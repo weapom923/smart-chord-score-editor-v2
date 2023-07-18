@@ -1,0 +1,51 @@
+<template>
+  <v-select
+    label="Grid Note Value"
+    v-model="$_gridNoteValueLabel"
+    v-bind:items="$_gridNoteValueLabels"
+    v-on:keydown.stop
+  />
+</template>
+
+<script lang="ts">
+import { NoteValue, nv } from '../../modules/NoteValue';
+
+export default {
+  emits: {
+    'update:gridNoteValue': (gridNoteValue: NoteValue) => true,
+  },
+
+  props: {
+    gridNoteValue: { type: NoteValue },
+  },
+
+  computed: {
+    $_labelToGridNoteValues(): Map<string, NoteValue> {
+      return new Map<string, NoteValue>([
+        [ 'Whole',   nv.divisible.whole ],
+        [ 'Half',    nv.divisible.half ],
+        [ 'Quarter', nv.divisible.quarter ],
+      ]);
+    },
+
+    $_gridNoteValueLabels(): string[] {
+      return [ ...this.$_labelToGridNoteValues.keys() ];
+    },
+
+    $_gridNoteValueLabel: {
+      get(): string | undefined  {
+        if (this.gridNoteValue === undefined) return undefined;
+        for (let [ gridNoteValueLabel, gridNoteValue ] of this.$_labelToGridNoteValues.entries()) {
+          if (gridNoteValue.isEqualTo(this.gridNoteValue)) return gridNoteValueLabel;
+        }
+        return undefined;
+      },
+      set(gridNoteValueLabel: string) {
+        let gridNoteValue = this.$_labelToGridNoteValues.get(gridNoteValueLabel);
+        if (gridNoteValue === undefined) return;
+        this.$emit('update:gridNoteValue', gridNoteValue.clone());
+      },
+    },
+  },
+}
+</script>
