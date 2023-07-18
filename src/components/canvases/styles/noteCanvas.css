@@ -1,0 +1,7 @@
+#note-canvas-container {
+  display: flex;
+  align-content: flex-start;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
