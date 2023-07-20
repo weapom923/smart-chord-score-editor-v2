@@ -4,7 +4,7 @@ import { ScoreMetadata } from '../../modules/ScoreMetadata';
 import { Section } from '../../modules/Section';
 import { Bar } from '../../modules/Bar';
 import { PartInBar } from '../../modules/PartInBar';
-import { BarBreak, bb } from '../../modules/BarBreak';
+import { BarBreak } from '../../modules/BarBreak';
 import { Note } from '../../modules/Note';
 import { ScoreChangeHistoryManager, ScoreChange } from '../../modules/ScoreChangeHistoryManager';
 import { SectionAndBarIdx, SectionAndBarRange } from '../../modules/SectionAndBarRange';
@@ -89,7 +89,6 @@ const ScoreModule: Module<ScoreState, RootState> = {
             state.score = currentScore.clone();
           },
           afterChange() {
-            state.selectedBars = undefined;
             state.isRedoable = state.scoreChangeHistoryManager.isRedoable;
             state.isUndoable = state.scoreChangeHistoryManager.isUndoable;
           },
@@ -98,22 +97,49 @@ const ScoreModule: Module<ScoreState, RootState> = {
     },
 
     insertSections(state: ScoreState, { sectionIdx, sections }: { sectionIdx: number, sections: Section[] }) {
-      let sectionAndBarIdx = new SectionAndBarIdx(sectionIdx, 0);
-      let numBars = sections.reduce((numBars: number, section: Section) => (numBars + section.numBars), 0);
-      if (state.selectedBars !== undefined) {
-        if (state.selectedBars.includes(sectionAndBarIdx)) {
-          state.selectedBars.last.barIdx += numBars;
-        } else if (sectionAndBarIdx.isPosteriorTo(state.selectedBars.last)) {
-          state.selectedBars.first.barIdx += numBars;
-          state.selectedBars.last.barIdx += numBars;
-        }
-      }
       const newSections = sections.map(section => section.clone());
       const numSections = sections.length;
+      const insertedSectionAndBarRange = new SectionAndBarRange(
+        new SectionAndBarIdx(sectionIdx, newSections[0].firstBarIdx ?? 0),
+        new SectionAndBarIdx(sectionIdx + numSections - 1, newSections[0].lastBarIdx ?? 0),
+      );
       state.scoreChangeHistoryManager.register(
         new ScoreChange({
-          redo() { state.score.sections.splice(sectionIdx, 0, ...newSections.map(section => section.clone())) },
-          undo() { state.score.sections.splice(sectionIdx, numSections) },
+          redo() {
+            state.score.sections.splice(sectionIdx, 0, ...newSections.map(section => section.clone()));
+            if (state.selectedBars !== undefined) {
+              if ((state.selectedBars.first.sectionIdx < sectionIdx) && (state.selectedBars.last.sectionIdx >= sectionIdx)) {
+                state.selectedBars.last.sectionIdx += numSections;
+              } else if (state.selectedBars.first.sectionIdx >= sectionIdx) {
+                state.selectedBars.first.sectionIdx += numSections;
+                state.selectedBars.last.sectionIdx += numSections;
+              }
+            }
+          },
+          undo() {
+            state.score.sections.splice(sectionIdx, numSections);
+            if (state.selectedBars !== undefined) {
+              if (state.selectedBars.isCompletelyIncludedIn(insertedSectionAndBarRange)) {
+                state.selectedBars = undefined;
+                return;
+              }
+              if (insertedSectionAndBarRange.includes(state.selectedBars.last)) {
+                let selectedBarsIdxLast = state.score.getPreviousSectionAndBarIdx(insertedSectionAndBarRange.first);
+                if (selectedBarsIdxLast === undefined) {
+                  state.selectedBars = undefined;
+                  return
+                }
+                state.selectedBars.last = selectedBarsIdxLast;
+              } else if (insertedSectionAndBarRange.last.isPriorTo(state.selectedBars.last)) {
+                state.selectedBars.last.sectionIdx -= numSections;
+              }
+              if (insertedSectionAndBarRange.includes(state.selectedBars.first)) {
+                state.selectedBars.first = insertedSectionAndBarRange.first.clone();
+              } else if (insertedSectionAndBarRange.last.isPriorTo(state.selectedBars.first)) {
+                state.selectedBars.first.sectionIdx -= numSections;
+              }
+            }
+          },
           afterChange() {
             state.isRedoable = state.scoreChangeHistoryManager.isRedoable;
             state.isUndoable = state.scoreChangeHistoryManager.isUndoable;
