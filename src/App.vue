@@ -432,32 +432,20 @@ const App = defineComponent({
         let baseSectionIdx = this.$store.state.score.selectedBars.first.sectionIdx;
         let baseSection = this.$_score.getSection(baseSectionIdx);
         let baseBar = baseSection.firstBar;
-        if (baseBar === undefined) {
-          await this.$store.dispatch(
-            'dialog/setDialog',
-            {
-              componentName: 'generate-section-dialog',
-              props: {
-                sectionIdx: baseSectionIdx,
-              },
+        await this.$store.dispatch(
+          'dialog/setDialog',
+          {
+            componentName: 'generate-section-dialog',
+            props: {
+              sectionIdx: baseSectionIdx,
+              barValue: baseBar.value,
+              clef: baseBar.clef,
+              scale: baseBar.scale,
+              partInBarTypes: baseBar.parts.map(part => part.type),
+              gridNoteValue: baseBar.gridNoteValue,
             },
-          );
-        } else {
-          await this.$store.dispatch(
-            'dialog/setDialog',
-            {
-              componentName: 'generate-section-dialog',
-              props: {
-                sectionIdx: baseSectionIdx,
-                barValue: baseBar.value,
-                clef: baseBar.clef,
-                scale: baseBar.scale,
-                partInBarTypes: baseBar.parts.map(part => part.type),
-                gridNoteValue: baseBar.gridNoteValue,
-              },
-            },
-          );
-        }
+          },
+        );
         return true;
       }
 
@@ -466,32 +454,20 @@ const App = defineComponent({
         let baseSectionIdx = this.$store.state.score.selectedBars.last.sectionIdx;
         let baseSection = this.$_score.getSection(baseSectionIdx);
         let baseBar = baseSection.lastBar;
-        if (baseBar === undefined) {
-          await this.$store.dispatch(
-            'dialog/setDialog',
-            {
-              componentName: 'generate-section-dialog',
-              props: {
-                sectionIdx: baseSectionIdx + 1,
-              },
+        await this.$store.dispatch(
+          'dialog/setDialog',
+          {
+            componentName: 'generate-section-dialog',
+            props: {
+              sectionIdx: baseSectionIdx + 1,
+              barValue: baseBar.value,
+              clef: baseBar.clef,
+              scale: baseBar.scale,
+              partInBarTypes: baseBar.parts.map(part => part.type),
+              gridNoteValue: baseBar.gridNoteValue,
             },
-          );
-        } else {
-          await this.$store.dispatch(
-            'dialog/setDialog',
-            {
-              componentName: 'generate-section-dialog',
-              props: {
-                sectionIdx: baseSectionIdx + 1,
-                barValue: baseBar.value,
-                clef: baseBar.clef,
-                scale: baseBar.scale,
-                partInBarTypes: baseBar.parts.map(part => part.type),
-                gridNoteValue: baseBar.gridNoteValue,
-              },
-            },
-          );
-        }
+          },
+        );
         return true;
       }
 
