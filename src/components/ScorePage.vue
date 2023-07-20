@@ -88,12 +88,10 @@ export default {
         let firstBarIdxOfCurrentSection =
           (currentSectionIdx === this.sectionAndBarRange.first.sectionIdx)?
           this.sectionAndBarRange.first.barIdx : this.$_score.getSection(currentSectionIdx).firstBarIdx;
-        if (firstBarIdxOfCurrentSection === undefined) continue;
 
         let lastBarIdxOfCurrentSection =
           (currentSectionIdx === this.sectionAndBarRange.last.sectionIdx)?
           this.sectionAndBarRange.last.barIdx : this.$_score.getSection(currentSectionIdx).lastBarIdx;
-        if (lastBarIdxOfCurrentSection === undefined) continue;
 
         let showBeatOnFirstBarOfCurrentSection = false;
         let currentSectionAndFirstBarIdx = new SectionAndBarIdx(currentSectionIdx, firstBarIdxOfCurrentSection);
