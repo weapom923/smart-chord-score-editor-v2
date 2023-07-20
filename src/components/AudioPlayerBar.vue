@@ -1,10 +1,15 @@
 <template>
   <v-toolbar id="audio-player-bar" density="compact">
-    <v-btn
-      icon="mdi-folder-open" size="small"
-      v-on:click="$_loadAudioSource"
-    >
-    </v-btn>
+    <v-tooltip location="top" text="load audio file">
+      <template v-slot:activator="{ props }">
+        <v-btn
+          icon="mdi-folder-open" size="small"
+          v-bind="props"
+          v-on:click="$_loadAudioSource"
+        >
+        </v-btn>
+      </template>
+    </v-tooltip>
     <audio-player
       ref="audioPlayer" class="pr-4"
       v-if="($data.$_audioContext !== undefined) && ($data.$_audioBuffer !== undefined)"

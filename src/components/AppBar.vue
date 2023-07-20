@@ -7,18 +7,18 @@
       location="bottom"
       v-for="(menuItemDefinition, menuItemDefinitionId) in $_leftMenuItemDefinitions"
       v-bind:key="menuItemDefinitionId"
+      v-bind:text="menuItemDefinition.text"
     >
       <template v-slot:activator="{ props }">
         <v-btn
           size="x-small"
           v-bind="props"
           v-bind:disabled="menuItemDefinition.disabled"
+          v-bind:icon="menuItemDefinition.iconName"
           v-on:click="menuItemDefinition.callback"
         >
-          <v-icon>{{ menuItemDefinition.iconName }}</v-icon>
         </v-btn>
       </template>
-      <span>{{ menuItemDefinition.text }}</span>
     </v-tooltip>
     
     <v-spacer />
@@ -33,9 +33,9 @@
           size="x-small"
           v-bind="props"
           v-bind:disabled="menuItemDefinition.disabled"
+          v-bind:icon="menuItemDefinition.iconName"
           v-on:click="menuItemDefinition.callback"
         >
-          <v-icon>{{ menuItemDefinition.iconName }}</v-icon>
         </v-btn>
       </template>
       <span>{{ menuItemDefinition.text }}</span>
