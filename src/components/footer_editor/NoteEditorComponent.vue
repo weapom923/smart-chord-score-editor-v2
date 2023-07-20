@@ -69,6 +69,7 @@ export default {
   },
 
   props: {
+    selectedBar:              { type: Bar, required: true },
     selectedSectionAndBarIdx: { type: SectionAndBarIdx, required: true },
     selectedPartIdx:          { type: Number, required: true },
     selectedNoteIdx:          { type: Number, required: true },
@@ -88,17 +89,9 @@ export default {
   },
 
   computed: {
-    $_score(): Score {
-      return this.$store.state.score.score;
-    },
-
-    $_selectedBar(): Bar {
-      return this.$_score.getBar(this.selectedSectionAndBarIdx);
-    },
-
     $_selectedPart(): PartInBar {
       if (this.temporalSelectedPart !== undefined) return this.temporalSelectedPart;
-      return this.$_selectedBar.getPart(this.selectedPartIdx);
+      return this.selectedBar.getPart(this.selectedPartIdx);
     },
 
     $_selectedNote(): Note | undefined {
@@ -130,7 +123,7 @@ export default {
 
     $_numSliderTicks(): number | undefined {
       if (this.$data.$_noteValueSliderUnitValue === undefined) return undefined;
-      return this.$_selectedBar.value.clone()
+      return this.selectedBar.value.clone()
         .divide(this.$data.$_noteValueSliderUnitValue)
         .toNumber()
     },
@@ -185,7 +178,7 @@ export default {
           .divide(this.$data.$_noteValueSliderUnitValue)
           .toNumber();
       } else {
-        return this.$_selectedBar.value.clone()
+        return this.selectedBar.value.clone()
           .divide(this.$data.$_noteValueSliderUnitValue)
           .toNumber();
       }

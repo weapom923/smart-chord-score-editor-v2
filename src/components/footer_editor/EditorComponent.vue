@@ -21,7 +21,7 @@
         <v-col
           cols="9"
           id="bar-component-container"
-          v-if="($_selectedSectionAndBarIdx !== undefined) && ($data.$_selectedPartIdx !== undefined)"
+          v-if="($_selectedSectionAndBarIdx !== undefined) && ($data.$_selectedPartIdx !== undefined) && ($_selectedBar !== undefined)"
         >
           <bar-editor-component
             ref="barEditorComponent"
@@ -39,6 +39,7 @@
             flat class="pa-0"
             v-if="$data.$_selectedNoteIdx !== undefined"
             v-model:temporal-selected-part="$data.$_temporalSelectedPart"
+            v-bind:selected-bar="$_selectedBar"
             v-bind:selected-section-and-bar-idx="$_selectedSectionAndBarIdx"
             v-bind:selected-part-idx="$data.$_selectedPartIdx"
             v-model:selected-note-idx="$data.$_selectedNoteIdx"
@@ -94,9 +95,17 @@ const EditorComponent = defineComponent({
       deep: true,
     },
 
+    $_selectedBar: {
+      handler(selectedBar?: Bar) {
+        this.$_truncateSelectedPartIdx(selectedBar);
+      },
+      deep: true,
+    },
+
     $_selectedPart: {
       handler(selectedPart?: PartInBar) {
         this.$data.$_lastPartInBarType = selectedPart?.type;
+        this.$_truncateSelectedNoteIdx(selectedPart);
       },
       deep: true,
     },
@@ -233,6 +242,34 @@ const EditorComponent = defineComponent({
         this.$data.$_selectedNoteIdx = undefined;
       } else {
         this.$data.$_selectedNoteIdx = 0;
+      }
+    },
+
+    $_truncateSelectedPartIdx(selectedBar?: Bar) {
+      if ((selectedBar?.firstPartIdx === undefined) || (selectedBar?.lastPartIdx === undefined)) {
+        this.$data.$_selectedPartIdx = undefined;
+      } else {
+        if (this.$data.$_selectedPartIdx !== undefined) {
+          if (this.$data.$_selectedPartIdx < selectedBar.firstPartIdx) {
+            this.$data.$_selectedPartIdx = selectedBar.firstPartIdx;
+          } else if (this.$data.$_selectedPartIdx > selectedBar.lastPartIdx) {
+            this.$data.$_selectedPartIdx = selectedBar.lastPartIdx;
+          }
+        }
+      }
+    },
+
+    $_truncateSelectedNoteIdx(selectedPart?: PartInBar) {
+      if ((selectedPart?.firstNoteIdx === undefined) || (selectedPart?.lastNoteIdx === undefined)) {
+        this.$data.$_selectedNoteIdx = undefined;
+      } else {
+        if (this.$data.$_selectedNoteIdx !== undefined) {
+          if (this.$data.$_selectedNoteIdx < selectedPart.firstNoteIdx) {
+            this.$data.$_selectedNoteIdx = selectedPart.firstNoteIdx;
+          } else if (this.$data.$_selectedNoteIdx > selectedPart.lastNoteIdx) {
+            this.$data.$_selectedNoteIdx = selectedPart.lastNoteIdx;
+          }
+        }
       }
     },
   },
