@@ -25,6 +25,7 @@ export class Section {
   ) {
     this.name = name;
     this.bars = bars;
+    if (this.numBars === 0) throw new RangeError();
   }
 
   static generateNew(
@@ -81,29 +82,25 @@ export class Section {
     return this.bars.length;
   }
 
-  get barRange(): BarRange | undefined {
-    if (this.firstBarIdx === undefined) return undefined;
-    if (this.lastBarIdx === undefined) return undefined;
+  get barRange(): BarRange {
     return new BarRange(this.firstBarIdx, this.lastBarIdx);
   }
 
-  get firstBarIdx(): BarIdx | undefined {
-    if (this.numBars === 0) return undefined;
+  get firstBarIdx(): BarIdx {
+    if (this.numBars === 0) throw new RangeError();
     return 0;
   }
 
-  get lastBarIdx(): BarIdx | undefined {
-    if (this.numBars === 0) return undefined;
+  get lastBarIdx(): BarIdx {
+    if (this.numBars === 0) throw new RangeError();
     return this.numBars - 1;
   }
 
-  get firstBar(): Bar | undefined {
-    if (this.firstBarIdx === undefined) return undefined;
+  get firstBar(): Bar {
     return this.bars[this.firstBarIdx]
   }
 
-  get lastBar(): Bar | undefined {
-    if (this.lastBarIdx === undefined) return undefined;
+  get lastBar(): Bar {
     return this.bars[this.lastBarIdx]
   }
 
