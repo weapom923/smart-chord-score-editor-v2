@@ -149,38 +149,39 @@ const ScoreModule: Module<ScoreState, RootState> = {
     },
 
     insertBars(state: ScoreState, { sectionAndBarIdx, bars }: { sectionAndBarIdx: SectionAndBarIdx, bars: Bar[] }) {
+      const targetSectionAndBarIdx = sectionAndBarIdx.clone();
       const newBars = bars.map(bar => bar.clone());
       const numBars = bars.length;
       state.scoreChangeHistoryManager.register(
         new ScoreChange({
           redo() {
-            state.score.getSection(sectionAndBarIdx.sectionIdx).bars.splice(sectionAndBarIdx.barIdx, 0, ...newBars.map(bar => bar.clone()));
+            state.score.getSection(targetSectionAndBarIdx.sectionIdx).bars.splice(targetSectionAndBarIdx.barIdx, 0, ...newBars.map(bar => bar.clone()));
             if (state.selectedBars !== undefined) {
               if (state.selectedBars.includeSingleBarOnly) {
-                if (state.selectedBars.idx.isPosteriorOrEqualTo(sectionAndBarIdx)) {
+                if (state.selectedBars.idx.isPosteriorOrEqualTo(targetSectionAndBarIdx)) {
                   state.selectedBars.first.barIdx += numBars;
                   state.selectedBars.last.barIdx += numBars;
                 }
               } else {
-                if (state.selectedBars.first.isPosteriorOrEqualTo(sectionAndBarIdx)) {
+                if (state.selectedBars.first.isPosteriorOrEqualTo(targetSectionAndBarIdx)) {
                   state.selectedBars.first.barIdx += numBars;
                 }
-                if (state.selectedBars.last.isPosteriorOrEqualTo(sectionAndBarIdx)) {
+                if (state.selectedBars.last.isPosteriorOrEqualTo(targetSectionAndBarIdx)) {
                   state.selectedBars.last.barIdx += numBars;
                 }
               }
             }
           },
           undo() {
-            state.score.getSection(sectionAndBarIdx.sectionIdx).bars.splice(sectionAndBarIdx.barIdx, numBars);
+            state.score.getSection(targetSectionAndBarIdx.sectionIdx).bars.splice(targetSectionAndBarIdx.barIdx, numBars);
             if (state.selectedBars !== undefined) {
-              if (state.selectedBars.includes(sectionAndBarIdx)) {
+              if (state.selectedBars.includes(targetSectionAndBarIdx)) {
                 if (!state.selectedBars.includeSingleBarOnly) state.selectedBars.last.barIdx -= numBars;
               } else {
-                if (sectionAndBarIdx.isPriorOrEqualTo(state.selectedBars.first)) {
+                if (targetSectionAndBarIdx.isPriorOrEqualTo(state.selectedBars.first)) {
                   state.selectedBars.first.barIdx -= numBars;
                 }
-                if (sectionAndBarIdx.isPriorOrEqualTo(state.selectedBars.last)) {
+                if (targetSectionAndBarIdx.isPriorOrEqualTo(state.selectedBars.last)) {
                   state.selectedBars.last.barIdx -= numBars;
                 }
               }
