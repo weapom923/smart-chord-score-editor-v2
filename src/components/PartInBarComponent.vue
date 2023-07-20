@@ -5,6 +5,7 @@
       v-bind:key="noteIdx"
     >
       <note-base-component
+        v-if="$_noteBarComponentProps.has(noteIdx)"
         v-bind="assertDefined($_noteBarComponentProps.get(noteIdx))"
         v-on:split-note-element-mounted="$_onSplitNoteElementMounted(noteIdx, $event)"
         v-on:split-note-element-unmounted="$_onSplitNoteElementUnmounted(noteIdx, $event)"
@@ -57,13 +58,6 @@ export default {
     TieCanvas,
   },
 
-  watch: {
-    '$data.$_splitNoteElements': {
-      handler() { this.$_updatePositionAndSize() },
-      deep: true,
-    },
-  },
-
   props: {
     part:            { type: PartInBar, required: true },
     selectedNoteIdx: { type: Number },
@@ -79,7 +73,7 @@ export default {
     $_tieStyles: Map<NoteIdx, CSSProperties>,
   } {
     return {
-      $_partInBarElementResizeObserver: new ResizeObserver(() => { this.$_updatePositionAndSize }),
+      $_partInBarElementResizeObserver: new ResizeObserver(() => { this.$_updateTiePropsAndStyles() }),
       $_noteTieStartOffsets: new Map(),
       $_noteTieEndOffsets: new Map(),
       $_splitNoteElements: new Map(),
@@ -113,7 +107,7 @@ export default {
 
   mounted() {
     this.$data.$_partInBarElementResizeObserver.observe(this.$el);
-    this.$_updatePositionAndSize();
+    this.$_updateTiePropsAndStyles();
   },
 
   beforeUnmount() {
@@ -127,6 +121,7 @@ export default {
       }
       this.$data.$_splitNoteElements.get(noteIdx)?.set(splitNoteIdx, splitNoteElement);
       this.$emit('splitNoteElementMounted', { noteIdx, splitNoteIdx, splitNoteElement });
+      this.$nextTick(() => this.$_updateTiePropsAndStyles());
     },
 
     $_onSplitNoteElementUnmounted(noteIdx: NoteIdx, splitNoteIdx: SplitNoteIdx) {
@@ -135,6 +130,7 @@ export default {
       splitNoteElements.delete(splitNoteIdx);
       if (splitNoteElements.size > 0) this.$data.$_splitNoteElements.delete(noteIdx);
       this.$emit('splitNoteElementUnmounted', { noteIdx, splitNoteIdx });
+      this.$nextTick(() => this.$_updateTiePropsAndStyles());
     },
 
     $_onChordComponentMounted(noteIdx: NoteIdx, noteChordElement: HTMLElement) {
@@ -154,20 +150,16 @@ export default {
         this.$data.$_noteTieStartOffsets.set(noteIdx, tieStartPointOffset);
         this.$data.$_noteTieEndOffsets.set(noteIdx, tieEndPointOffset);
       }
-      this.$_updatePositionAndSize();
+      this.$nextTick(() => this.$_updateTiePropsAndStyles());
     },
 
     $_onClickNote(noteIdx: NoteIdx) {
       this.$emit('clickNote', noteIdx);
     },
 
-    $_updatePositionAndSize() {
-      this.$_updateTiePropsAndStyles();
-    },
-
     $_emitTiePointUpdate() {
       if ((this.$el === null) || (this.$el === undefined)) return;
-      let partElementBoundingClientRect = (this.$el as HTMLElement).getBoundingClientRect();
+      let partElementOffsetX = (this.$el as HTMLElement).getBoundingClientRect().x;
       if (this.part.firstNoteIdx === undefined) return;
       let firstSplitNoteElements = this.$data.$_splitNoteElements.get(this.part.firstNoteIdx);
       if (firstSplitNoteElements === undefined) return;
@@ -178,13 +170,13 @@ export default {
       if (lastSplitNoteElements === undefined) return;
       let lastNoteElement = lastSplitNoteElements.get(lastSplitNoteElements.size - 1);
       if (lastNoteElement === undefined) return;
-      let firstNoteElementBoundingClientRect = firstNoteElement.getBoundingClientRect();
-      let lastNoteElementBoundingClientRect = lastNoteElement.getBoundingClientRect();
+      let firstNoteElementOffsetX = firstNoteElement.getBoundingClientRect().x;
+      let lastNoteElementOffsetX = lastNoteElement.getBoundingClientRect().x;
       let firstNoteTieEndOffset = this.$data.$_noteTieEndOffsets.get(this.part.firstNoteIdx);
       let partTieEndPointOffset: DOMPoint | undefined = undefined;
       if (firstNoteTieEndOffset !== undefined) {
         partTieEndPointOffset = new DOMPoint(
-          firstNoteTieEndOffset.x + firstNoteElementBoundingClientRect.x - partElementBoundingClientRect.x,
+          firstNoteTieEndOffset.x + firstNoteElementOffsetX - partElementOffsetX,
           firstNoteTieEndOffset.y,
         );
       }
@@ -192,7 +184,7 @@ export default {
       let partTieStartPointOffset: DOMPoint | undefined = undefined;
       if (lastNoteTieStartOffset !== undefined) {
         partTieStartPointOffset = new DOMPoint(
-          lastNoteTieStartOffset.x + lastNoteElementBoundingClientRect.x - partElementBoundingClientRect.x,
+          lastNoteTieStartOffset.x + lastNoteElementOffsetX - partElementOffsetX,
           lastNoteTieStartOffset.y,
         );
       }

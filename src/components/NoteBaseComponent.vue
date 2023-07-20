@@ -17,40 +17,43 @@
       />
     </div>
     <div id="split-divisible-notes-container">
-      <div
-        class="split-divisible-note-container"
+      <template
         v-for="(splitNote, splitNoteIdx) in $_splitNotes"
         v-bind:key="splitNoteIdx"
-        v-bind:style="$_splitNoteContainerStyles.get(splitNoteIdx)"
-        v-on:click="$_onClickNote"
       >
-        <template v-if="$_isNormalNote(splitNote.type)">
-          <chord-note-canvas
-            v-if="$_isPartTypeChord"
-            v-bind:note="splitNote"
-            v-bind:invert-stem-direction="true"
+        <div
+          class="split-divisible-note-container"
+          v-bind:style="assertDefined($_splitNoteContainerStyles.get(splitNoteIdx))"
+          v-on:click="$_onClickNote"
+        >
+          <template v-if="$_isNormalNote(splitNote.type)">
+            <chord-note-canvas
+              v-if="$_isPartTypeChord"
+              v-bind:note="splitNote"
+              v-bind:invert-stem-direction="true"
+              v-bind:color="$_noteColor"
+              v-on:width-update="$_onNoteWidthUpdate(splitNoteIdx, $event)"
+              v-on:tie-point-update="$_onNoteTiePointUpdate(splitNoteIdx, $event)"
+              v-on:vue:mounted="$_onSplitNoteElementMounted(splitNoteIdx, $event.el)"
+              v-on:vue:unmounted="$_onSplitNoteElementUnmounted(splitNoteIdx)"
+            />
+            <tie-canvas
+              v-if="$data.$_tieProps.has(splitNoteIdx)"
+              v-bind="assertDefined($data.$_tieProps.get(splitNoteIdx))"
+              v-bind:style="$data.$_tieStyles.get(splitNoteIdx)"
+            />
+          </template>
+          <rest-note-canvas
+            v-if="$_isRestNote(splitNote.type)"
+            v-bind:note-value="splitNote.value"
+            v-bind:rest-note-pitch="restNotePitch"
             v-bind:color="$_noteColor"
             v-on:width-update="$_onNoteWidthUpdate(splitNoteIdx, $event)"
-            v-on:tie-point-update="$_onNoteTiePointUpdate(splitNoteIdx, $event)"
             v-on:vue:mounted="$_onSplitNoteElementMounted(splitNoteIdx, $event.el)"
             v-on:vue:unmounted="$_onSplitNoteElementUnmounted(splitNoteIdx)"
           />
-          <tie-canvas
-            v-if="$data.$_tieProps.has(splitNoteIdx)"
-            v-bind="assertDefined($data.$_tieProps.get(splitNoteIdx))"
-            v-bind:style="$data.$_tieStyles.get(splitNoteIdx)"
-          />
-        </template>
-        <rest-note-canvas
-          v-if="$_isRestNote(splitNote.type)"
-          v-bind:note-value="splitNote.value"
-          v-bind:rest-note-pitch="restNotePitch"
-          v-bind:color="$_noteColor"
-          v-on:width-update="$_onNoteWidthUpdate(splitNoteIdx, $event)"
-          v-on:vue:mounted="$_onSplitNoteElementMounted(splitNoteIdx, $event.el)"
-          v-on:vue:unmounted="$_onSplitNoteElementUnmounted(splitNoteIdx)"
-        />
-      </div>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -101,7 +104,7 @@ export default {
     chordComponentMounted: (event: HTMLElement) => true,
     chordComponentUnmounted: () => true,
     splitNoteElementMounted: (event: { splitNoteIdx: SplitNoteIdx, splitNoteElement: HTMLElement }) => true,
-    splitNoteElementUnounted: (event: SplitNoteIdx) => true,
+    splitNoteElementUnmounted: (event: SplitNoteIdx) => true,
     clickNote: () => true,
     tiePointUpdate: (event: { tieStartPointOffset: DOMPoint, tieEndPointOffset: DOMPoint } | undefined) => true,
   },
@@ -114,27 +117,8 @@ export default {
   },
 
   watch: {
-    $_numSplitNotes: {
-      handler(newNumSplitNotes: number, oldNumSplitNotes: number) {
-        if(newNumSplitNotes < oldNumSplitNotes) {
-          for (let splitNoteIdx = newNumSplitNotes; splitNoteIdx < oldNumSplitNotes; ++splitNoteIdx) {
-            this.$data.$_splitNoteElementWidthPxs.delete(splitNoteIdx);
-            this.$data.$_splitNoteTieStartOffsets.delete(splitNoteIdx);
-            this.$data.$_splitNoteTieEndOffsets.delete(splitNoteIdx);
-            this.$data.$_splitNoteElements.delete(splitNoteIdx);
-          }
-        }
-      },
-      immediate: true,
-    },
-
     $_noteTieStartAndEndOffset(noteTieStartAndEndOffset) {
       this.$emit('tiePointUpdate', noteTieStartAndEndOffset);
-    },
-
-    '$data.$_splitNoteElements': {
-      handler() { this.$_updateTiePropsAndStyles() },
-      deep: true,
     },
   },
 
@@ -158,7 +142,7 @@ export default {
     $_tieStyles: Map<SplitNoteIdx, CSSProperties>,
   } {
     return {
-      $_noteBaseElementResizeObserver: new ResizeObserver(() => { this.$_updatePositionAndSize() }),
+      $_noteBaseElementResizeObserver: new ResizeObserver(() => { this.$_updateTiePropsAndStyles() }),
       $_chordElementWidthPx: undefined,
       $_splitNoteElementWidthPxs: new Map(),
       $_splitNoteTieStartOffsets: new Map(),
@@ -227,22 +211,30 @@ export default {
       let splitNoteContainerStyles = new Map<SplitNoteIdx, CSSProperties>();
       for (let splitNoteIdx = 0; splitNoteIdx < this.$_numSplitNotes; ++splitNoteIdx) {
         let splitNoteValue = this.$_splitNoteValues[splitNoteIdx];
+        let flexGrow = splitNoteValue.clone().divide(nv.divisible.sixtyFourth).toNumber();
         let splitNoteElementWidthPx = this.$data.$_splitNoteElementWidthPxs.get(splitNoteIdx);
-        if (splitNoteElementWidthPx === undefined) continue;
-        splitNoteContainerStyles.set(
-          splitNoteIdx,
-          {
-            flexGrow:  `${splitNoteValue.clone().divide(nv.divisible.sixtyFourth).toNumber()}`,
-            flexBasis: `${splitNoteElementWidthPx}px`,
-            width:     `${splitNoteElementWidthPx}px`,
-          },
-        );
+        if (splitNoteElementWidthPx === undefined) {
+          splitNoteContainerStyles.set(
+            splitNoteIdx,
+            {
+              flexGrow,
+            },
+          );
+        } else {
+          splitNoteContainerStyles.set(
+            splitNoteIdx,
+            {
+              flexGrow,
+              flexBasis: `${splitNoteElementWidthPx}px`,
+              width:     `${splitNoteElementWidthPx}px`,
+            },
+          );
+        }
       }
       return splitNoteContainerStyles;
     },
 
     $_noteTieStartAndEndOffset(): { tieStartPointOffset: DOMPoint, tieEndPointOffset: DOMPoint } | undefined {
-      if (this.$data.$_splitNoteTieStartOffsets.size < 1) return undefined;
       let tieStartPointOffset = this.$data.$_splitNoteTieStartOffsets.get(0);
       if (tieStartPointOffset === undefined) return undefined;
       let tieEndPointOffset = this.$data.$_splitNoteTieEndOffsets.get(this.$data.$_splitNoteTieEndOffsets.size - 1);
@@ -253,7 +245,7 @@ export default {
 
   mounted() {
     this.$data.$_noteBaseElementResizeObserver.observe(this.$el);
-    this.$_updatePositionAndSize();
+    this.$_updateTiePropsAndStyles();
   },
 
   beforeUnmount() {
@@ -286,11 +278,16 @@ export default {
       if (splitNoteElement === null) return;
       this.$data.$_splitNoteElements.set(splitNoteIdx, splitNoteElement);
       this.$emit('splitNoteElementMounted', { splitNoteIdx, splitNoteElement });
+      this.$nextTick(() => this.$_updateTiePropsAndStyles());
     },
 
     $_onSplitNoteElementUnmounted(splitNoteIdx: SplitNoteIdx) {
       this.$data.$_splitNoteElements.delete(splitNoteIdx);
-      this.$emit('splitNoteElementUnounted', splitNoteIdx);
+      this.$data.$_splitNoteElementWidthPxs.delete(splitNoteIdx);
+      this.$data.$_splitNoteTieStartOffsets.delete(splitNoteIdx);
+      this.$data.$_splitNoteTieEndOffsets.delete(splitNoteIdx);
+      this.$emit('splitNoteElementUnmounted', splitNoteIdx);
+      this.$nextTick(() => this.$_updateTiePropsAndStyles());
     },
 
     $_onNoteWidthUpdate(splitNoteIdx: SplitNoteIdx, widthPx: number) {
@@ -306,23 +303,19 @@ export default {
       this.$emit('clickNote');
     },
 
-    $_updatePositionAndSize() {
-      this.$_updateTiePropsAndStyles();
-    },
-
     $_updateTiePropsAndStyles() {
       let noteBaseElement = this.$el;
-      if ((noteBaseElement === undefined) && (noteBaseElement === null)) return;
+      if ((noteBaseElement === undefined) || (noteBaseElement === null)) return;
       let noteBaseElementOffsetX = (noteBaseElement as HTMLElement).getBoundingClientRect().x;
       let tieProps = new Map<SplitNoteIdx, InstanceType<typeof TieCanvas>['$props']>();
       let tieStyles = new Map<SplitNoteIdx, CSSProperties>();
-      for (let splitNoteIdx = 0; splitNoteIdx < this.$_lastSplitNoteIdx; ++splitNoteIdx) {
-        let nextSplitNoteIdx = splitNoteIdx + 1;
-        let currentSplitNoteElement = this.$data.$_splitNoteElements.get(splitNoteIdx);
+      for (let currentSplitNoteIdx = 0; currentSplitNoteIdx < this.$_lastSplitNoteIdx; ++currentSplitNoteIdx) {
+        let nextSplitNoteIdx = currentSplitNoteIdx + 1;
+        let currentSplitNoteElement = this.$data.$_splitNoteElements.get(currentSplitNoteIdx);
         if (currentSplitNoteElement === undefined) continue;
         let nextSplitNoteElement = this.$data.$_splitNoteElements.get(nextSplitNoteIdx);
         if (nextSplitNoteElement === undefined) continue;
-        let splitNoteTieStartOffset = this.$data.$_splitNoteTieStartOffsets.get(splitNoteIdx);
+        let splitNoteTieStartOffset = this.$data.$_splitNoteTieStartOffsets.get(currentSplitNoteIdx);
         if (splitNoteTieStartOffset === undefined) continue;
         let splitNoteTieEndOffset = this.$data.$_splitNoteTieEndOffsets.get(nextSplitNoteIdx);
         if (splitNoteTieEndOffset === undefined) continue;
@@ -333,7 +326,7 @@ export default {
         let relativeTieEndHorizontalOffsetPx = (nextSplitNoteElementOffsetX - noteBaseElementOffsetX) + splitNoteTieEndOffset.x;
         let relativeTieEndVerticalOffsetPx = splitNoteTieEndOffset.y;
         tieProps.set(
-          splitNoteIdx,
+          currentSplitNoteIdx,
           {
             startVerticalOffsetPx: relativeTieStartVerticalOffsetPx,
             endVerticalOffsetPx: relativeTieEndVerticalOffsetPx,
@@ -341,7 +334,7 @@ export default {
           },
         );
         tieStyles.set(
-          splitNoteIdx,
+          currentSplitNoteIdx,
           {
             position: 'absolute',
             left: `${splitNoteTieStartOffset.x}px`,
