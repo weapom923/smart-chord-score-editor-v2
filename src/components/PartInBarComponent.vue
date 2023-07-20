@@ -224,9 +224,9 @@ export default {
         if (noteTieEndOffset === undefined) continue;
         let lastSplitNoteElementOfCurrentNote = splitNoteElement.get(splitNoteElement.size - 1);
         if (lastSplitNoteElementOfCurrentNote === undefined) continue;
-        let currentNoteElementOffsetX = lastSplitNoteElementOfCurrentNote.getBoundingClientRect().x;
         let firstSplitNoteElementOfNextNote = nextSplitNoteElement.get(0);
         if (firstSplitNoteElementOfNextNote === undefined) continue;
+        let currentNoteElementOffsetX = lastSplitNoteElementOfCurrentNote.getBoundingClientRect().x;
         let nextNoteElementOffsetX = firstSplitNoteElementOfNextNote.getBoundingClientRect().x;
         let tieStartHorizontalOffsetPx = (currentNoteElementOffsetX - partElementOffsetX) + noteTieStartOffset.x;
         let tieStartVerticalOffsetPx = noteTieStartOffset.y;
