@@ -177,10 +177,10 @@ const ScoreModule: Module<ScoreState, RootState> = {
               if (state.selectedBars.includes(sectionAndBarIdx)) {
                 if (!state.selectedBars.includeSingleBarOnly) state.selectedBars.last.barIdx -= numBars;
               } else {
-                if (sectionAndBarIdx.isPosteriorOrEqualTo(state.selectedBars.first)) {
+                if (sectionAndBarIdx.isPriorOrEqualTo(state.selectedBars.first)) {
                   state.selectedBars.first.barIdx -= numBars;
                 }
-                if (sectionAndBarIdx.isPosteriorOrEqualTo(state.selectedBars.last)) {
+                if (sectionAndBarIdx.isPriorOrEqualTo(state.selectedBars.last)) {
                   state.selectedBars.last.barIdx -= numBars;
                 }
               }
