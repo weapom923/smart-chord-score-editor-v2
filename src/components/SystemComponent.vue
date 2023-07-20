@@ -294,7 +294,6 @@ export default {
       let sameTypedPartIdxInNextBar = new Map<BarIdx, Map<PartIdx, { sectionAndBarIdx: SectionAndBarIdx, partIdx: PartIdx }>>();
       for (let barIdx of this.barRange.indices()) {
         let sameTypedPartIdx = new Map<PartIdx, { sectionAndBarIdx: SectionAndBarIdx, partIdx: PartIdx }>();
-        if (this.$_section.barRange === undefined) continue;
         if (!this.$_section.barRange.includes(barIdx)) continue;
         for (let partIdx of this.$_section.getBar(barIdx).partIndices()) {
           let found = this.score.findSameTypedPartIndexInNextBar({
@@ -312,7 +311,6 @@ export default {
     $_isTiedToNextSystem(): Map<PartIdx, boolean> | undefined {
       let isTiedToNextSystem = new Map<PartIdx, boolean>();
       let currentPartIdcs = this.$_partIdcs.get(this.barRange.lastBarIdx) as PartIdx[];
-      if (this.$_section.barRange === undefined) return undefined;
       if (!this.$_section.barRange.includes(this.barRange.lastBarIdx)) return undefined;
       let currentBar = this.$_section.getBar(this.barRange.lastBarIdx);
       for (let currentPartIdx of currentPartIdcs) {
@@ -472,7 +470,6 @@ export default {
       for (let currentBarIdx of this.barRange.indices()) {
         tieProps.set(currentBarIdx, new Map<PartIdx, TieCanvasProps>());
         tieStyles.set(currentBarIdx, new Map<PartIdx, CSSProperties>());
-        if (this.$_section.barRange === undefined) continue;
         if (!this.$_section.barRange.includes(currentBarIdx)) continue;
         let currentPartIdcs = this.$_partIdcs.get(currentBarIdx) as PartIdx[];
         for (let currentPartIdx of currentPartIdcs) {
