@@ -11,7 +11,7 @@
     >
       <template v-slot:activator="{ props }">
         <v-btn
-          size="x-small"
+          size="small"
           v-bind="props"
           v-bind:disabled="menuItemDefinition.disabled"
           v-bind:icon="menuItemDefinition.iconName"
@@ -21,7 +21,7 @@
       </template>
     </v-tooltip>
     
-    <v-spacer />
+    <v-spacer></v-spacer>
 
     <v-tooltip
       location="bottom"
@@ -30,7 +30,7 @@
     >
       <template v-slot:activator="{ props }">
         <v-btn
-          size="x-small"
+          size="small"
           v-bind="props"
           v-bind:disabled="menuItemDefinition.disabled"
           v-bind:icon="menuItemDefinition.iconName"
