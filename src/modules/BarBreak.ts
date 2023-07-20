@@ -27,6 +27,10 @@ export class BarBreak {
     };
   }
 
+  clone(): BarBreak {
+    return this;
+  }
+
   isEqualTo(that: BarBreak) {
     return (raw(this) === raw(that));
   }

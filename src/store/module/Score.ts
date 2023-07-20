@@ -385,10 +385,11 @@ const ScoreModule: Module<ScoreState, RootState> = {
     },
 
     setBarBreak(state: ScoreState, { sectionAndBarIdx, barBreak }: { sectionAndBarIdx: SectionAndBarIdx, barBreak: BarBreak }) {
+      const newBarBreak = barBreak.clone();
       const currentBarBreak = state.score.getBar(sectionAndBarIdx).break;
       state.scoreChangeHistoryManager.register(
         new ScoreChange({
-          redo() { state.score.getBar(sectionAndBarIdx).break = barBreak },
+          redo() { state.score.getBar(sectionAndBarIdx).break = newBarBreak },
           undo() { state.score.getBar(sectionAndBarIdx).break = currentBarBreak },
           afterChange() {
             state.isRedoable = state.scoreChangeHistoryManager.isRedoable;
