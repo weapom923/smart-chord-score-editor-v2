@@ -26,10 +26,11 @@
           <bar-editor-component
             ref="barEditorComponent"
             flat class="pa-0"
+            v-if="$_selectedPart !== undefined"
             v-bind:selected-bar="$_selectedBar"
             v-bind:previous-bar="$_previousBar"
             v-bind:next-bar="$_nextBar"
-            v-bind:temporal-selected-part="$data.$_temporalSelectedPart"
+            v-bind:selected-part="$_selectedPart"
             v-bind:selected-section-and-bar-idx="$_selectedSectionAndBarIdx"
             v-model:selected-part-idx="$data.$_selectedPartIdx"
             v-model:selected-note-idx="$data.$_selectedNoteIdx"
@@ -147,6 +148,7 @@ const EditorComponent = defineComponent({
 
     $_selectedPart(): PartInBar | undefined {
       if (this.$data.$_selectedPartIdx === undefined) return undefined;
+      if (this.$data.$_temporalSelectedPart !== undefined) return this.$data.$_temporalSelectedPart;
       return this.$_selectedBar?.getPart(this.$data.$_selectedPartIdx);
     },
 

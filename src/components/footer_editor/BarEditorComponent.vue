@@ -198,7 +198,7 @@ export default {
   },
 
   props: {
-    temporalSelectedPart:     { type: PartInBar },
+    selectedPart:             { type: PartInBar, required: true },
     selectedBar:              { type: Bar, required: true },
     previousBar:              { type: Bar },
     nextBar:                  { type: Bar },
@@ -218,7 +218,7 @@ export default {
   computed: {
     $_temporalScore(): Score {
       let tempTargetBar = this.selectedBar.clone();
-      tempTargetBar.parts = [ this.temporalSelectedPart ?? this.$_selectedPart ];
+      tempTargetBar.parts = [ this.$_selectedPart ];
       let tempBars: Bar[] = [];
       if (this.previousBar !== undefined) {
         let previousBar = this.previousBar.clone();
@@ -250,9 +250,7 @@ export default {
     $_selectedSectionAndBarRange(): SectionAndBarRange { return new SectionAndBarRange(this.selectedSectionAndBarIdx) },
 
     $_selectedPart: {
-      get(): PartInBar {
-        return this.selectedBar.getPart(this.selectedPartIdx);
-      },
+      get(): PartInBar { return this.selectedPart },
       async set(partInBar: PartInBar) {
         await this.$store.dispatch(
           'score/replacePart',
