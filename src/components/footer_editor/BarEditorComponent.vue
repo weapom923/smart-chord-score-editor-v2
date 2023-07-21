@@ -129,6 +129,7 @@
             icon="mdi-form-textbox" size="x-small"
             v-if="$_isSelectedNoteTypeChord"
             v-bind="props"
+            v-bind:disabled="!$_isNoteSelected"
             v-on:click="$_openChordTextEditorDialog"
           >
           </v-btn>
