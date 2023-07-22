@@ -16,7 +16,7 @@
             <v-row>
               <v-col sm="4" cols="12">
                 <dialog-text-field
-                  autofocus
+                  autofocus density="compact"
                   v-model="$data.$_sectionName"
                   v-bind:rules="$_rules.sectionName"
                   label="Name"
