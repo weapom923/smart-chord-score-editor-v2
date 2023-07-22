@@ -80,6 +80,7 @@ type Messages = {
   ok: string,
   cancel: string,
   languageSetting: string,
+  onPrintLayoutEnabledMessage: string,
 
   barSelected: string,
   barsSelected: string,
@@ -205,6 +206,7 @@ const messageJa: Messages = {
   ok: 'OK',
   cancel: 'キャンセル',
   languageSetting: '言語設定',
+  onPrintLayoutEnabledMessage: '印刷レイアウト表示中(クリックかキー入力で終了)',
 
   barSelected: '小節選択',
   barsSelected: '小節選択',
@@ -330,6 +332,7 @@ let messageEn: Messages = {
   ok: 'OK',
   cancel: 'Cancel',
   languageSetting: 'Language setting',
+  onPrintLayoutEnabledMessage: 'Print layout(Press any key or click to exit)',
 
   barSelected: 'bar selected',
   barsSelected: 'bars selected',
