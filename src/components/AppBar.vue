@@ -67,6 +67,7 @@ class MenuItemDefinition {
 export default {
   computed: {
     $_leftMenuItemDefinitions(): Record<string, MenuItemDefinition> {
+      let onPrintLayoutEnabledMessage = this.$t('onPrintLayoutEnabledMessage');
       return {
         undo: new MenuItemDefinition(
           'mdi-undo', this.$t('undo'),
@@ -128,7 +129,7 @@ export default {
             );
             await this.$store.dispatch(
               'appState/setSnackBarMessage',
-              'Press any key to exit print layout.',
+              onPrintLayoutEnabledMessage,
             );
           },
         ),
