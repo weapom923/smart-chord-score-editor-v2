@@ -53,6 +53,13 @@ export default {
     'update:noteIdx': (event: NoteIdx) => true,
   },
 
+  watch: {
+    part: {
+      handler() { this.$_updateTiePropsAndStyles() },
+      deep: true,
+    },
+  },
+
   components: {
     NoteBaseComponent,
     TieCanvas,
