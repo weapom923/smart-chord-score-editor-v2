@@ -35,7 +35,6 @@
 </template>
 
 <script lang="ts">
-import { Score } from '../../modules/Score';
 import { Bar } from '../../modules/Bar';
 import { PartInBar } from '../../modules/PartInBar';
 import { Note } from '../../modules/Note';
