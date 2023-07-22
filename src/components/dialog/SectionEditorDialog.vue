@@ -5,7 +5,7 @@
     v-bind:ok-disabled="!$data.$_valid"
   >
     <template v-slot:body>
-      <v-card-title>Section</v-card-title>
+      <v-card-title v-text="$t('section')"></v-card-title>
 
       <v-card-text>
         <v-form
@@ -19,7 +19,7 @@
                   autofocus density="compact"
                   v-model="$data.$_sectionName"
                   v-bind:rules="$_rules.sectionName"
-                  label="Name"
+                  v-bind:label="$t('sectionName')"
                 />
               </v-col>
             </v-row>

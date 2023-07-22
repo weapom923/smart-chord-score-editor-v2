@@ -5,18 +5,18 @@
         <span>
           <span class="section-index">{{ $_selectedSectionAndBarRange.first.sectionIdx + 1 }}</span>
           <span class="section-title">{{ $_score.getSection($_selectedSectionAndBarRange.first.sectionIdx).name }}</span>
-          <span>bar-{{ $_selectedSectionAndBarRange.first.barIdx + 1 }}</span>
+          <span>{{ $_selectedSectionAndBarRange.first.barIdx + 1 }}</span>
         </span>
         <span class="connector-symbol" v-if="$_numSelectedBars > 1" />
         <span v-if="$_numSelectedBars > 1">
           <span class="section-index">{{ $_selectedSectionAndBarRange.last.sectionIdx + 1 }}</span>
           <span class="section-title">{{ $_score.getSection($_selectedSectionAndBarRange.last.sectionIdx).name }}</span>
-          <span>bar-{{ $_selectedSectionAndBarRange.last.barIdx + 1 }}</span>
+          <span>{{ $_selectedSectionAndBarRange.last.barIdx + 1 }}</span>
         </span>
       </div>
       <div v-if="$_numSelectedBars > 0">
-        <template v-if="$_numSelectedBars === 1">({{ $_numSelectedBars }} bar selected)</template>
-        <template v-else>({{ $_numSelectedBars }} bars selected)</template>
+        <template v-if="$_numSelectedBars === 1">({{ $_numSelectedBars }} {{ $t('barSelected') }})</template>
+        <template v-else>({{ $_numSelectedBars }} {{ $t('barsSelected') }})</template>
       </div>
       <v-spacer />
       <bar-part-type-selector

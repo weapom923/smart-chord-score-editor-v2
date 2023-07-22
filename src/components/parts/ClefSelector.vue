@@ -1,9 +1,9 @@
 <template>
   <v-select
-    label="Clef Sign"
     item-title="title"
     item-value="value"
     v-model="$_clef"
+    v-bind:label="$t('clefSign')"
     v-bind:items="$_allClefs"
     v-on:keydown.stop
   />
@@ -24,8 +24,8 @@ export default {
   computed: {
     $_allClefs(): { title: string, value: Clef }[] {
       return [
-        { title: 'Treble', value: cl.treble },
-        { title: 'Bass',   value: cl.bass },
+        { title: this.$t('clefSignTreble'), value: cl.treble },
+        { title: this.$t('clefSignBass'),   value: cl.bass },
       ];
     },
 

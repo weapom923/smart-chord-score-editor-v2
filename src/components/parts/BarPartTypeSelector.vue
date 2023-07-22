@@ -1,10 +1,10 @@
 <template>
   <v-select
-    label="Part Type"
     hide-details
     item-title="title"
     item-value="value"
     v-model="$_partIdx"
+    v-bind:label="$t('partType')"
     v-bind:items="$_allPartIdcs"
     v-bind:disabled="$_isPartEmpty"
     v-on:keydown.stop
@@ -37,9 +37,9 @@ export default {
     $_allPartIdcs(): { title: string, value: number }[] {
       return this.$_bar.parts.map((part: PartInBar, partIdx: number) => {
         switch (part.type) {
-          case 'normal': return { title: 'Normal', value: partIdx };
-          case 'chord':  return { title: 'Chord',  value: partIdx };
-          case 'rhythm': return { title: 'Rhythm', value: partIdx };
+          case 'normal': return { title: this.$t('normal'), value: partIdx };
+          case 'chord':  return { title: this.$t('chord'),  value: partIdx };
+          case 'rhythm': return { title: this.$t('rhythm'), value: partIdx };
         }
       });
     },

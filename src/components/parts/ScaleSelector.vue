@@ -1,9 +1,9 @@
 <template>
   <v-select
-    label="Scale"
     item-title="title"
     item-value="value"
     v-model="$_scale"
+    v-bind:label="$t('scale')"
     v-bind:items="$_allScales"
     v-on:keydown.stop
   />
@@ -24,32 +24,32 @@ export default {
   computed: {
     $_allScales(): { title: string, value: Scale }[] {
       return [
-        { title: 'C Major',  value: sc.cMajor },
-        { title: 'G Major',  value: sc.gMajor },
-        { title: 'D Major',  value: sc.dMajor },
-        { title: 'A Major',  value: sc.aMajor },
-        { title: 'E Major',  value: sc.eMajor },
-        { title: 'B Major',  value: sc.bMajor },
-        { title: 'F♯ Major', value: sc.fSharpMajor },
-        { title: 'G♭ Major', value: sc.gFlatMajor },
-        { title: 'C♯ Major', value: sc.cSharpMajor },
-        { title: 'D♭ Major', value: sc.dFlatMajor },
-        { title: 'A♭ Major', value: sc.aFlatMajor },
-        { title: 'E♭ Major', value: sc.eFlatMajor },
-        { title: 'B♭ Major', value: sc.bFlatMajor },
-        { title: 'F Major',  value: sc.fMajor },
-        { title: 'A Minor',  value: sc.aMinor },
-        { title: 'D Minor',  value: sc.dMinor },
-        { title: 'G Minor',  value: sc.gMinor },
-        { title: 'C Minor',  value: sc.cMinor },
-        { title: 'F Minor',  value: sc.fMinor },
-        { title: 'B♭ Minor', value: sc.bFlatMinor },
-        { title: 'E♭ Minor', value: sc.eFlatMinor },
-        { title: 'G♯ Minor', value: sc.gSharpMinor },
-        { title: 'C♯ Minor', value: sc.cSharpMinor },
-        { title: 'F♯ Minor', value: sc.fSharpMinor },
-        { title: 'B Minor',  value: sc.bMinor },
-        { title: 'E Minor',  value: sc.eMinor },
+        { title: `C ${this.$t('major')}`,  value: sc.cMajor },
+        { title: `G ${this.$t('major')}`,  value: sc.gMajor },
+        { title: `D ${this.$t('major')}`,  value: sc.dMajor },
+        { title: `A ${this.$t('major')}`,  value: sc.aMajor },
+        { title: `E ${this.$t('major')}`,  value: sc.eMajor },
+        { title: `B ${this.$t('major')}`,  value: sc.bMajor },
+        { title: `F♯ ${this.$t('major')}`, value: sc.fSharpMajor },
+        { title: `G♭ ${this.$t('major')}`, value: sc.gFlatMajor },
+        { title: `C♯ ${this.$t('major')}`, value: sc.cSharpMajor },
+        { title: `D♭ ${this.$t('major')}`, value: sc.dFlatMajor },
+        { title: `A♭ ${this.$t('major')}`, value: sc.aFlatMajor },
+        { title: `E♭ ${this.$t('major')}`, value: sc.eFlatMajor },
+        { title: `B♭ ${this.$t('major')}`, value: sc.bFlatMajor },
+        { title: `F ${this.$t('major')}`,  value: sc.fMajor },
+        { title: `A ${this.$t('minor')}`,  value: sc.aMinor },
+        { title: `D ${this.$t('minor')}`,  value: sc.dMinor },
+        { title: `G ${this.$t('minor')}`,  value: sc.gMinor },
+        { title: `C ${this.$t('minor')}`,  value: sc.cMinor },
+        { title: `F ${this.$t('minor')}`,  value: sc.fMinor },
+        { title: `B♭ ${this.$t('minor')}`, value: sc.bFlatMinor },
+        { title: `E♭ ${this.$t('minor')}`, value: sc.eFlatMinor },
+        { title: `G♯ ${this.$t('minor')}`, value: sc.gSharpMinor },
+        { title: `C♯ ${this.$t('minor')}`, value: sc.cSharpMinor },
+        { title: `F♯ ${this.$t('minor')}`, value: sc.fSharpMinor },
+        { title: `B ${this.$t('minor')}`,  value: sc.bMinor },
+        { title: `E ${this.$t('minor')}`,  value: sc.eMinor },
       ]
     },
 

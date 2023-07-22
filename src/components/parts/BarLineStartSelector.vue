@@ -1,9 +1,9 @@
 <template>
   <v-select
-    label="Bar Line Start"
     item-title="title"
     item-value="value"
     v-model="$_barLineStart"
+    v-bind:label="$t('barLineStartKind')"
     v-bind:items="$_allBarLineStarts"
     v-bind:disabled="barLineStart === undefined"
     v-on:keydown.stop
@@ -25,8 +25,8 @@ export default {
   computed: {
     $_allBarLineStarts(): { title: string, value: BarLine }[] {
       return [
-        { title: 'Empty',  value: bl.start.empty },
-        { title: 'Repeat', value: bl.start.repeatStart },
+        { title: '',                            value: bl.start.empty },
+        { title: this.$t('barLineStartRepeat'), value: bl.start.repeatStart },
       ];
     },
 

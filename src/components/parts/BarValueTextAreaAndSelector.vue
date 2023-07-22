@@ -3,8 +3,8 @@
     <v-text-field
       number
       type="number"
-      label="Bar Value"
       v-model.number="$_barValueNumerator"
+      v-bind:label="$t('beat')"
       v-bind="$attrs"
       v-bind:rules="$_rules"
       v-bind:min="$_barValueNumeratorMin"

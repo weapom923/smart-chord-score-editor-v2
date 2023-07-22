@@ -5,7 +5,7 @@
     v-bind:ok-disabled="!$data.$_valid"
   >
     <template v-slot:body>
-      <v-card-title>Chord Text</v-card-title>
+      <v-card-title>{{ $t('chordText') }}</v-card-title>
 
       <v-card-text>
         <chord-component
@@ -20,10 +20,10 @@
           <dialog-text-field
             autofocus density="compact"
             v-model="$data.$_tempChordText"
+            v-bind:label="$t('chordText')"
             v-bind:error="$_hasError"
             v-bind:error-messages="$data.$_parseErrorMessage"
             v-on:update:model-value="$_tryParseChordText"
-            label="Chord Text"
           />
         </v-form>
       </v-card-text>

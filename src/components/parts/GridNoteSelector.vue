@@ -1,6 +1,6 @@
 <template>
   <v-select
-    label="Grid Note Value"
+    v-bind:label="$t('gridNoteValue')"
     v-model="$_gridNoteValueLabel"
     v-bind:items="$_gridNoteValueLabels"
     v-on:keydown.stop
@@ -22,9 +22,9 @@ export default {
   computed: {
     $_labelToGridNoteValues(): Map<string, NoteValue> {
       return new Map<string, NoteValue>([
-        [ 'Whole',   nv.divisible.whole ],
-        [ 'Half',    nv.divisible.half ],
-        [ 'Quarter', nv.divisible.quarter ],
+        [ this.$t('noteValueWhole'),   nv.divisible.whole ],
+        [ this.$t('noteValueHalf'),    nv.divisible.half ],
+        [ this.$t('noteValueQuarter'), nv.divisible.quarter ],
       ]);
     },
 

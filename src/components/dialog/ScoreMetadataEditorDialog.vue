@@ -5,7 +5,7 @@
     v-bind:ok-disabled="!$data.$_valid"
   >
     <template v-slot:body>
-      <v-card-title>Score Metadata</v-card-title>
+      <v-card-title v-text="$t('scoreMetadata')"></v-card-title>
   
       <v-card-text>
         <v-form
@@ -19,7 +19,7 @@
                   autofocus density="compact"
                   v-model="$data.$_metadata.title"
                   v-bind:rules="$_rules.title"
-                  label="Title"
+                  v-bind:label="$t('songTitle')"
                 />
               </v-col>
 
@@ -28,7 +28,7 @@
                   density="compact"
                   v-model="$data.$_metadata.artistName"
                   v-bind:rules="$_rules.artistName"
-                  label="Artist Name"
+                  v-bind:label="$t('artistName')"
                 />
               </v-col>
 
@@ -37,7 +37,7 @@
                   density="compact"
                   v-model="$data.$_metadata.composerName"
                   v-bind:rules="$_rules.composerName"
-                  label="Composer Name"
+                  v-bind:label="$t('composerName')"
                 />
               </v-col>
 
@@ -46,7 +46,7 @@
                   density="compact"
                   v-model="$data.$_metadata.arrangerName"
                   v-bind:rules="$_rules.arrangerName"
-                  label="Arranger Name"
+                  v-bind:label="$t('arrangerName')"
                 />
               </v-col>
 
@@ -55,7 +55,7 @@
                   density="compact"
                   v-model="$data.$_metadata.lyricistName"
                   v-bind:rules="$_rules.lyricistName"
-                  label="Lyricist Name"
+                  v-bind:label="$t('lyricistName')"
                 />
               </v-col>
             </v-row>

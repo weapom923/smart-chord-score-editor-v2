@@ -436,9 +436,9 @@ export default {
           if (tensionNotePitch === undefined) continue;
           for (let tensionNotePitchInChord of this.chord.tensionNotes) {
             if (tensionNotePitchInChord.isEqualTo(tensionNotePitch)) {
-            tensionNotePitchTexts.push(tensionNotePitchText);
+              tensionNotePitchTexts.push(tensionNotePitchText);
+            }
           }
-        }
         }
         return tensionNotePitchTexts;
       },

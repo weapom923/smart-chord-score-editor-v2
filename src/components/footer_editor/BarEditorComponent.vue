@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-actions>
-      <v-tooltip location="bottom" text="insert bar before">
+      <v-tooltip location="bottom" v-bind:text="$t('insertBarBefore')">
         <template v-slot:activator="{ props }">
           <v-btn
             icon="mdi-plus" size="x-small"
@@ -11,7 +11,7 @@
           </v-btn>
         </template>
       </v-tooltip>
-      <v-tooltip location="bottom" text="select previous bar">
+      <v-tooltip location="bottom" v-bind:text="$t('selectPreviousBar')">
         <template v-slot:activator="{ props }">
           <v-btn
             icon="mdi-arrow-left" size="x-small"
@@ -23,7 +23,7 @@
         </template>
       </v-tooltip>
       <v-spacer></v-spacer>
-      <v-tooltip location="bottom" text="note" v-if="$_isSelectedNoteTypeRest">
+      <v-tooltip location="bottom" v-bind:text="$t('convertToNormalNote')" v-if="$_isSelectedNoteTypeRest">
         <template v-slot:activator="{ props }">
           <v-btn
             icon="mdi-music-note-quarter" size="x-small"
@@ -34,7 +34,7 @@
           </v-btn>
         </template>
       </v-tooltip>
-      <v-tooltip location="bottom" text="rest note" v-else>
+      <v-tooltip location="bottom" v-bind:text="$t('convertToRestNote')" v-else>
         <template v-slot:activator="{ props }">
           <v-btn
             icon="mdi-music-rest-quarter" size="x-small"
@@ -45,7 +45,7 @@
           </v-btn>
         </template>
       </v-tooltip>
-      <v-tooltip location="bottom" text="untie" v-if="$_isSelectedNoteTied">
+      <v-tooltip location="bottom" v-bind:text="$t('untie')" v-if="$_isSelectedNoteTied">
         <template v-slot:activator="{ props }">
           <v-btn
             icon text="Untie" size="x-small"
@@ -56,7 +56,7 @@
           </v-btn>
         </template>
       </v-tooltip>
-      <v-tooltip location="bottom" text="tie" v-else>
+      <v-tooltip location="bottom" v-bind:text="$t('tie')" v-else>
         <template v-slot:activator="{ props }">
           <v-btn
             icon text="Tie" size="x-small"
@@ -67,7 +67,7 @@
           </v-btn>
         </template>
       </v-tooltip>
-      <v-tooltip location="bottom" text="remove note">
+      <v-tooltip location="bottom" v-bind:text="$t('removeNote')">
         <template v-slot:activator="{ props }">
           <v-btn
             icon="mdi-eraser" size="x-small"
@@ -78,7 +78,7 @@
           </v-btn>
         </template>
       </v-tooltip>
-      <v-tooltip location="bottom" text="copy note">
+      <v-tooltip location="bottom" v-bind:text="$t('copyNote')">
         <template v-slot:activator="{ props }">
           <v-btn
             icon="mdi-content-copy" size="x-small"
@@ -89,7 +89,7 @@
           </v-btn>
         </template>
       </v-tooltip>
-      <v-tooltip location="bottom" text="paste note">
+      <v-tooltip location="bottom" v-bind:text="$t('pasteNote')">
         <template v-slot:activator="{ props }">
           <v-btn
             icon="mdi-content-paste" size="x-small"
@@ -101,7 +101,7 @@
           </v-btn>
         </template>
       </v-tooltip>
-      <v-tooltip location="bottom" text="remove bar">
+      <v-tooltip location="bottom" v-bind:text="$t('removeBar')">
         <template v-slot:activator="{ props }">
           <v-btn
             icon="mdi-delete" size="x-small"
@@ -112,7 +112,7 @@
           </v-btn>
         </template>
       </v-tooltip>
-      <v-tooltip location="bottom" text="fill bar with note">
+      <v-tooltip location="bottom" v-bind:text="$t('fillBarWithNote')">
         <template v-slot:activator="{ props }">
           <v-btn
             icon="mdi-music-note-plus" size="x-small"
@@ -123,7 +123,7 @@
           </v-btn>
         </template>
       </v-tooltip>
-      <v-tooltip location="bottom" text="open chord text dialog">
+      <v-tooltip location="bottom" v-bind:text="$t('openChordTextDialog')">
         <template v-slot:activator="{ props }">
           <v-btn
             icon="mdi-form-textbox" size="x-small"
@@ -136,7 +136,7 @@
         </template>
       </v-tooltip>
       <v-spacer></v-spacer>
-      <v-tooltip location="bottom" text="select next bar">
+      <v-tooltip location="bottom" v-bind:text="$t('selectNextBar')">
         <template v-slot:activator="{ props }">
           <v-btn
             icon="mdi-arrow-right" size="x-small"
@@ -147,7 +147,7 @@
           </v-btn>
         </template>
       </v-tooltip>
-      <v-tooltip location="bottom" text="insert bar after">
+      <v-tooltip location="bottom" v-bind:text="$t('insertBarAfter')">
         <template v-slot:activator="{ props }">
           <v-btn
             icon="mdi-plus" size="x-small"

@@ -21,16 +21,16 @@
           <v-btn
             color="secondary"
             v-on:click="$_onCancelClicked"
+            v-bind:text="$t('cancel')"
           >
-            Cancel
           </v-btn>
 
           <v-btn
             color="primary"
             v-on:click="$_onOkClicked"
             v-bind:disabled="okDisabled"
+            v-bind:text="$t('ok')"
           >
-            OK
           </v-btn>
         </slot>
       </v-card-actions>
