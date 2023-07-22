@@ -434,9 +434,11 @@ export default {
         for (let tensionNotePitchText of this.$_allTensionNotePitchTexts) {
           let tensionNotePitch = this.$_tensionNotePitchTextToInstance.get(tensionNotePitchText);
           if (tensionNotePitch === undefined) continue;
-          if (this.chord.tensionNotes.has(tensionNotePitch)) {
+          for (let tensionNotePitchInChord of this.chord.tensionNotes) {
+            if (tensionNotePitchInChord.isEqualTo(tensionNotePitch)) {
             tensionNotePitchTexts.push(tensionNotePitchText);
           }
+        }
         }
         return tensionNotePitchTexts;
       },
