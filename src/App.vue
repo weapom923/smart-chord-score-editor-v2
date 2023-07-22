@@ -6,11 +6,12 @@
     >
     </app-bar>
 
-    <v-main ref="main">
+    <v-main
+      v-on:mousedown="$_onClickBackground"
+    >
       <div
         id="score-page-container"
         class="d-flex flex-column align-center"
-        v-on:click.left="$_disablePrintLayout"
       >
         <v-btn
           variant="outlined"
@@ -192,7 +193,8 @@ const App = defineComponent({
   },
 
   methods: {
-    async $_disablePrintLayout() {
+    async $_onClickBackground() {
+      await this.$store.dispatch('score/unselectBar');
       await this.$store.dispatch('appState/setIsPrintLayoutEnabled', false);
     },
 
