@@ -143,13 +143,11 @@
       <v-tooltip
         location="bottom"
         v-bind:text="$t('removeBar')"
-        v-bind:disabled="!$_isNoteSelected"
       >
         <template v-slot:activator="{ props }">
           <v-btn
             icon="mdi-delete" size="x-small"
             v-bind="props"
-            v-bind:disabled="!$_isNoteSelected"
             v-on:click="$_removeSelectedBar"
           >
           </v-btn>
