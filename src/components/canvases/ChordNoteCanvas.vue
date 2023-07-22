@@ -28,6 +28,8 @@ const ChordNoteCanvas = defineComponent({
   extends: CanvasBase,
 
   watch: {
+    note() { this.$_setDirty(true) },
+
     invertStemDirection() { this.$_setDirty(true) },
 
     $_noteWidthPx(newCanvasWidthPx: number) {
