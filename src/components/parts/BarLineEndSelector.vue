@@ -1,9 +1,9 @@
 <template>
   <v-select
-    label="Bar Line End"
     item-title="title"
     item-value="value"
     v-model="$_barLineEnd"
+    v-bind:label="$t('barLineEndKind')"
     v-bind:items="$_allBarLineEnds"
     v-bind:disabled="barLineEnd === undefined"
     v-on:keydown.stop
@@ -25,10 +25,10 @@ export default {
   computed: {
     $_allBarLineEnds(): { title: string, value: BarLine }[] {
       return [
-        { title: 'Single',       value: bl.end.single },
-        { title: 'Double',       value: bl.end.double },
-        { title: 'Repeat',       value: bl.end.repeatEnd },
-        { title: 'Great Double', value: bl.end.greatDouble },
+        { title: this.$t('barLineEndSingle'),      value: bl.end.single },
+        { title: this.$t('barLineEndDouble'),      value: bl.end.double },
+        { title: this.$t('barLineEndRepeat'),      value: bl.end.repeatEnd },
+        { title: this.$t('barLineEndGreatDouble'), value: bl.end.greatDouble },
       ];
     },
 

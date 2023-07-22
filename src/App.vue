@@ -17,8 +17,8 @@
           variant="outlined"
           v-if="$_score.numSections === 0"
           v-on:click="$_generateNewSection"
+          v-bind:text="$t('generateNewSection')"
         >
-          Generate New Section
         </v-btn>
         <score-page
           v-for="(scorePageSectionAndBarRange, scorePageDefinitionIdx) of $_scorePageSectionAndBarRanges"
@@ -142,6 +142,10 @@ const App = defineComponent({
     $_scoreMetadata: {
       handler(scoreMetadata: ScoreMetadata) { document.title = `${scoreMetadata.title} - ${scoreMetadata.artistName}` },
       immediate: true,
+    },
+
+    '$store.state.config.locale'(locale) {
+      this.$i18n.locale = locale;
     },
   },
 

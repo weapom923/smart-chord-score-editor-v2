@@ -1,9 +1,9 @@
 <template>
   <v-select
-    label="Bar Break"
     item-title="title"
     item-value="value"
     v-model="$_barBreak"
+    v-bind:label="$t('barBreakKind')"
     v-bind:items="$_allBarBreaks"
     v-bind:disabled="barBreak === undefined"
     v-on:keydown.stop
@@ -25,9 +25,9 @@ export default {
   computed: {
     $_allBarBreaks(): { title: string, value: BarBreak }[] {
       return [
-        { title: 'Empty',        value: bb.empty },
-        { title: 'System Break', value: bb.system },
-        { title: 'Page Break',   value: bb.page },
+        { title: '',                        value: bb.empty },
+        { title: this.$t('barBreakSystem'), value: bb.system },
+        { title: this.$t('barBreakPage'),   value: bb.page },
       ];
     },
 

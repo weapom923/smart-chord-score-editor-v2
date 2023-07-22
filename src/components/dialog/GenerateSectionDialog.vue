@@ -5,7 +5,7 @@
     v-bind:ok-disabled="!$data.$_valid"
   >
     <template v-slot:body>
-      <v-card-title>Section</v-card-title>
+      <v-card-title>{{ $t('section') }}</v-card-title>
   
       <v-card-text>
         <v-form
@@ -21,7 +21,7 @@
                   density="compact"
                   v-model="$data.$_name"
                   v-bind:rules="$_rules.name"
-                  label="Section Name"
+                  v-bind:label="$t('sectionName')"
                 >
                 </dialog-text-field>
               </v-col>
@@ -38,7 +38,7 @@
                 <clef-selector
                   density="compact"
                   v-model:clef="$data.$_clef"
-                  label="Clef Sign"
+                  v-bind:label="$t('clefSign')"
                 >
                 </clef-selector>
               </v-col>

@@ -1,10 +1,10 @@
 <template>
   <v-select
     multiple 
-    label="Part Type"
     item-title="title"
     item-value="value"
     v-model="$_partInBarTypeNames"
+    v-bind:label="$t('partType')"
     v-bind:items="$_allPartInBarTypeNames"
     v-bind:rules="$_rules"
     v-on:keydown.stop
@@ -26,7 +26,7 @@ export default {
   computed: {
     $_allPartInBarTypeNames(): { title: string, value: PartInBarType }[] {
       return [
-        { title: 'Chord', value: 'chord' },
+        { title: this.$t('chord'), value: 'chord' },
       ];
     },
 

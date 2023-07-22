@@ -1,6 +1,6 @@
 <template>
   <v-toolbar id="audio-player-bar" density="compact">
-    <v-tooltip location="top" text="load audio file">
+    <v-tooltip location="top" v-bind:text="$t('loadAudioFile')">
       <template v-slot:activator="{ props }">
         <v-btn
           icon="mdi-folder-open" size="small"

@@ -21,15 +21,20 @@ export type ConfigRawObj = {
   defaultPartInBarTypes: PartInBarType[],
   selectedNoteColor: ColorRawObj,
   pageWidthOnPrintPx: number,
+  locale: string,
 };
 
-export type Config = {
+export type PublicConfig = {
   staffLineStepPx: number,
   systemMarginTopPx: number,
   systemMarginBottomPx: number,
   defaultGridNoteValue: NoteValue,
   chordFontSizePx: number,
   pageWidthOnPrintPx: number,
+  locale: string,
+};
+
+export type Config = PublicConfig & {
   defaultChord: Chord,
   defaultBarValue: NoteValue,
   defaultClef: Clef,
@@ -41,7 +46,7 @@ export type Config = {
 const ConfigModule: Module<Config, RootState> = {
   namespaced: true,
 
-  state: <Config> {
+  state: {
     staffLineStepPx: 10,
     systemMarginTopPx: 30,
     systemMarginBottomPx: 10,
@@ -54,6 +59,7 @@ const ConfigModule: Module<Config, RootState> = {
     defaultScale: Scale.instance.cMajor,
     defaultPartInBarTypes: [ 'chord' ],
     selectedNoteColor: new Color(42, 118, 210, 1),
+    locale: 'ja',
   },
 
   mutations: {
@@ -89,13 +95,14 @@ const ConfigModule: Module<Config, RootState> = {
       }
     },
 
-    setConfig(state: Config, config: Config) {
-      state.staffLineStepPx = config.staffLineStepPx;
-      state.systemMarginTopPx = config.systemMarginTopPx;
-      state.systemMarginBottomPx = config.systemMarginBottomPx;
-      state.defaultGridNoteValue = config.defaultGridNoteValue;
-      state.chordFontSizePx = config.chordFontSizePx;
-      state.pageWidthOnPrintPx = config.pageWidthOnPrintPx;
+    setConfig(state: Config, publicConfig: PublicConfig) {
+      state.staffLineStepPx = publicConfig.staffLineStepPx;
+      state.systemMarginTopPx = publicConfig.systemMarginTopPx;
+      state.systemMarginBottomPx = publicConfig.systemMarginBottomPx;
+      state.defaultGridNoteValue = publicConfig.defaultGridNoteValue;
+      state.chordFontSizePx = publicConfig.chordFontSizePx;
+      state.pageWidthOnPrintPx = publicConfig.pageWidthOnPrintPx;
+      state.locale = publicConfig.locale;
 
       const configRawObj: ConfigRawObj = {
         staffLineStepPx: state.staffLineStepPx,
@@ -110,13 +117,14 @@ const ConfigModule: Module<Config, RootState> = {
         defaultPartInBarTypes: state.defaultPartInBarTypes,
         selectedNoteColor: state.selectedNoteColor.getRawObj(),
         pageWidthOnPrintPx: state.pageWidthOnPrintPx,
+        locale: state.locale,
       }
       window.localStorage.setItem('config', JSON.stringify(configRawObj));
     },
   },
 
   actions: {
-    setConfig(context: ActionContext<Config, RootState>, config: Config) {
+    setConfig(context: ActionContext<Config, RootState>, config: PublicConfig) {
       context.commit('setConfig', config);
     },
 

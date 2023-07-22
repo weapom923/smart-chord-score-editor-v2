@@ -1,8 +1,8 @@
 <template>
   <v-select
     multiple
-    label="Bar Repeat Ending"
     v-model="$_barRepeatEndingNumbers"
+    v-bind:label="$t('barRepeatNumber')"
     v-bind:items="$_allBarRepeatEndingNumbers"
     v-bind:disabled="barRepeatEnding === undefined"
     v-on:keydown.stop

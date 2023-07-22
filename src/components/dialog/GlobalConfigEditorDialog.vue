@@ -5,7 +5,7 @@
     v-bind:ok-disabled="!$data.$_valid"
   >
     <template v-slot:body>
-      <v-card-title>Global Config</v-card-title>
+      <v-card-title>{{ $t('globalConfig') }}</v-card-title>
   
       <v-card-text>
         <v-form
@@ -22,7 +22,7 @@
                   v-bind:rules="$_rules.staffLineStepPx"
                   v-bind:max="$_staffLineStaffPxMax"
                   v-bind:min="$_staffLineStaffPxMin"
-                  label="Staff Line Step(px)"
+                  v-bind:label="$t('staffLineStepPx')"
                 />
               </v-col>
 
@@ -33,7 +33,7 @@
                   v-model.number="$data.$_systemMarginTopPx"
                   v-bind:rules="$_rules.systemMarginTopPx"
                   v-bind:min="$_systemMarginTopPxMin"
-                  label="System Margin Top(px)"
+                  v-bind:label="$t('systemMarginTopPx')"
                 />
               </v-col>
 
@@ -44,7 +44,7 @@
                   v-model.number="$data.$_systemMarginBottomPx"
                   v-bind:rules="$_rules.systemMarginBottomPx"
                   v-bind:min="$_systemMerginBottomPxMin"
-                  label="Staff Margin Bottom(px)"
+                  v-bind:label="$t('systemMarginBottomPx')"
                 />
               </v-col>
 
@@ -63,7 +63,7 @@
                   v-model.number="$data.$_chordFontSizePx"
                   v-bind:rules="$_rules.chordFontSizePx"
                   v-bind:min="$_chordFontSizePxMin"
-                  label="Chord Font Size(px)"
+                  v-bind:label="$t('chordFontSizePx')"
                 />
               </v-col>
 
@@ -74,11 +74,21 @@
                   v-model.number="$data.$_pageWidthOnPrintPx"
                   v-bind:rules="$_rules.pageWidthOnPrintPx"
                   v-bind:min="$_pageWidthOnPrintPxMin"
-                  label="Page Width On Print(px)"
+                  v-bind:label="$t('pageWidthOnPrintPx')"
                 >
                 </dialog-text-field>
               </v-col>
 
+              <v-col sm="4" cols="12">
+                <v-select
+                  density="compact"
+                  v-model="$data.$_locale"
+                  v-bind:items="$_localeItems"
+                  v-bind:rules="$_rules.locale"
+                  v-bind:label="$t('languageSetting')"
+                >
+                </v-select>
+              </v-col>
             </v-row>
           </v-container>
         </v-form>
@@ -93,6 +103,7 @@ import DialogTextField from '../parts/DialogTextField.vue';
 import GridNoteSelector from '../parts/GridNoteSelector.vue';
 import { NoteValue, nv } from '../../modules/NoteValue';
 import { isEmptyLike } from '../../modules/utils';
+import { PublicConfig } from '../../store/module/Config'
 
 const staffLineStaffPxMin = 5;
 const staffLineStaffPxMax = 15;
@@ -116,6 +127,7 @@ export default {
     $_defaultGridNoteValue: NoteValue,
     $_chordFontSizePx: number,
     $_pageWidthOnPrintPx: number,
+    $_locale: string,
   } {
     return {
       $_valid: true,
@@ -125,6 +137,7 @@ export default {
       $_defaultGridNoteValue: this.$store.state.config.defaultGridNoteValue,
       $_chordFontSizePx: this.$store.state.config.chordFontSizePx,
       $_pageWidthOnPrintPx: this.$store.state.config.pageWidthOnPrintPx,
+      $_locale: this.$store.state.config.locale,
       // $_defaultChord: undefined,
       // $_selectedNoteColor: undefined,
     };
@@ -147,6 +160,13 @@ export default {
     $_chordFontSizePxMin() { return chordFontSizePxMin },
 
     $_pageWidthOnPrintPxMin() { return pageWidthOnPrintPxMin },
+
+    $_localeItems(): { title: string, value: string }[] {
+      return [
+        { title: '日本語', value: 'ja' },
+        { title: 'English', value: 'en' },
+      ];
+    },
 
     $_rules(): { [key: string]: ((value: any) => string | true)[] } {
       return {
@@ -206,6 +226,8 @@ export default {
           },
         ],
 
+        locale: [],
+
         // defaultChord: [
         //   () => { return true }
         // ],
@@ -219,17 +241,16 @@ export default {
 
   methods: {
     $_ok() {
-      this.$store.dispatch(
-        'config/setConfig',
-        {
-          staffLineStepPx: Number(this.$data.$_staffLineStepPx),
-          systemMarginTopPx: Number(this.$data.$_systemMarginTopPx),
-          systemMarginBottomPx: Number(this.$data.$_systemMarginBottomPx),
-          defaultGridNoteValue: this.$data.$_defaultGridNoteValue,
-          chordFontSizePx: Number(this.$data.$_chordFontSizePx),
-          pageWidthOnPrintPx: Number(this.$data.$_pageWidthOnPrintPx),
-        },
-      )
+      let publicConfig: PublicConfig = {
+        staffLineStepPx: Number(this.$data.$_staffLineStepPx),
+        systemMarginTopPx: Number(this.$data.$_systemMarginTopPx),
+        systemMarginBottomPx: Number(this.$data.$_systemMarginBottomPx),
+        defaultGridNoteValue: this.$data.$_defaultGridNoteValue,
+        chordFontSizePx: Number(this.$data.$_chordFontSizePx),
+        pageWidthOnPrintPx: Number(this.$data.$_pageWidthOnPrintPx),
+        locale: this.$data.$_locale,
+      };
+      this.$store.dispatch('config/setConfig', publicConfig);
     },
   },
 }

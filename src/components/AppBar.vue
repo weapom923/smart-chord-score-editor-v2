@@ -67,21 +67,21 @@ export default {
     $_leftMenuItemDefinitions(): Record<string, MenuItemDefinition> {
       return {
         undo: new MenuItemDefinition(
-          'mdi-undo', 'undo',
+          'mdi-undo', this.$t('undo'),
           async () => { await this.$store.dispatch('score/undo') },
           !this.$store.state.score.isUndoable,
         ),
         redo: new MenuItemDefinition(
-          'mdi-redo', 'redo',
+          'mdi-redo', this.$t('redo'),
           async () => { await this.$store.dispatch('score/redo') },
           !this.$store.state.score.isRedoable,
         ),
         generateNewScore: new MenuItemDefinition(
-          'mdi-file', 'new',
+          'mdi-file', this.$t('createNewScore'),
           async () => { await this.$store.dispatch('score/setScore', new Score()) },
         ),
         loadScoreFile: new MenuItemDefinition(
-          'mdi-folder-open', 'load',
+          'mdi-folder-open', this.$t('loadScore'),
           async () => {
             let fileInterface = await getFileInterface('application/json');
             if (fileInterface === undefined) return;
@@ -91,7 +91,7 @@ export default {
           },
         ),
         saveScoreFile: new MenuItemDefinition(
-          'mdi-content-save', 'save',
+          'mdi-content-save', this.$t('saveScore'),
           () => {
             downloadFile(
               `${this.$store.state.score.score.metadata.title}.json`,
@@ -101,7 +101,7 @@ export default {
           },
         ),
         loadScoreFromTextFile: new MenuItemDefinition(
-          'mdi-import', 'import from text',
+          'mdi-import', this.$t('importScoreFromText'),
           async () => {
             let fileInterface = await getFileInterface();
             if (fileInterface === undefined) return;
@@ -118,7 +118,7 @@ export default {
         ),
         enablePrintLayout: new MenuItemDefinition(
           `mdi-printer-${(this.$store.state.appState.isPrintLayoutEnabled)? 'off' : 'eye'}`,
-          `${(this.$store.state.appState.isPrintLayoutEnabled)? 'disable' : 'enable'} print layout`,
+          this.$t(`${(this.$store.state.appState.isPrintLayoutEnabled)? 'dis' : 'en'}ablePrintLayout`),
           async () => {
             await this.$store.dispatch(
               'appState/setIsPrintLayoutEnabled',
@@ -136,19 +136,19 @@ export default {
     $_rightMenuItemDefinitions(): Record<string, MenuItemDefinition> {
       return {
         openScoreMetadataEditorDialog: new MenuItemDefinition(
-          'mdi-file-cog', 'score metadata',
+          'mdi-file-cog', this.$t('scoreMetadata'),
           async () => { await this.$store.dispatch('dialog/setDialog', { componentName: 'score-metadata-editor-dialog' }) },
         ),
         openGlobalConfigEditorDialog: new MenuItemDefinition(
-          'mdi-cog', 'global config',
+          'mdi-cog', this.$t('globalConfig'),
           async () => { await this.$store.dispatch('dialog/setDialog', { componentName: 'global-config-editor-dialog' }) },
         ),
         showHelp: new MenuItemDefinition(
-          'mdi-help-circle', 'show help',
+          'mdi-help-circle', this.$t('help'),
           async () => { await this.$store.dispatch('dialog/setDialog', { componentName: 'help-dialog' }) },
         ),
         showInfo: new MenuItemDefinition(
-          'mdi-information', 'show info',
+          'mdi-information', this.$t('appInfo'),
           async () => { await this.$store.dispatch('dialog/setDialog', { componentName: 'app-info-dialog' }) },
         ),
       };

@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex align-center">
-    <v-tooltip location="top" text="seek to head">
+    <v-tooltip location="top" v-bind:text="$t('seekToHead')">
       <template v-slot:activator="{ props }">
         <v-btn
           icon="mdi-skip-previous" size="small"
@@ -11,7 +11,7 @@
       </template>
     </v-tooltip>
 
-    <v-tooltip location="top" text="rewind">
+    <v-tooltip location="top" v-bind:text="$t('rewind')">
       <template v-slot:activator="{ props }">
         <v-btn
           icon="mdi-rewind" size="small"
@@ -24,7 +24,7 @@
       </template>
     </v-tooltip>
 
-    <v-tooltip location="top" text="pause" v-if="isPlaying">
+    <v-tooltip location="top" v-bind:text="$t('pause')" v-if="isPlaying">
       <template v-slot:activator="{ props }">
         <v-btn
           icon="mdi-pause" size="small"
@@ -35,7 +35,7 @@
         </v-btn>
       </template>
     </v-tooltip>
-    <v-tooltip location="top" text="play" v-else>
+    <v-tooltip location="top" v-bind:text="$t('play')" v-else>
       <template v-slot:activator="{ props }">
         <v-btn
           icon="mdi-play" size="small"
@@ -46,7 +46,7 @@
       </template>
     </v-tooltip>
 
-    <v-tooltip location="top" text="fast forward">
+    <v-tooltip location="top" v-bind:text="$t('fastForward')">
       <template v-slot:activator="{ props }">
         <v-btn
           icon="mdi-fast-forward" size="small"
@@ -59,7 +59,7 @@
       </template>
     </v-tooltip>
 
-    <v-tooltip location="top" text="seek to tail">
+    <v-tooltip location="top" v-bind:text="$t('seekToTail')">
       <template v-slot:activator="{ props }">
         <v-btn
           icon="mdi-skip-next" size="small"
@@ -70,7 +70,7 @@
       </template>
     </v-tooltip>
 
-    <v-tooltip location="top" text="clear loop" v-if="loopDefinition !== undefined">
+    <v-tooltip location="top" v-bind:text="$t('clearLoop')" v-if="loopDefinition !== undefined">
       <template v-slot:activator="{ props }">
         <v-btn
           icon="mdi-restart-off" size="small" class="loop-enabled"
@@ -82,7 +82,7 @@
       </template>
     </v-tooltip>
 
-    <v-tooltip location="top" text="set loop start" v-else-if="$_isTempLoopBeginNotSet">
+    <v-tooltip location="top" v-bind:text="$t('setLoopStart')" v-else-if="$_isTempLoopBeginNotSet">
       <template v-slot:activator="{ props }">
         <v-btn
           icon="mdi-ray-start" size="small"
@@ -93,7 +93,7 @@
       </template>
     </v-tooltip>
 
-    <v-tooltip location="top" text="set loop end" v-else-if="$_isTempLoopEndNotSet">
+    <v-tooltip location="top" v-bind:text="$t('setLoopEnd')" v-else-if="$_isTempLoopEndNotSet">
       <template v-slot:activator="{ props }">
         <v-btn
           icon="mdi-ray-start-end" size="small"
