@@ -52,6 +52,7 @@
           <v-spacer></v-spacer>
           <v-btn
             size="small" icon
+            v-show="$store.state.score.selectedBars !== undefined"
             v-on:click="$_toggleFooterEditorMaximizedAndMinimized"
           >
             <v-icon>
