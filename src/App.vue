@@ -1,5 +1,5 @@
 <template>
-  <v-layout id="app">
+  <v-app id="app">
     <app-bar
       class="no-print" theme="dark"
       v-if="!$store.state.appState.isPrintLayoutEnabled"
@@ -71,7 +71,7 @@
         </editor-component>
       </v-card>
     </v-footer>
-  </v-layout>
+  </v-app>
 </template>
 
 <style>
