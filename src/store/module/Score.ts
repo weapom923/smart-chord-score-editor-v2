@@ -236,28 +236,38 @@ const ScoreModule: Module<ScoreState, RootState> = {
             }
             state.score.sections.splice(sectionIdcs[0], sectionIdcs.length);
 
-            if (state.selectedBars !== undefined) {
-              let selectedBarsOffsetBasis: SectionAndBarIdx | undefined;
-              if (lastPriorSectionAndBarIdx !== undefined) {
-                selectedBarsOffsetBasis = state.score.getNextSectionAndBarIdx(lastPriorSectionAndBarIdx);
-              } else {
-                selectedBarsOffsetBasis = state.score.firstSectionAndBarIdx;
-              }
-              if (selectedBarsOffsetBasis !== undefined) {
+            let selectedBarsOffsetBasis: SectionAndBarIdx | undefined;
+            if (lastPriorSectionAndBarIdx !== undefined) {
+              selectedBarsOffsetBasis = state.score.getNextSectionAndBarIdx(lastPriorSectionAndBarIdx);
+            } else {
+              selectedBarsOffsetBasis = state.score.firstSectionAndBarIdx;
+            }
+            if (selectedBarsOffsetBasis === undefined) {
+              state.selectedBars = undefined;
+            } else {
+              if (state.selectedBars !== undefined) {
                 if (numOffsetSelectedBarsLast !== undefined) {
                   state.selectedBars.last = selectedBarsOffsetBasis.clone();
                   for (let counter = 0; counter < numOffsetSelectedBarsLast; ++counter) {
-                    let newSelectedBarsLast = state.score.getNextSectionAndBarIdx(state.selectedBars.last);
-                    if (newSelectedBarsLast === undefined) break;
-                    state.selectedBars.last = newSelectedBarsLast;
+                    let tempSelectedBarsLast = state.score.getNextSectionAndBarIdx(state.selectedBars.last);
+                    if (tempSelectedBarsLast === undefined) {
+                      state.selectedBars = undefined;
+                      break;
+                    }
+                    state.selectedBars.last = tempSelectedBarsLast;
                   }
                 }
+              }
+              if (state.selectedBars !== undefined) {
                 if (numOffsetSelectedBarsFirst !== undefined) {
                   state.selectedBars.first = selectedBarsOffsetBasis.clone();
                   for (let counter = 0; counter < numOffsetSelectedBarsFirst; ++counter) {
-                    let newSelectedBarsFirst = state.score.getNextSectionAndBarIdx(state.selectedBars.first);
-                    if (newSelectedBarsFirst === undefined) break;
-                    state.selectedBars.first = newSelectedBarsFirst;
+                    let tempSelectedBarsFirst = state.score.getNextSectionAndBarIdx(state.selectedBars.first);
+                    if (tempSelectedBarsFirst === undefined) {
+                      state.selectedBars = undefined;
+                      break;
+                    }
+                    state.selectedBars.first = tempSelectedBarsFirst;
                   }
                 }
               }
