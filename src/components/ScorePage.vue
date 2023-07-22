@@ -3,7 +3,6 @@
     id="score-page"
     class="d-flex flex-column overflow-y-hidden mb-5"
     color="background"
-    v-on:mousedown="$_unselectBar"
     v-bind:style="$_pageStyle"
   >
     <score-title-component v-if="$_isFirstPage">
@@ -119,10 +118,6 @@ export default {
   },
 
   methods: {
-    async $_unselectBar() {
-      await this.$store.dispatch('score/unselectBar');
-    },
-
     async $_generateNewSection() {
       await this.$store.dispatch(
         'dialog/setDialog',
