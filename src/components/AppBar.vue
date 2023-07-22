@@ -8,6 +8,7 @@
       v-for="(menuItemDefinition, menuItemDefinitionId) in $_leftMenuItemDefinitions"
       v-bind:key="menuItemDefinitionId"
       v-bind:text="menuItemDefinition.text"
+      v-bind:disabled="menuItemDefinition.disabled"
     >
       <template v-slot:activator="{ props }">
         <v-btn
@@ -27,6 +28,7 @@
       location="bottom"
       v-for="(menuItemDefinition, menuItemDefinitionId) in $_rightMenuItemDefinitions"
       v-bind:key="menuItemDefinitionId"
+      v-bind:disabled="menuItemDefinition.disabled"
     >
       <template v-slot:activator="{ props }">
         <v-btn
