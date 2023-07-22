@@ -123,7 +123,6 @@ import { Color, cl } from '../modules/Color';
 import { assertDefined, max } from '../modules/utils';
 import TieCanvas from './canvases/TieCanvas.vue';
 import { SectionAndBarIdx, BarRange } from '../modules/SectionAndBarRange';
-import { Bar } from '../modules/Bar';
 
 const selectedBarStaffBackgroundColor = new Color(0, 0, 0, 0.2);
 

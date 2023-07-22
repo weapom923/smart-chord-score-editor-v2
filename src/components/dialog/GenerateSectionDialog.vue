@@ -74,9 +74,9 @@ import ClefSelector from '../parts/ClefSelector.vue';
 import BarValueTextAreaAndSelector from '../parts/BarValueTextAreaAndSelector.vue';
 import PartInBarTypeSelector from '../parts/PartInBarTypeSelector.vue';
 import { Section } from '../../modules/Section';
-import { Clef, cl } from '../../modules/Clef';
-import { Scale, sc } from '../../modules/Scale';
-import { NoteValue, nv } from '../../modules/NoteValue';
+import { Clef } from '../../modules/Clef';
+import { Scale } from '../../modules/Scale';
+import { NoteValue } from '../../modules/NoteValue';
 import { PartInBarType } from '../../modules/PartInBar';
 import { isEmptyLike } from '../../modules/utils';
 
