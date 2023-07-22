@@ -17,7 +17,7 @@
               <v-col sm="4" cols="12">
                 <dialog-text-field
                   autofocus number
-                  type="number"
+                  type="number" density="compact"
                   v-model.number="$data.$_staffLineStepPx"
                   v-bind:rules="$_rules.staffLineStepPx"
                   v-bind:max="$_staffLineStaffPxMax"
@@ -29,7 +29,7 @@
               <v-col sm="4" cols="12">
                 <dialog-text-field
                   number
-                  type="number"
+                  type="number" density="compact"
                   v-model.number="$data.$_systemMarginTopPx"
                   v-bind:rules="$_rules.systemMarginTopPx"
                   v-bind:min="$_systemMarginTopPxMin"
@@ -40,7 +40,7 @@
               <v-col sm="4" cols="12">
                 <dialog-text-field
                   number
-                  type="number"
+                  type="number" density="compact"
                   v-model.number="$data.$_systemMarginBottomPx"
                   v-bind:rules="$_rules.systemMarginBottomPx"
                   v-bind:min="$_systemMerginBottomPxMin"
@@ -50,6 +50,7 @@
 
               <v-col sm="4" cols="12">
                 <grid-note-selector
+                  density="compact"
                   v-model:grid-note-value="$data.$_defaultGridNoteValue"
                   v-bind:rules="$_rules.defaultGridNoteValue"
                 />
@@ -58,7 +59,7 @@
               <v-col sm="4" cols="12">
                 <dialog-text-field
                   number
-                  type="number"
+                  type="number" density="compact"
                   v-model.number="$data.$_chordFontSizePx"
                   v-bind:rules="$_rules.chordFontSizePx"
                   v-bind:min="$_chordFontSizePxMin"
@@ -69,7 +70,7 @@
               <v-col sm="4" cols="12">
                 <dialog-text-field
                   number
-                  type="number"
+                  type="number" density="compact"
                   v-model.number="$data.$_pageWidthOnPrintPx"
                   v-bind:rules="$_rules.pageWidthOnPrintPx"
                   v-bind:min="$_pageWidthOnPrintPxMin"

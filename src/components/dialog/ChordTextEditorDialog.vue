@@ -18,7 +18,7 @@
           v-on:submit.prevent
         >
           <dialog-text-field
-            autofocus
+            autofocus density="compact"
             v-model="$data.$_tempChordText"
             v-bind:error="$_hasError"
             v-bind:error-messages="$data.$_parseErrorMessage"

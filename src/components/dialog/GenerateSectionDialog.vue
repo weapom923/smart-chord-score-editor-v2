@@ -18,6 +18,7 @@
               <v-col sm="4" cols="12">
                 <dialog-text-field
                   autofocus
+                  density="compact"
                   v-model="$data.$_name"
                   v-bind:rules="$_rules.name"
                   label="Section Name"
@@ -27,6 +28,7 @@
 
               <v-col sm="4" cols="12">
                 <bar-value-text-area-and-selector
+                  density="compact"
                   v-model:bar-value="$data.$_barValue"
                 >
                 </bar-value-text-area-and-selector>
@@ -34,6 +36,7 @@
 
               <v-col sm="4" cols="12">
                 <clef-selector
+                  density="compact"
                   v-model:clef="$data.$_clef"
                   label="Clef Sign"
                 >
@@ -42,6 +45,7 @@
 
               <v-col sm="4" cols="12">
                 <scale-selector
+                  density="compact"
                   v-model:scale="$data.$_scale"
                 >
                 </scale-selector>
@@ -49,6 +53,7 @@
 
               <v-col sm="4" cols="12">
                 <part-in-bar-type-selector
+                  density="compact"
                   v-model:part-in-bar-types="$data.$_partInBarTypes"
                 >
                 </part-in-bar-type-selector>

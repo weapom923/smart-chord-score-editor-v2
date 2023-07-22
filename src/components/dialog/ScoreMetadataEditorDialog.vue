@@ -16,7 +16,7 @@
             <v-row>
               <v-col sm="4" cols="12">
                 <dialog-text-field
-                  autofocus
+                  autofocus density="compact"
                   v-model="$data.$_metadata.title"
                   v-bind:rules="$_rules.title"
                   label="Title"
@@ -25,6 +25,7 @@
 
               <v-col sm="4" cols="12">
                 <dialog-text-field
+                  density="compact"
                   v-model="$data.$_metadata.artistName"
                   v-bind:rules="$_rules.artistName"
                   label="Artist Name"
@@ -33,6 +34,7 @@
 
               <v-col sm="4" cols="12">
                 <dialog-text-field
+                  density="compact"
                   v-model="$data.$_metadata.composerName"
                   v-bind:rules="$_rules.composerName"
                   label="Composer Name"
@@ -41,6 +43,7 @@
 
               <v-col sm="4" cols="12">
                 <dialog-text-field
+                  density="compact"
                   v-model="$data.$_metadata.arrangerName"
                   v-bind:rules="$_rules.arrangerName"
                   label="Arranger Name"
@@ -49,6 +52,7 @@
 
               <v-col sm="4" cols="12">
                 <dialog-text-field
+                  density="compact"
                   v-model="$data.$_metadata.lyricistName"
                   v-bind:rules="$_rules.lyricistName"
                   label="Lyricist Name"
