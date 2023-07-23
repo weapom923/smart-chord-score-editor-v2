@@ -115,8 +115,6 @@ import { BarBreak, bb } from './modules/BarBreak';
 import { SectionAndBarRange, SectionAndBarIdx } from './modules/SectionAndBarRange';
 import { getKeyEventType } from './modules/KeyEventType';
 import { downloadFile } from './modules/utils';
-
-import TestPage from './components/TestPage.vue'
 import { ScoreMetadata } from './modules/ScoreMetadata';
 
 const App = defineComponent({
@@ -135,7 +133,6 @@ const App = defineComponent({
     ChordTextEditorDialog,
     AppInfoDialog,
     HelpDialog,
-    TestPage,
   },
 
   watch: {
