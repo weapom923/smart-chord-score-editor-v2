@@ -37,21 +37,20 @@ import { NoteValue } from '../modules/NoteValue'
 import { max } from '../modules/utils'
 
 export default {
-  watch: {
-    barValue: {
-      handler() {
-        this.$_updateStyle();
-      },
-      deep: true,
-    },
-  },
-
   props: {
     barValue: { type: NoteValue, required: true },
   },
 
-  data(): { $_style?: CSSProperties } {
-    return { $_style: undefined };
+  data(): {
+    $_style?: CSSProperties,
+    $_numeratorResizeObserver: ResizeObserver,
+    $_denominatorResizeObserver: ResizeObserver,
+  } {
+    return {
+      $_style: undefined,
+      $_numeratorResizeObserver: new ResizeObserver(() => { this.$_updateStyle() }),
+      $_denominatorResizeObserver: new ResizeObserver(() => { this.$_updateStyle() }),
+    };
   },
 
   computed: {
@@ -60,7 +59,14 @@ export default {
   },
 
   mounted() {
+    this.$data.$_numeratorResizeObserver.observe(this.$_numerator);
+    this.$data.$_numeratorResizeObserver.observe(this.$_denominator);
     this.$_updateStyle();
+  },
+
+  beforeUnmount() {
+    this.$data.$_numeratorResizeObserver.unobserve(this.$_denominator);
+    this.$data.$_numeratorResizeObserver.unobserve(this.$_numerator);
   },
 
   methods: {
