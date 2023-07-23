@@ -139,7 +139,7 @@ export default {
       let splitNoteElements = this.$data.$_splitNoteElements.get(noteIdx);
       if (splitNoteElements === undefined) return;
       splitNoteElements.delete(splitNoteIdx);
-      if (splitNoteElements.size > 0) this.$data.$_splitNoteElements.delete(noteIdx);
+      if (splitNoteElements.size === 0) this.$data.$_splitNoteElements.delete(noteIdx);
       this.$emit('splitNoteElementUnmounted', { noteIdx, splitNoteIdx });
       this.$nextTick(() => this.$_updateTiePropsAndStyles());
     },
