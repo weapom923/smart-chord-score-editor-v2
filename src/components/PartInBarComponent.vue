@@ -110,10 +110,14 @@ export default {
       }
       return noteBarComponentProps;
     },
+
+    $_partInBarElement(): HTMLDivElement {
+      return this.$el as HTMLDivElement;
+    },
   },
 
   mounted() {
-    this.$data.$_partInBarElementResizeObserver.observe(this.$el);
+    this.$data.$_partInBarElementResizeObserver.observe(this.$_partInBarElement);
     this.$_updateTiePropsAndStyles();
   },
 
@@ -165,8 +169,7 @@ export default {
     },
 
     $_emitTiePointUpdate() {
-      if ((this.$el === null) || (this.$el === undefined)) return;
-      let partElementOffsetX = (this.$el as HTMLElement).getBoundingClientRect().x;
+      let partElementOffsetX = this.$_partInBarElement.getBoundingClientRect().x;
       if (this.part.firstNoteIdx === undefined) return;
       let firstSplitNoteElements = this.$data.$_splitNoteElements.get(this.part.firstNoteIdx);
       if (firstSplitNoteElements === undefined) return;
@@ -205,8 +208,7 @@ export default {
     },
 
     $_updateTiePropsAndStyles() {
-      if ((this.$el === null) || (this.$el === undefined)) return;
-      let partElementOffsetX = (this.$el as HTMLElement).getBoundingClientRect().x;
+      let partElementOffsetX = this.$_partInBarElement.getBoundingClientRect().x;
       let tieProps = new Map<NoteIdx, TieCanvasProps>();
       let tieStyles = new Map<NoteIdx, CSSProperties>();
       for (let noteIdx of this.part.noteIndices()) {

@@ -241,10 +241,14 @@ export default {
       if (tieEndPointOffset === undefined) return undefined;
       return { tieStartPointOffset, tieEndPointOffset };
     },
+
+    $_noteBaseElement(): HTMLDivElement {
+      return this.$el as HTMLDivElement;
+    },
   },
 
   mounted() {
-    this.$data.$_noteBaseElementResizeObserver.observe(this.$el);
+    this.$data.$_noteBaseElementResizeObserver.observe(this.$_noteBaseElement);
     this.$_updateTiePropsAndStyles();
   },
 
@@ -304,9 +308,7 @@ export default {
     },
 
     $_updateTiePropsAndStyles() {
-      let noteBaseElement = this.$el;
-      if ((noteBaseElement === undefined) || (noteBaseElement === null)) return;
-      let noteBaseElementOffsetX = (noteBaseElement as HTMLElement).getBoundingClientRect().x;
+      let noteBaseElementOffsetX = this.$_noteBaseElement.getBoundingClientRect().x;
       let tieProps = new Map<SplitNoteIdx, InstanceType<typeof TieCanvas>['$props']>();
       let tieStyles = new Map<SplitNoteIdx, CSSProperties>();
       for (let currentSplitNoteIdx = 0; currentSplitNoteIdx < this.$_lastSplitNoteIdx; ++currentSplitNoteIdx) {

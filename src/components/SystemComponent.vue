@@ -324,10 +324,14 @@ export default {
       }
       return isTiedToNextSystem;
     },
+
+    $_systemElement(): HTMLDivElement {
+      return this.$el as HTMLDivElement;
+    },
   },
 
   mounted() {
-    this.$data.$_systemElementResizeObserver.observe(this.$el as HTMLElement);
+    this.$data.$_systemElementResizeObserver.observe(this.$_systemElement);
     this.$_updatePositionAndSize();
   },
 
@@ -419,10 +423,8 @@ export default {
       let tieProps = new Map<BarIdx, Map<PartIdx, TieCanvasProps>>();
       let tieStyles = new Map<BarIdx, Map<PartIdx, CSSProperties>>();
       let firstBar = this.$_section.getBar(this.barRange.firstBarIdx);
-      if ((this.$el === undefined) || (this.$el === null)) return;
-      let systemComponentElement = this.$el as HTMLElement;
-      if (systemComponentElement.nodeType === Node.COMMENT_NODE) return;
-      let systemElementBoundingClientRect = systemComponentElement.getBoundingClientRect();
+      if (this.$_systemElement.nodeType === Node.COMMENT_NODE) return;
+      let systemElementBoundingClientRect = this.$_systemElement.getBoundingClientRect();
       let partIdcs = this.$_partIdcs.get(this.barRange.firstBarIdx) as PartIdx[];
       for (let partIdxInFirstBar of partIdcs) {
         let partInFirstBar = firstBar.getPart(partIdxInFirstBar);
@@ -534,7 +536,7 @@ export default {
       if (!this.$store.state.appState.isAutoScrollEnabled) return;
       if (this.$store.state.appState.isFooterEditorMinimized) return;
       // FIXME
-      // this.$vuetify.goTo(this.$el as HTMLElement);
+      // this.$vuetify.goTo(this.$_systemElement);
     },
 
     assertDefined: assertDefined,

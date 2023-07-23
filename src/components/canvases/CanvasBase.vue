@@ -35,6 +35,10 @@ export default {
     $_staffLineStepPx(): number {
       return this.$store.state.config.staffLineStepPx;
     },
+
+    $_canvasElement(): HTMLCanvasElement {
+      return this.$el as HTMLCanvasElement;
+    },
   },
 
   methods: {
@@ -46,28 +50,28 @@ export default {
 
     $_setCanvasWidthPx(canvasWidthPx: number, setStyle: boolean = true) {
       if (setStyle) {
-        this.$el.style.width = `${canvasWidthPx}px`;
+        this.$_canvasElement.style.width = `${canvasWidthPx}px`;
       }
-      this.$el.width = canvasWidthPx;
+      this.$_canvasElement.width = canvasWidthPx;
       this.$_setDirty(true);
     },
 
     $_setCanvasHeightPx(canvasHeightPx: number, setStyle: boolean = true) {
       if (setStyle) {
-        this.$el.style.height = `${canvasHeightPx}px`;
+        this.$_canvasElement.style.height = `${canvasHeightPx}px`;
       }
-      this.$el.height = canvasHeightPx;
+      this.$_canvasElement.height = canvasHeightPx;
       this.$_setDirty(true);
     },
 
     $_draw() {
       if (!this.$data.$_isDirty) return;
-      if ((this.$el === undefined) || (this.$el === null)) return;
       if (this.$data.$_drawCallback === undefined) return;
 
-      let canvas = this.$el.getContext('2d');
+      let canvas = this.$_canvasElement.getContext('2d');
+      if (canvas === null) return;
       canvas.beginPath();
-      canvas.clearRect(0, 0, this.$el.width, this.$el.height);
+      canvas.clearRect(0, 0, this.$_canvasElement.width, this.$_canvasElement.height);
       this.$data.$_drawCallback(canvas);
       this.$_setDirty(false);
     }

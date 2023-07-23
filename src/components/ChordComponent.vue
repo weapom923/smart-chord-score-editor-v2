@@ -137,21 +137,16 @@ export default {
     $_resizeObverber: ResizeObserver,
   } {
     return {
-      $_resizeObverber: new ResizeObserver(() => {
-        if ((this.$el === undefined) || (this.$el === null)) return;
-        let chordComponentElement = (this.$el as HTMLElement);
-        this.$emit('widthUpdate', chordComponentElement.getBoundingClientRect().width);
-      }),
+      $_resizeObverber: new ResizeObserver(() => { this.$_emitWidthUpdate() }),
     };
   },
 
   mounted() {
-    this.$data.$_resizeObverber.observe(this.$el);
+    this.$data.$_resizeObverber.observe(this.$_chordElement);
   },
 
   beforeUnmount() {
-    let chordComponentElement = (this.$el as HTMLElement);
-    this.$emit('widthUpdate', chordComponentElement.getBoundingClientRect().width);
+    this.$_emitWidthUpdate();
     this.$data.$_resizeObverber.disconnect();
   },
 
@@ -177,6 +172,16 @@ export default {
         fontSize: `${this.$_fontSizePx * 0.8}px`,
         lineHeight: `${this.$_fontSizePx * 0.8}px`,
       };
+    },
+
+    $_chordElement(): HTMLDivElement {
+      return this.$el as HTMLDivElement;
+    },
+  },
+
+  methods: {
+    $_emitWidthUpdate() {
+      this.$emit('widthUpdate', this.$_chordElement.getBoundingClientRect().width);
     },
   },
 };

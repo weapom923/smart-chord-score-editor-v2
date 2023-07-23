@@ -17,7 +17,7 @@ export default {
 
   mounted() {
     this.$_setCanvasHeightPx(this.$_staffHeightPx);
-    this.$data.$_resizeObserver.observe(this.$el);
+    this.$data.$_resizeObserver.observe(this.$_canvasElement);
   },
 
   beforeUnmount() {
@@ -46,7 +46,7 @@ export default {
         drawLine(
           canvas,
           { x: 0, y: lineIdx * this.$_staffLineStepPx },
-          { x: this.$el.width },
+          { x: this.$_canvasElement.width },
         );
       }
     });
