@@ -123,7 +123,7 @@ export default {
 
   watch: {
     bar: {
-      handler() { this.$_setBarElementPositionAndSize() },
+      handler() { this.$_updatePositionAndSize() },
       deep: true,
     },
 
@@ -139,7 +139,7 @@ export default {
 
   mounted() {
     this.$data.$_barElementResizeObserver.observe(this.$el as HTMLElement);
-    this.$_setBarElementPositionAndSize();
+    this.$_updatePositionAndSize();
   },
 
   beforeUnmount() {
@@ -172,7 +172,7 @@ export default {
     $_partContainerBoundingClientRect: DOMRect,
   } {
     return {
-      $_barElementResizeObserver: new ResizeObserver(() => { this.$_setBarElementPositionAndSize() }),
+      $_barElementResizeObserver: new ResizeObserver(() => { this.$_updatePositionAndSize() }),
       $_partNoteElements: new Map(),
       $_partNoteChordElements: new Map(),
       $_partTieStartPointOffsets: new Map(),
@@ -276,16 +276,12 @@ export default {
       } else {
         this.$data.$_partTieEndPointOffsets.set(partIdx, tieEndPointOffset);
       }
-      this.$_setBarElementPositionAndSize();
-    },
-
-    $_setBarElementPositionAndSize() {
-      this.$data.$_barElementBoundingClientRect = this.$_barComponent.getBoundingClientRect();
-      this.$data.$_partContainerBoundingClientRect = this.$_partContainer.getBoundingClientRect();
       this.$_updatePositionAndSize();
     },
 
     $_updatePositionAndSize() {
+      this.$data.$_barElementBoundingClientRect = this.$_barComponent.getBoundingClientRect();
+      this.$data.$_partContainerBoundingClientRect = this.$_partContainer.getBoundingClientRect();
       this.$_emitTiePointUpdate();
       this.$_updateMarginTopAndBottom();
       this.$_updateBarRepeatEndingStyle();
