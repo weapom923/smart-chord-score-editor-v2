@@ -150,8 +150,15 @@ const App = defineComponent({
       immediate: true,
     },
 
-    '$store.state.config.locale'(locale) {
+    '$store.state.config.locale'(locale: string) {
       this.$i18n.locale = locale;
+    },
+
+    '$store.state.score.score': {
+      handler(score: Score) {
+        window.localStorage.setItem('score', score.dumpJson());
+      },
+      deep: true,
     },
 
     score: {
@@ -159,6 +166,11 @@ const App = defineComponent({
         if (score !== undefined) {
           await this.$store.dispatch('score/setScore', score);
           await this.$store.dispatch('score/clearChangeHistory');
+        } else {
+          let scoreJsonFromCookie = window.localStorage.getItem('score');
+          if (scoreJsonFromCookie !== null) {
+            await this.$store.dispatch('score/setScore', Score.loadJson(scoreJsonFromCookie));
+          } 
         }
       },
       immediate: true,
