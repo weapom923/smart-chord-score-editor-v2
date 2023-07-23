@@ -32,8 +32,6 @@ import AudioPlayer from './AudioPlayer.vue';
 import { loadFileAsUint8Array, getFileInterface } from '../modules/utils';
 import { KeyEventType } from '../modules/KeyEventType'
 
-type AudioPlayerComponentType = InstanceType<typeof AudioPlayer>;
-
 const AudioPlayerBar = defineComponent({
   emits: {
     'update:isLoopEnabled': (isLoopEnabled: boolean) => true,
@@ -55,11 +53,12 @@ const AudioPlayerBar = defineComponent({
   },
 
   methods: {
+    $_getAudioPlayer(): InstanceType<typeof AudioPlayer> | undefined | null {
+      return this.$refs.audioPlayer as any;
+    },
+
     onKeydown(keyEventType: KeyEventType, event: KeyboardEvent): boolean {
-      let audioPlayerComponent = this.$refs.audioPlayer;
-      if ((audioPlayerComponent === undefined) || (audioPlayerComponent === null)) return false;
-      if ((audioPlayerComponent as AudioPlayerComponentType).onKeydown(keyEventType, event)) return true;
-      return false;
+      return this.$_getAudioPlayer()?.onKeydown(keyEventType, event) ?? false;
     },
 
     async $_loadAudioSource() {

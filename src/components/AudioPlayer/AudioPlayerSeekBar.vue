@@ -130,8 +130,8 @@ export default defineComponent({
         this.$data.$_seekBarBaseWidthPx = resizeObserverEntry.contentRect.width;
       },
     );
-    this.$data.$_seekBarBaseResizeObserver.observe(this.$refs.seekBarBase as HTMLElement);
-    this.$data.$_seekBarBaseWidthPx = (this.$refs.seekBarBase as HTMLElement).clientWidth;
+    this.$data.$_seekBarBaseResizeObserver.observe(this.$_seekBarBase);
+    this.$data.$_seekBarBaseWidthPx = this.$_seekBarBase.clientWidth;
   },
 
   unmounted() {
@@ -159,22 +159,24 @@ export default defineComponent({
     };
   },
 
+  computed: {
+    $_seekBarBase(): HTMLDivElement { return this.$refs.seekBarBase as HTMLDivElement },
+    $_seekBarPlayed(): HTMLDivElement { return this.$refs.seekBarPlayed as HTMLDivElement },
+    $_seekBarLoop(): HTMLDivElement { return this.$refs.seekBarLoop as HTMLDivElement },
+  },
+
   methods: {
     $_updateSeekBarPosition(currentTimeSec: number, seekBarScale: number) {
-      let seekBarPlayedElement = this.$refs.seekBarPlayed as HTMLElement | null | undefined;
-      if ((seekBarPlayedElement === undefined) || (seekBarPlayedElement === null)) return;
-      seekBarPlayedElement.style.width = `${currentTimeSec / seekBarScale}px`;
+      this.$_seekBarPlayed.style.width = `${currentTimeSec / seekBarScale}px`;
     }, 
 
     $_updateLoopRange(loopDefinition: AudioPlaybackLoopDefinition, seekBarScale: number) {
-      let seekBarLoopElement = this.$refs.seekBarLoop as HTMLElement | null | undefined;
-      if ((seekBarLoopElement === undefined) || (seekBarLoopElement === null)) return;
-      seekBarLoopElement.style.left = `${loopDefinition.beginTimeSec / seekBarScale}px`;
-      seekBarLoopElement.style.width = `${loopDefinition.loopDurationSec / seekBarScale}px`;
+      this.$_seekBarLoop.style.left = `${loopDefinition.beginTimeSec / seekBarScale}px`;
+      this.$_seekBarLoop.style.width = `${loopDefinition.loopDurationSec / seekBarScale}px`;
     },
 
     $_getSeekTimeSecByMouseEvent(mouseEvent: MouseEvent) {
-      let seekBarBaseClientRect = (this.$refs.seekBarBase as InstanceType<typeof HTMLElement>).getBoundingClientRect();
+      let seekBarBaseClientRect = this.$_seekBarBase.getBoundingClientRect();
       let seekBarOffsetPx = mouseEvent.clientX - seekBarBaseClientRect.x;
       return seekBarOffsetPx * this.$data.$_seekBarScale;
     },

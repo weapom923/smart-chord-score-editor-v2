@@ -99,8 +99,6 @@ import { SectionAndBarIdx } from '../modules/SectionAndBarRange';
 
 const selectedBarStaffBackgroundColor = new Color(0, 0, 0, 0.2);
 
-type BarRepeatEndingComponentType = InstanceType<typeof BarRepeatEndingComponent>;
-
 export default {
   inheritAttrs: false,
 
@@ -203,9 +201,21 @@ export default {
     $_isBarRepeatEndingEmpty(): boolean {
       return this.bar.repeatEnding.isEqualTo(bre.empty);
     },
+
+    $_barComponent(): HTMLDivElement {
+      return this.$el as HTMLDivElement;
+    },
+
+    $_partContainer(): HTMLDivElement {
+      return this.$refs.partContainer as HTMLDivElement;
+    },
   },
 
   methods: {
+    $_getBarRepeatEndingComponent(): InstanceType<typeof BarRepeatEndingComponent> | undefined | null {
+      return this.$refs.barRepeatEndingComponent as any;
+    },
+
     $_getSelectedNoteIdxInPart(partIdx: PartIdx) {
       if (this.selectedPartIdx === undefined) return undefined;
       if (partIdx === this.selectedPartIdx) return this.selectedNoteIdx;
@@ -270,10 +280,8 @@ export default {
     },
 
     $_setBarElementPositionAndSize() {
-      if ((this.$el === undefined) || (this.$el === null)) return;
-      if ((this.$refs.partContainer === undefined) || (this.$refs.partContainer === null)) return;
-      this.$data.$_barElementBoundingClientRect = (this.$el as HTMLElement).getBoundingClientRect();
-      this.$data.$_partContainerBoundingClientRect = (this.$refs.partContainer as HTMLElement).getBoundingClientRect();
+      this.$data.$_barElementBoundingClientRect = this.$_barComponent.getBoundingClientRect();
+      this.$data.$_partContainerBoundingClientRect = this.$_partContainer.getBoundingClientRect();
       this.$_updatePositionAndSize();
     },
 
@@ -363,10 +371,8 @@ export default {
     },
 
     $_updateBarRepeatEndingStyle() {
-      if (this.$refs.barRepeatEndingComponent === undefined) return;
-      if (this.$refs.barRepeatEndingComponent === null) return;
-      let barRepeatEndingComponent = (this.$refs.barRepeatEndingComponent as BarRepeatEndingComponentType);
-      let barRepeatEndingElementBoundingClientRect = barRepeatEndingComponent.$el.getBoundingClientRect();
+      let barRepeatEndingElementBoundingClientRect = this.$_getBarRepeatEndingComponent()?.$el.getBoundingClientRect();
+      if (barRepeatEndingElementBoundingClientRect === undefined) return;
       let barRepeatEndingWidthPx = this.$data.$_barElementBoundingClientRect.x + this.$data.$_barElementBoundingClientRect.width - barRepeatEndingElementBoundingClientRect.x;
       let barRepeatEndingRightOffsetPx = barRepeatEndingElementBoundingClientRect.x + barRepeatEndingElementBoundingClientRect.width - this.$data.$_barElementBoundingClientRect.x;
       this.$data.$_barRepeatEndingStyle = {
