@@ -38,6 +38,12 @@ const ScoreModule: Module<ScoreState, RootState> = {
   },
 
   mutations: {
+    clearChangeHistory(state: ScoreState) {
+      state.scoreChangeHistoryManager.clear();
+      state.isRedoable = state.scoreChangeHistoryManager.isRedoable;
+      state.isUndoable = state.scoreChangeHistoryManager.isUndoable;
+    },
+
     redo(state: ScoreState) {
       state.scoreChangeHistoryManager.redo();
     },
@@ -600,6 +606,10 @@ const ScoreModule: Module<ScoreState, RootState> = {
     },
 
     // Change History
+    clearChangeHistory(context: ActionContext<ScoreState, RootState>) {
+      context.commit('clearChangeHistory');
+    },
+
     redo(context: ActionContext<ScoreState, RootState>) {
       context.commit('redo');
     },

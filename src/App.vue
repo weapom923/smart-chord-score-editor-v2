@@ -147,10 +147,20 @@ const App = defineComponent({
     '$store.state.config.locale'(locale) {
       this.$i18n.locale = locale;
     },
+
+    score: {
+      async handler(score?: Score) {
+        if (score !== undefined) {
+          await this.$store.dispatch('score/setScore', score);
+          await this.$store.dispatch('score/clearChangeHistory');
+        }
+      },
+      immediate: true,
+    }
   },
 
   props: {
-    score: { type: Score, required: true },
+    score: { type: Score },
   },
 
   computed: {

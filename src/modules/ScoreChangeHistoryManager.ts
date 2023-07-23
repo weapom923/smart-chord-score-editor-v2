@@ -19,6 +19,12 @@ export class ScoreChangeHistoryManager {
   #history: ScoreChange[] = [];
   #nextChangeIdx = 0;
 
+  clear() {
+    const self = raw(this);
+    self.#history.splice(0);
+    self.#nextChangeIdx = 0;
+  }
+
   get #latestChangeIdx(): number | undefined {
     const self = raw(this);
     if (self.#history.length === 0) return undefined;
