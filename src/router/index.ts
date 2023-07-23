@@ -9,21 +9,13 @@ const router = createRouter({
       path: '/:pathMatch(.*)*',
       component: App,
       async beforeEnter(to, from, next) {
-        if (['/', ''].includes(to.path)) {
-          let scoreJsonFromCookie = window.localStorage.getItem('score');
-          if (scoreJsonFromCookie !== null) {
-            to.meta.score = Score.loadJson(scoreJsonFromCookie);
-          } 
+        try {
+          let response = await fetch(`/scores${to.path}.json`);
+          let scoreRawObj = await response.json();
+          to.meta.score = Score.loadFromRawObj(scoreRawObj);
+        }
+        finally {
           next();
-        } else {
-          try {
-            let response = await fetch(`/scores${to.path}.json`);
-            let scoreRawObj = await response.json();
-            to.meta.score = Score.loadFromRawObj(scoreRawObj);
-          }
-          finally {
-            next();
-          }
         }
       },
       props: route => ({ score: route.meta.score }),
