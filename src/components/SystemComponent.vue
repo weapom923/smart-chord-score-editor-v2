@@ -38,7 +38,6 @@
       </template>
       <div class="bar-container">
         <bar-component
-          ref="barComponent"
           v-model:selected-part-idx="$_selectedPartIdx"
           v-model:selected-note-idx="$_selectedNoteIdx"
           v-bind="barProps"

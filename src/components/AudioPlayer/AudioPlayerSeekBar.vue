@@ -11,7 +11,6 @@
       >
         <div
           id="seek-bar-handle"
-          ref="seekBarHandle"
           v-on:mousedown.stop="$_seekStart"
         >
         </div>
@@ -27,7 +26,6 @@
 
       <div
         id="seek-bar-clickable-area"
-        ref="seekBarClickableArea"
         v-on:mousedown.stop="$_seekStart"
       >
       </div>
