@@ -137,7 +137,17 @@ const App = defineComponent({
 
   watch: {
     $_scoreMetadata: {
-      handler(scoreMetadata: ScoreMetadata) { document.title = `${scoreMetadata.title} - ${scoreMetadata.artistName}` },
+      handler(scoreMetadata: ScoreMetadata) {
+        if (scoreMetadata.artistName.length === 0) {
+          if (scoreMetadata.title.length === 0) {
+            document.title = 'Smart Chord Score Editor';
+          } else {
+            document.title = scoreMetadata.title;
+          }
+        } else {
+          document.title = `${scoreMetadata.title} - ${scoreMetadata.artistName}`
+        }
+      },
       immediate: true,
     },
 
