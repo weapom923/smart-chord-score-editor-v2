@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import App from './App.vue'
+import Index from './Index.vue'
 import store from './store'
 import vuetify from './plugins/vuetify'
 import { loadFonts } from './plugins/webfontloader'
@@ -9,7 +9,7 @@ import { i18n } from './plugins/vuei18n'
 loadFonts()
 
 
-createApp(App)
+createApp(Index)
   .use(router)
   .use(store)
   .use(vuetify)
