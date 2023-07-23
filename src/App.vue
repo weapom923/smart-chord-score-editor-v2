@@ -43,7 +43,6 @@
 
     <v-footer
       class="pa-0 no-print"
-      ref="footer"
       v-show="!$store.state.appState.isPrintLayoutEnabled"
       v-bind:app="!$store.state.appState.isPrintLayoutEnabled"
     >

@@ -9,7 +9,6 @@
   
       <v-card-text>
         <v-form
-          ref="form"
           v-model="$data.$_valid"
           v-on:submit.prevent
         >
