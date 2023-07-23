@@ -35,19 +35,23 @@ export default {
   },
 
   mounted() {
-    this.$el.addEventListener('compositionstart', this.$_onCompositionstart);
-    this.$el.addEventListener('compositionend', this.$_onCompositionend);
+    this.$_vTextFieldElement.addEventListener('compositionstart', this.$_onCompositionstart);
+    this.$_vTextFieldElement.addEventListener('compositionend', this.$_onCompositionend);
   },
 
   beforeUnmount() {
-    this.$el.removeEventListener('compositionstart', this.$_onCompositionstart);
-    this.$el.removeEventListener('compositionend', this.$_onCompositionend);
+    this.$_vTextFieldElement.removeEventListener('compositionstart', this.$_onCompositionstart);
+    this.$_vTextFieldElement.removeEventListener('compositionend', this.$_onCompositionend);
   },
 
   computed: {
     $_modelValue: {
       get() { return this.modelValue },
       set(modelValue: any) { this.$emit('update:modelValue', modelValue) }
+    },
+
+    $_vTextFieldElement(): HTMLElement {
+      return this.$el as HTMLElement;
     },
   },
 

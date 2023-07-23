@@ -138,7 +138,7 @@ export default {
   },
 
   mounted() {
-    this.$data.$_barElementResizeObserver.observe(this.$el as HTMLElement);
+    this.$data.$_barElementResizeObserver.observe(this.$_barElement);
     this.$_updatePositionAndSize();
   },
 
@@ -202,7 +202,7 @@ export default {
       return this.bar.repeatEnding.isEqualTo(bre.empty);
     },
 
-    $_barComponent(): HTMLDivElement {
+    $_barElement(): HTMLDivElement {
       return this.$el as HTMLDivElement;
     },
 
@@ -280,7 +280,7 @@ export default {
     },
 
     $_updatePositionAndSize() {
-      this.$data.$_barElementBoundingClientRect = this.$_barComponent.getBoundingClientRect();
+      this.$data.$_barElementBoundingClientRect = this.$_barElement.getBoundingClientRect();
       this.$data.$_partContainerBoundingClientRect = this.$_partContainer.getBoundingClientRect();
       this.$_emitTiePointUpdate();
       this.$_updateMarginTopAndBottom();
