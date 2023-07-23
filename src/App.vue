@@ -162,7 +162,7 @@ const App = defineComponent({
         }
       },
       immediate: true,
-    }
+    },
   },
 
   props: {
@@ -199,6 +199,10 @@ const App = defineComponent({
       }
       return sectionAndBarRanges;
     },
+
+    $_audioPlayerBar(): InstanceType<typeof AudioPlayerBar> {
+      return this.$refs.audioPlayerBar as InstanceType<typeof AudioPlayerBar>;
+    },
   },
 
   created() {
@@ -214,6 +218,10 @@ const App = defineComponent({
   },
 
   methods: {
+    $_getEditorComponent(): InstanceType<typeof EditorComponent> | undefined | null {
+      return this.$refs.editorComponent as any;
+    },
+
     async $_onClickBackground() {
       await this.$store.dispatch('score/unselectBar');
       await this.$store.dispatch('appState/setIsPrintLayoutEnabled', false);
@@ -241,14 +249,8 @@ const App = defineComponent({
 
     async $_onKeydown(event: KeyboardEvent) {
       let keyEventType = getKeyEventType(event);
-      let editorComponent = this.$refs.editorComponent as InstanceType<typeof EditorComponent> | null | undefined;
-      if ((editorComponent !== undefined) && (editorComponent !== null)) {
-        if (await editorComponent.onKeydown(keyEventType, event)) return true;
-      }
-      let audioPlayerBar = this.$refs.audioPlayerBar as InstanceType<typeof AudioPlayerBar> | null | undefined;
-      if ((audioPlayerBar !== undefined) && (audioPlayerBar !== null)) {
-        if (audioPlayerBar.onKeydown(keyEventType, event)) return true;
-      }
+      if (await this.$_getEditorComponent()?.onKeydown(keyEventType, event) ?? false) return true;
+      if (this.$_audioPlayerBar.onKeydown(keyEventType, event)) return true;
       if (this.$store.state.appState.isPrintLayoutEnabled) {
         await this.$store.dispatch('appState/setIsPrintLayoutEnabled', false);
         return true;

@@ -54,16 +54,19 @@ export default {
     return { $_style: undefined };
   },
 
+  computed: {
+    $_numerator(): HTMLDivElement { return this.$refs.numerator as HTMLDivElement },
+    $_denominator(): HTMLDivElement { return this.$refs.denominator as HTMLDivElement },
+  },
+
   mounted() {
     this.$_updateStyle();
   },
 
   methods: {
     $_updateStyle() {
-      if ((this.$refs.numerator === null) || (this.$refs.numerator === undefined)) return;
-      if ((this.$refs.denominator === null) || (this.$refs.denominator === undefined)) return;
-      let numeratorWidthPx = (this.$refs.numerator as HTMLElement).getBoundingClientRect().width;
-      let denominatorWidthPx = (this.$refs.denominator as HTMLElement).getBoundingClientRect().width;
+      let numeratorWidthPx = this.$_numerator.getBoundingClientRect().width;
+      let denominatorWidthPx = this.$_denominator.getBoundingClientRect().width;
       this.$data.$_style = {
         fontSize:   `${this.$store.state.config.staffLineStepPx * 2}px`,
         lineHeight: `${this.$store.state.config.staffLineStepPx * 2}px`,

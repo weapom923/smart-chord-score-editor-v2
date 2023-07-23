@@ -80,8 +80,6 @@ import { Bar } from '../../modules/Bar';
 import { PartInBar, PartInBarType } from '../../modules/PartInBar';
 import { SectionAndBarIdx, SectionAndBarRange } from '../../modules/SectionAndBarRange';
 
-type BarEditorComponentType = InstanceType<typeof BarEditorComponent>;
-
 const EditorComponent = defineComponent({
   components: {
     BarEditorToolbar,
@@ -180,8 +178,12 @@ const EditorComponent = defineComponent({
   },
 
   methods: {
+    $_getBarEditorComponent(): InstanceType<typeof BarEditorComponent> | undefined | null {
+      return this.$refs.barEditorComponent as any;
+    },
+
     async onKeydown(keyEventType: KeyEventType, event: KeyboardEvent): Promise<boolean> {
-      if (await (this.$refs.barEditorComponent as BarEditorComponentType)?.onKeydown(keyEventType, event) ?? false) return true;
+      if (await this.$_getBarEditorComponent()?.onKeydown(keyEventType, event) ?? false) return true;
       switch (keyEventType) {
         case 'key':
           switch (event.code) {

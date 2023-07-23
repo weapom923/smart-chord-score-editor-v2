@@ -126,6 +126,10 @@ export default defineComponent({
       if (!Object.keys(this.$data.$_audioBufferSourceNodePool).includes(this.$data.$_latestAudioBufferSourceNodeId)) return undefined;
       return this.$data.$_audioBufferSourceNodePool[this.$data.$_latestAudioBufferSourceNodeId];
     },
+
+    $_audioPlayerSeekBar(): InstanceType<typeof AudioPlayerSeekBar> {
+      return this.$refs.audioPlayerSeekBar as InstanceType<typeof AudioPlayerSeekBar>;
+    }
   },
 
   mounted() {
@@ -160,11 +164,11 @@ export default defineComponent({
 
     /* private */
     $_onMousemove(mouseEvent: MouseEvent) {
-      (this.$refs.audioPlayerSeekBar as InstanceType<typeof AudioPlayerSeekBar>).onMousemove(mouseEvent);
+      this.$_audioPlayerSeekBar.onMousemove(mouseEvent);
     },
 
     $_onMouseup(mouseEvent: MouseEvent) {
-      (this.$refs.audioPlayerSeekBar as InstanceType<typeof AudioPlayerSeekBar>).onMouseup(mouseEvent);
+      this.$_audioPlayerSeekBar.onMouseup(mouseEvent);
     },
 
     $_onRequestAnimationFrame() {
