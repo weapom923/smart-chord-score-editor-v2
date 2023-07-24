@@ -53,6 +53,7 @@
                   density="compact"
                   v-model:grid-note-value="$data.$_defaultGridNoteValue"
                   v-bind:rules="$_rules.defaultGridNoteValue"
+                  v-bind:label="$t('defaultGridNoteValue')"
                 />
               </v-col>
 
