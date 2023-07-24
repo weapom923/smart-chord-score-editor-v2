@@ -274,16 +274,19 @@ export default {
 
   computed: {
     $_temporalScore(): Score {
-      let tempTargetBar = this.selectedBar.clone();
-      tempTargetBar.parts = [ this.$_selectedPart ];
       let tempBars: Bar[] = [];
       if (this.previousBar !== undefined) {
         let previousBar = this.previousBar.clone();
         previousBar.break = bb.system;
         tempBars.push(previousBar);
       }
+      let tempTargetBar = this.selectedBar.clone();
+      tempTargetBar.parts = [ this.selectedPart ];
+      tempTargetBar.break = bb.system;
       tempBars.push(tempTargetBar);
-      if (this.nextBar !== undefined) tempBars.push(this.nextBar);
+      if (this.nextBar !== undefined) {
+        tempBars.push(this.nextBar);
+      }
       return new Score(
         this.$store.state.score.score.metadata,
         [
