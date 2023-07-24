@@ -13,6 +13,7 @@
         v-on:chord-component-before-unmount="$_onChordComponentBeforeUnmount(noteIdx)"
         v-on:tie-point-update="$_onNoteTiePointUpdate(noteIdx, $event)"
         v-on:click-note="$_onClickNote(noteIdx)"
+        v-on:resize="$_updateTiePropsAndStyles"
       />
       <tie-canvas
         v-if="$data.$_tieProps.has(noteIdx)"
