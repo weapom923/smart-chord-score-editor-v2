@@ -165,8 +165,8 @@ export default {
 
     $_totalNoteElementWidthPx(): number {
       let totalNoteElementWidthPx = 0;
-      for (let splitNoteElement of this.$data.$_splitNoteElements.values()) {
-        totalNoteElementWidthPx += splitNoteElement.clientWidth;
+      for (let splitNoteElementWidthPx of this.$data.$_splitNoteElementWidthPxs.values()) {
+        totalNoteElementWidthPx += splitNoteElementWidthPx;
       }
       return totalNoteElementWidthPx;
     },
