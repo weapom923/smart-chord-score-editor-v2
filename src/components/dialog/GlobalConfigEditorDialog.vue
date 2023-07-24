@@ -2,7 +2,6 @@
   <dialog-base
     v-model:shows="$_shows"
     v-bind:ok-callback="$_ok"
-    v-bind:ok-disabled="!$data.$_valid"
   >
     <template v-slot:body>
       <v-card-title>{{ $t('globalConfig') }}</v-card-title>
@@ -95,6 +94,31 @@
         </v-form>
       </v-card-text>
     </template>
+
+    <template v-slot:buttons="{ on }">
+      <v-btn
+        v-on:click="$_resetToDefault"
+        v-bind:text="$t('resetToDefault')"
+      >
+      </v-btn>
+
+      <v-spacer />
+
+      <v-btn
+        color="secondary"
+        v-on:click="on.cancelClicked"
+        v-bind:text="$t('cancel')"
+      >
+      </v-btn>
+
+      <v-btn
+        color="primary"
+        v-on:click="on.okClicked"
+        v-bind:disabled="!$data.$_valid"
+        v-bind:text="$t('ok')"
+      >
+      </v-btn>
+    </template>
   </dialog-base>
 </template>
 
@@ -102,9 +126,9 @@
 import DialogBase from './DialogBase.vue';
 import DialogTextField from '../parts/DialogTextField.vue';
 import GridNoteSelector from '../parts/GridNoteSelector.vue';
-import { NoteValue, nv } from '../../modules/NoteValue';
+import { NoteValue } from '../../modules/NoteValue';
 import { isEmptyLike } from '../../modules/utils';
-import { PublicConfig } from '../../store/module/Config'
+import { PublicConfig, defaultConfig } from '../../store/module/Config'
 
 const staffLineStaffPxMin = 5;
 const staffLineStaffPxMax = 15;
@@ -135,7 +159,7 @@ export default {
       $_staffLineStepPx: this.$store.state.config.staffLineStepPx,
       $_systemMarginTopPx: this.$store.state.config.systemMarginTopPx,
       $_systemMarginBottomPx: this.$store.state.config.systemMarginBottomPx,
-      $_defaultGridNoteValue: this.$store.state.config.defaultGridNoteValue,
+      $_defaultGridNoteValue: this.$store.state.config.defaultGridNoteValue.clone(),
       $_chordFontSizePx: this.$store.state.config.chordFontSizePx,
       $_pageWidthOnPrintPx: this.$store.state.config.pageWidthOnPrintPx,
       $_locale: this.$store.state.config.locale,
@@ -252,6 +276,16 @@ export default {
         locale: this.$data.$_locale,
       };
       this.$store.dispatch('config/setConfig', publicConfig);
+    },
+
+    $_resetToDefault() {
+      this.$data.$_staffLineStepPx      = defaultConfig.staffLineStepPx;
+      this.$data.$_systemMarginTopPx    = defaultConfig.systemMarginTopPx;
+      this.$data.$_systemMarginBottomPx = defaultConfig.systemMarginBottomPx;
+      this.$data.$_defaultGridNoteValue = defaultConfig.defaultGridNoteValue.clone();
+      this.$data.$_chordFontSizePx      = defaultConfig.chordFontSizePx;
+      this.$data.$_pageWidthOnPrintPx   = defaultConfig.pageWidthOnPrintPx;
+      this.$data.$_locale               = defaultConfig.locale;
     },
   },
 }
