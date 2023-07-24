@@ -21,6 +21,8 @@ const noteDotMarginPx = 2;
 
 const ChordNoteCanvas = defineComponent({
   emits: {
+    widthUpdate: (noteWidthPx: number) => true,
+    tiePointUpdate: ({ tieStartPointOffset, tieEndPointOffset }: { tieStartPointOffset: DOMPoint, tieEndPointOffset: DOMPoint }) => true,
     mounted: (element: HTMLCanvasElement) => true,
     beforeUnmount: () => true,
   },
