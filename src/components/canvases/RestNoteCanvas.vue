@@ -22,6 +22,8 @@ const RestNoteCanvas = defineComponent({
 
   emits: {
     widthUpdate: (widthPx: number) => true,
+    mounted: (element: HTMLCanvasElement) => true,
+    beforeUnmount: () => true,
   },
 
   watch: {
@@ -49,6 +51,11 @@ const RestNoteCanvas = defineComponent({
     this.$_setCanvasWidthPx(this.$_noteWidthPx);
     this.$_setCanvasHeightPx(this.$_noteHeightPx);
     this.$emit('widthUpdate', this.$_noteWidthPx);
+    this.$emit('mounted', this.$el);
+  },
+
+  beforeUnmount() {
+    this.$emit('beforeUnmount');
   },
 
   props: {

@@ -38,9 +38,9 @@
         v-bind:selected-note-idx="$_getSelectedNoteIdxInPart(partIdx)"
         v-bind:grid-note-value="bar.gridNoteValue"
         v-on:split-note-element-mounted="$_onSplitNoteElementMounted(partIdx, $event)"
-        v-on:split-note-element-unmounted="$_onSplitNoteElementUnmounted(partIdx, $event)"
+        v-on:split-note-element-before-unmount="$_onSplitNoteElementBeforeUnmount(partIdx, $event)"
         v-on:note-chord-element-mounted="$_onNoteChordElementMounted(partIdx, $event)"
-        v-on:note-chord-element-unmounted="$_onNoteChordElementUnmounted(partIdx, $event)"
+        v-on:note-chord-element-before-unmount="$_onNoteChordElementBeforeUnmount(partIdx, $event)"
         v-on:tie-point-update="$_onPartTiePointUpdate(partIdx, $event)"
         v-on:click-note="$_onClickNote(partIdx, $event)"
       />
@@ -109,6 +109,8 @@ export default {
     mousedownStaff: (event: MouseEvent) => true,
     marginTopPxUpdate: (marginTopPx: number) => true,
     marginBottomPxUpdate: (marginBottomPx: number) => true,
+    mounted: (element: HTMLDivElement) => true,
+    beforeUnmount: () => true,
   },
 
   components: {
@@ -140,9 +142,11 @@ export default {
   mounted() {
     this.$data.$_barElementResizeObserver.observe(this.$_barElement);
     this.$_updatePositionAndSize();
+    this.$emit('mounted', this.$el);
   },
 
   beforeUnmount() {
+    this.$emit('beforeUnmount');
     this.$data.$_barElementResizeObserver.disconnect();
   },
 
@@ -235,7 +239,7 @@ export default {
       noteElements.set(splitNoteIdx, splitNoteElement);
     },
 
-    $_onSplitNoteElementUnmounted(partIdx: PartIdx, { noteIdx, splitNoteIdx }: { noteIdx: NoteIdx, splitNoteIdx: SplitNoteIdx }) {
+    $_onSplitNoteElementBeforeUnmount(partIdx: PartIdx, { noteIdx, splitNoteIdx }: { noteIdx: NoteIdx, splitNoteIdx: SplitNoteIdx }) {
       let partNoteElements = this.$data.$_partNoteElements.get(partIdx);
       if (partNoteElements === undefined) return;
       let noteElements = partNoteElements.get(noteIdx);
@@ -257,7 +261,7 @@ export default {
       this.$_updateMarginTopAndBottom();
     },
 
-    $_onNoteChordElementUnmounted(partIdx: PartIdx, noteIdx: NoteIdx) {
+    $_onNoteChordElementBeforeUnmount(partIdx: PartIdx, noteIdx: NoteIdx) {
       let partNoteChordElements = this.$data.$_partNoteChordElements.get(partIdx);
       if (partNoteChordElements === undefined) return;
       partNoteChordElements.delete(noteIdx);

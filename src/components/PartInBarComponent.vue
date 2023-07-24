@@ -8,9 +8,9 @@
         v-if="$_noteBarComponentProps.has(noteIdx)"
         v-bind="assertDefined($_noteBarComponentProps.get(noteIdx))"
         v-on:split-note-element-mounted="$_onSplitNoteElementMounted(noteIdx, $event)"
-        v-on:split-note-element-unmounted="$_onSplitNoteElementUnmounted(noteIdx, $event)"
+        v-on:split-note-element-before-unmount="$_onSplitNoteElementBeforeUnmount(noteIdx, $event)"
         v-on:chord-component-mounted="$_onChordComponentMounted(noteIdx, $event)"
-        v-on:chord-component-unmounted="$_onChordComponentUnmounted(noteIdx)"
+        v-on:chord-component-before-unmount="$_onChordComponentBeforeUnmount(noteIdx)"
         v-on:tie-point-update="$_onNoteTiePointUpdate(noteIdx, $event)"
         v-on:click-note="$_onClickNote(noteIdx)"
       />
@@ -46,9 +46,9 @@ export default {
   emits: {
     tiePointUpdate: (event: { tieEndPointOffset?: DOMPoint, tieStartPointOffset?: DOMPoint }) => true,
     splitNoteElementMounted: (event: { noteIdx: NoteIdx, splitNoteIdx: SplitNoteIdx, splitNoteElement: HTMLElement }) => true,
-    splitNoteElementUnmounted: (event: { noteIdx: NoteIdx, splitNoteIdx: SplitNoteIdx }) => true,
+    splitNoteElementBeforeUnmount: (event: { noteIdx: NoteIdx, splitNoteIdx: SplitNoteIdx }) => true,
     noteChordElementMounted: (event: { noteIdx: NoteIdx, noteChordElement: HTMLElement }) => true,
-    noteChordElementUnmounted: (event: NoteIdx) => true,
+    noteChordElementBeforeUnmount: (event: NoteIdx) => true,
     clickNote: (event: NoteIdx) => true,
     'update:noteIdx': (event: NoteIdx) => true,
   },
@@ -135,12 +135,12 @@ export default {
       this.$nextTick(() => this.$_updateTiePropsAndStyles());
     },
 
-    $_onSplitNoteElementUnmounted(noteIdx: NoteIdx, splitNoteIdx: SplitNoteIdx) {
+    $_onSplitNoteElementBeforeUnmount(noteIdx: NoteIdx, splitNoteIdx: SplitNoteIdx) {
       let splitNoteElements = this.$data.$_splitNoteElements.get(noteIdx);
       if (splitNoteElements === undefined) return;
       splitNoteElements.delete(splitNoteIdx);
       if (splitNoteElements.size === 0) this.$data.$_splitNoteElements.delete(noteIdx);
-      this.$emit('splitNoteElementUnmounted', { noteIdx, splitNoteIdx });
+      this.$emit('splitNoteElementBeforeUnmount', { noteIdx, splitNoteIdx });
       this.$nextTick(() => this.$_updateTiePropsAndStyles());
     },
 
@@ -148,8 +148,8 @@ export default {
       this.$emit('noteChordElementMounted', { noteIdx, noteChordElement });
     },
 
-    $_onChordComponentUnmounted(noteIdx: NoteIdx) {
-      this.$emit('noteChordElementUnmounted', noteIdx);
+    $_onChordComponentBeforeUnmount(noteIdx: NoteIdx) {
+      this.$emit('noteChordElementBeforeUnmount', noteIdx);
     },
 
     $_onNoteTiePointUpdate(noteIdx: NoteIdx, noteTieStartAndEndOffset?: { tieStartPointOffset: DOMPoint, tieEndPointOffset: DOMPoint }) {

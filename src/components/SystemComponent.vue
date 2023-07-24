@@ -44,8 +44,8 @@
           v-on:tie-point-update="$_onTiePointUpdate(barProps.barIdx, $event)"
           v-on:margin-top-px-update="$_onMarginTopPxUpdate(barProps.barIdx, $event)"
           v-on:margin-bottom-px-update="$_onMarginBottomPxUpdate(barProps.barIdx, $event)"
-          v-on:vue:mounted="$_setBarElement(barProps.barIdx, $event.el)"
-          v-on:vue:unmounted="$_deleteBarElement(barProps.barIdx)"
+          v-on:mounted="$_setBarElement(barProps.barIdx, $event)"
+          v-on:before-unmount="$_deleteBarElement(barProps.barIdx)"
         >
         </bar-component>
         <v-menu
@@ -377,7 +377,7 @@ export default {
     },
 
     $_setBarElement(barIdx: BarIdx, barElement: HTMLElement) {
-      if (barElement !== null) this.$data.$_barElements.set(barIdx, barElement);
+      this.$data.$_barElements.set(barIdx, barElement);
       this.$_updateTiePropsAndStyles();
     },
 

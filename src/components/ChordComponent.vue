@@ -121,6 +121,8 @@ import TensionNotePitchComponent from './TensionNotePitchComponent.vue';
 export default {
   emits: {
     widthUpdate: (widthPx: number) => true,
+    mounted: (element: HTMLDivElement) => true,
+    beforeUnmount: () => true,
   },
 
   components: {
@@ -143,9 +145,11 @@ export default {
 
   mounted() {
     this.$data.$_resizeObverber.observe(this.$_chordElement);
+    this.$emit('mounted', this.$el);
   },
 
   beforeUnmount() {
+    this.$emit('beforeUnmount');
     this.$_emitWidthUpdate();
     this.$data.$_resizeObverber.disconnect();
   },
