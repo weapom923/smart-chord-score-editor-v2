@@ -22,6 +22,21 @@ export type ConfigRawObj = {
   locale: string,
 };
 
+export const defaultConfig: Config = {
+  staffLineStepPx: 10,
+  systemMarginTopPx: 30,
+  systemMarginBottomPx: 10,
+  defaultGridNoteValue: NoteValue.instance.divisible.half,
+  chordFontSizePx: 18,
+  pageWidthOnPrintPx: 1080,
+  defaultChord: new Chord(NotePitch.instance.a, 'major'),
+  defaultBarValue: new NoteValue(4, 4),
+  defaultClef: Clef.instance.treble,
+  defaultScale: Scale.instance.cMajor,
+  defaultPartInBarTypes: [ 'chord' ],
+  locale: 'ja',
+};
+
 export type PublicConfig = {
   staffLineStepPx: number,
   systemMarginTopPx: number,
@@ -44,18 +59,18 @@ const ConfigModule: Module<Config, RootState> = {
   namespaced: true,
 
   state: {
-    staffLineStepPx: 10,
-    systemMarginTopPx: 30,
-    systemMarginBottomPx: 10,
-    defaultGridNoteValue: NoteValue.instance.divisible.half,
-    chordFontSizePx: 18,
-    pageWidthOnPrintPx: 1080,
-    defaultChord: new Chord(NotePitch.instance.a, 'major'),
-    defaultBarValue: new NoteValue(4, 4),
-    defaultClef: Clef.instance.treble,
-    defaultScale: Scale.instance.cMajor,
-    defaultPartInBarTypes: [ 'chord' ],
-    locale: 'ja',
+    staffLineStepPx: defaultConfig.staffLineStepPx,
+    systemMarginTopPx: defaultConfig.systemMarginTopPx,
+    systemMarginBottomPx: defaultConfig.systemMarginBottomPx,
+    defaultGridNoteValue: defaultConfig.defaultGridNoteValue.clone(),
+    chordFontSizePx: defaultConfig.chordFontSizePx,
+    pageWidthOnPrintPx: defaultConfig.pageWidthOnPrintPx,
+    defaultChord: defaultConfig.defaultChord.clone(),
+    defaultBarValue: defaultConfig.defaultBarValue.clone(),
+    defaultClef: defaultConfig.defaultClef,
+    defaultScale: defaultConfig.defaultScale,
+    defaultPartInBarTypes: [ ...defaultConfig.defaultPartInBarTypes ],
+    locale: defaultConfig.locale,
   },
 
   mutations: {
