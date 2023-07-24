@@ -34,13 +34,13 @@
         location="bottom"
         v-if="$_isSelectedNoteTypeRest"
         v-bind:text="$t('convertToNormalNote')"
-        v-bind:disabled="!$_isSelectedNoteTypeTogglable || !$_isNoteSelected"
+        v-bind:disabled="!$_isTiedByNextNote || !$_isNoteSelected"
       >
         <template v-slot:activator="{ props }">
           <v-btn
             icon="mdi-music-note-quarter" size="x-small"
             v-bind="props"
-            v-bind:disabled="!$_isSelectedNoteTypeTogglable || !$_isNoteSelected"
+            v-bind:disabled="!$_isTiedByNextNote || !$_isNoteSelected"
             v-on:click="$_toggleSelectedNoteType"
           >
           </v-btn>
@@ -50,13 +50,13 @@
         location="bottom"
         v-else
         v-bind:text="$t('convertToRestNote')"
-        v-bind:disabled="!$_isSelectedNoteTypeTogglable || !$_isNoteSelected"
+        v-bind:disabled="!$_isTiedByNextNote || !$_isNoteSelected"
       >
         <template v-slot:activator="{ props }">
           <v-btn
             icon="mdi-music-rest-quarter" size="x-small"
             v-bind="props"
-            v-bind:disabled="!$_isSelectedNoteTypeTogglable || !$_isNoteSelected"
+            v-bind:disabled="!$_isTiedByNextNote || !$_isNoteSelected"
             v-on:click="$_toggleSelectedNoteType"
           >
           </v-btn>
@@ -372,7 +372,7 @@ export default {
       return true;
     },
 
-    $_isSelectedNoteTypeTogglable(): boolean {
+    $_isTiedByNextNote(): boolean {
       if (this.$_isSelectedNoteTypeRest) {
         return true;
       } else {
@@ -441,7 +441,7 @@ export default {
               if (this.$_isFillBarWithNoteButtonDisabled) break;
               return await this.$_fillBarWithNote(false);
             case 'KeyR':
-              if (!this.$_isSelectedNoteTypeTogglable) break;
+              if (!this.$_isTiedByNextNote) break;
               return this.$_toggleSelectedNoteType();
             case 'KeyC':
               if (!this.$_isSelectedNoteTypeChord) break;
