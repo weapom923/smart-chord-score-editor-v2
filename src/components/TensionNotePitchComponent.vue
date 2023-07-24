@@ -18,17 +18,14 @@
   display: inline-block;
   width: fit-content;
   height: fit-content;
-  line-height: 10px;
 }
 
 #tension-note-text {
   display: inline-block;
-  font-size: 10px;
 }
 
 #tension-note-sharp-or-flat-text {
   display: inline-block;
-  font-size: 8px;
 }
 </style>
 
