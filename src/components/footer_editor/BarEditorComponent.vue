@@ -452,6 +452,7 @@ export default {
               if (this.$_isFillBarWithNoteButtonDisabled) break;
               return await this.$_fillBarWithNote(false);
             case 'KeyR':
+              if (!this.$_isSelectedNoteTypeTogglable) break;
               return this.$_toggleSelectedNoteType();
             case 'KeyC':
               if (!this.$_isSelectedNoteTypeChord) break;
