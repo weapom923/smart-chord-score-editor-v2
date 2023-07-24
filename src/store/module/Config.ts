@@ -92,6 +92,7 @@ const ConfigModule: Module<Config, RootState> = {
         state.defaultScale = Scale.loadFromRawObj(rawConfigFromCookie.defaultScale);
         state.defaultPartInBarTypes = rawConfigFromCookie.defaultPartInBarTypes;
         state.selectedNoteColor = Color.loadFromRawObj(rawConfigFromCookie.selectedNoteColor);
+        state.locale = rawConfigFromCookie.locale;
       }
     },
 
