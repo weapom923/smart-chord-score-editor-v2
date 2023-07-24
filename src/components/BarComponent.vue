@@ -127,6 +127,7 @@ export default {
     bar: {
       handler() { this.$_updatePositionAndSize() },
       deep: true,
+      flush: 'post',
     },
 
     '$store.state.config.systemMarginTopPx'() { this.$_updateMarginTopAndBottom() },
