@@ -13,8 +13,15 @@
       >
         {{ $_basicChordText }}
       </div>
-      <div id="additionals" v-if="($_sortedTensionNotes.length > 0) || ($_additionalChordText.length > 0)">
-        <div v-if="$_sortedTensionNotes.length > 0" id="tension-notes-container">
+      <div
+        id="additionals"
+        v-if="($_sortedTensionNotes.length > 0) || ($_additionalChordText.length > 0)"
+      >
+        <div
+          id="tension-notes-container"
+          v-if="$_sortedTensionNotes.length > 0"
+          v-bind:style="$_tensionNoteContainerStyle"
+        >
           (
           <div id="tension-notes">
             <tension-note-pitch-component
@@ -175,6 +182,12 @@ export default {
       return {
         fontSize: `${this.$_fontSizePx * 0.8}px`,
         lineHeight: `${this.$_fontSizePx * 0.8}px`,
+      };
+    },
+
+    $_tensionNoteContainerStyle(): CSSProperties {
+      return {
+        marginBottom: `${this.$_fontSizePx * 0.2}px`,
       };
     },
 
