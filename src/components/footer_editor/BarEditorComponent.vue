@@ -539,7 +539,7 @@ export default {
         {
           sectionAndBarIdx: this.selectedSectionAndBarIdx,
           partIdx: this.selectedPartIdx,
-          newPart,
+          partInBar: newPart,
         },
       );
       return true;
