@@ -13,8 +13,10 @@
             <tbody>
               <tr><td>→</td><td v-text="$t('helpMessage.selectNextBar')"></td></tr>
               <tr><td>Shift + →</td><td v-text="$t('helpMessage.selectExpandNextBar')"></td></tr>
+              <tr><td>Shift + ←</td><td v-text="$t('helpMessage.selectShrinkNextBar')"></td></tr>
               <tr><td>←</td><td v-text="$t('helpMessage.selectPreviousBar')"></td></tr>
-              <tr><td>Shift + ←</td><td v-text="$t('helpMessage.selectExpandPreviousBar')"></td></tr>
+              <tr><td>Ctrl + Shift + ←</td><td v-text="$t('helpMessage.selectExpandPreviousBar')"></td></tr>
+              <tr><td>Ctrl + Shift + →</td><td v-text="$t('helpMessage.selectShrinkPreviousBar')"></td></tr>
               <tr><td>Ctrl + Z</td><td v-text="$t('helpMessage.undo')"></td></tr>
               <tr><td>Ctrl + Shift + Z</td><td v-text="$t('helpMessage.redo')"></td></tr>
               <tr><td>Ctrl + S</td><td v-text="$t('helpMessage.saveScore')"></td></tr>
