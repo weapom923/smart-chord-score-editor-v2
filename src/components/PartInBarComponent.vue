@@ -58,6 +58,7 @@ export default {
     part: {
       handler() { this.$_updateTiePropsAndStyles() },
       deep: true,
+      flush: 'post',
     },
   },
 
