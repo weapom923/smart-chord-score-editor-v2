@@ -6,7 +6,6 @@ import { Chord, ChordRawObj } from '../../modules/Chord';
 import { Clef, ClefRawObj } from '../../modules/Clef';
 import { Scale, ScaleRawObj } from '../../modules/Scale';
 import { PartInBarType } from '../../modules/PartInBar';
-import { Color, ColorRawObj } from '../../modules/Color'
 
 export type ConfigRawObj = {
   staffLineStepPx: number,
@@ -19,7 +18,6 @@ export type ConfigRawObj = {
   defaultClef: ClefRawObj,
   defaultScale: ScaleRawObj,
   defaultPartInBarTypes: PartInBarType[],
-  selectedNoteColor: ColorRawObj,
   pageWidthOnPrintPx: number,
   locale: string,
 };
@@ -40,7 +38,6 @@ export type Config = PublicConfig & {
   defaultClef: Clef,
   defaultScale: Scale,
   defaultPartInBarTypes: PartInBarType[],
-  selectedNoteColor: Color,
 };
 
 const ConfigModule: Module<Config, RootState> = {
@@ -58,7 +55,6 @@ const ConfigModule: Module<Config, RootState> = {
     defaultClef: Clef.instance.treble,
     defaultScale: Scale.instance.cMajor,
     defaultPartInBarTypes: [ 'chord' ],
-    selectedNoteColor: new Color(42, 118, 210, 1),
     locale: 'ja',
   },
 
@@ -91,7 +87,6 @@ const ConfigModule: Module<Config, RootState> = {
         state.defaultClef = Clef.loadFromRawObj(rawConfigFromCookie.defaultClef);
         state.defaultScale = Scale.loadFromRawObj(rawConfigFromCookie.defaultScale);
         state.defaultPartInBarTypes = rawConfigFromCookie.defaultPartInBarTypes;
-        state.selectedNoteColor = Color.loadFromRawObj(rawConfigFromCookie.selectedNoteColor);
         state.locale = rawConfigFromCookie.locale;
       }
     },
@@ -116,7 +111,6 @@ const ConfigModule: Module<Config, RootState> = {
         defaultClef: state.defaultClef.getRawObj(),
         defaultScale: state.defaultScale.getRawObj(),
         defaultPartInBarTypes: state.defaultPartInBarTypes,
-        selectedNoteColor: state.selectedNoteColor.getRawObj(),
         pageWidthOnPrintPx: state.pageWidthOnPrintPx,
         locale: state.locale,
       }

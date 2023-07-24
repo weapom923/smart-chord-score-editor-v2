@@ -179,7 +179,7 @@ export default {
     },
 
     $_noteColor(): Color {
-      return (this.isSelected)? this.$store.state.config.selectedNoteColor : cl.black;
+      return (this.isSelected)? new Color(255, 130, 130, 1) : cl.black;
     },
 
     $_noteChord(): Chord | undefined {
