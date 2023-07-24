@@ -433,6 +433,8 @@ export default {
             partIdx: partIdxInFirstBar,
           });
           if (found === undefined) continue;
+          let previousPart = this.score.getPart(found);
+          if (previousPart.lastNote === undefined) continue;
           let firstBarNoteTieEndOffsets = this.$data.$_barNoteTieEndPointOffsets.get(this.barRange.firstBarIdx);
           if (firstBarNoteTieEndOffsets === undefined) continue;
           let firstBarNoteTieEndOffset = firstBarNoteTieEndOffsets.get(partIdxInFirstBar);
@@ -470,6 +472,8 @@ export default {
         if (!this.$_section.barRange.includes(currentBarIdx)) continue;
         let currentPartIdcs = this.$_partIdcs.get(currentBarIdx) as PartIdx[];
         for (let currentPartIdx of currentPartIdcs) {
+          let currentPart = this.$_section.getBar(currentBarIdx).getPart(currentPartIdx);
+          if (currentPart.lastNote === undefined) continue;
           let found = this.$_sameTypedPartIdxInNextBar.get(currentBarIdx)?.get(currentPartIdx);
           if (found === undefined) continue;
           let { sectionAndBarIdx: nextSectionAndBarIdx, partIdx: nextPartIdx } = found;
