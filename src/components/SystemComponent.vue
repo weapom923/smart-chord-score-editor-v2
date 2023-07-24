@@ -123,7 +123,7 @@ import { assertDefined, max } from '../modules/utils';
 import TieCanvas from './canvases/TieCanvas.vue';
 import { SectionAndBarIdx, BarRange } from '../modules/SectionAndBarRange';
 
-const selectedBarStaffBackgroundColor = new Color(0, 0, 0, 0.2);
+const selectedBarStaffBackgroundColor = new Color(170, 210, 160, 0.3);
 
 type TieCanvasProps = InstanceType<typeof TieCanvas>['$props'];
 type BarComponentPropsType = InstanceType<typeof BarComponent>['$props'];

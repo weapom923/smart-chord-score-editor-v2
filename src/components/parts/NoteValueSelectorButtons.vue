@@ -1,6 +1,6 @@
 <template>
   <v-btn-toggle
-    mandatory density="compact"
+    mandatory density="compact" color="primary"
     v-model="$_unitNoteValueLabel"
   >
     <v-btn

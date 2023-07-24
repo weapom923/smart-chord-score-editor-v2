@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-btn-group class="d-flex" density="compact">
+    <v-btn-group class="d-flex" density="compact" color="secondary" variant="text">
       <v-btn
         size="x-small" class="flex-grow-1"
         v-for="({ icon, callback }, menuItemIdx) in $_menuItemDefinitions"

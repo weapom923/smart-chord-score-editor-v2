@@ -10,8 +10,8 @@ const smartChordScoreMakerTheme: ThemeDefinition = {
   colors: {
     background: '#FFFFFF',
     surface: '#FFFFFF',
-    primary: '#FF9B9B',
-    secondary: '#AAC8A7',
+    primary: '#FFAAAA',
+    secondary: '#BADFA0',
     error: '#A86464',
   },
 };
