@@ -6,9 +6,7 @@
     >
     </app-bar>
 
-    <v-main
-      v-on:mousedown="$_onClickBackground"
-    >
+    <v-main v-on:mousedown.left="$_onClickBackground">
       <div
         id="score-page-container"
         class="d-flex flex-column align-center"
