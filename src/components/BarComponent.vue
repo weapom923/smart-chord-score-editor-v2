@@ -132,21 +132,18 @@ export default {
     '$store.state.config.systemMarginTopPx'() { this.$_updateMarginTopAndBottom() },
 
     '$store.state.config.systemMarginBottomPx'() { this.$_updateMarginTopAndBottom() },
-
-    '$data.$_partNoteChordElements': {
-      handler() { this.$_updateMarginTopAndBottom() },
-      deep: true,
-    }
   },
 
   mounted() {
     this.$data.$_barElementResizeObserver.observe(this.$_barElement);
+    this.$data.$_partContainerResizeObserver.observe(this.$_partContainer);
     this.$_updatePositionAndSize();
     this.$emit('mounted', this.$el);
   },
 
   beforeUnmount() {
     this.$emit('beforeUnmount');
+    this.$data.$_partContainerResizeObserver.disconnect();
     this.$data.$_barElementResizeObserver.disconnect();
   },
 
@@ -165,6 +162,7 @@ export default {
 
   data(): {
     $_barElementResizeObserver: ResizeObserver,
+    $_partContainerResizeObserver: ResizeObserver,
     $_partNoteElements: Map<PartIdx, Map<NoteIdx, Map<SplitNoteIdx, HTMLElement>>>,
     $_partNoteChordElements: Map<number, Map<NoteIdx, HTMLElement>>,
     $_partTieStartPointOffsets: Map<PartIdx, DOMPoint>,
@@ -177,6 +175,7 @@ export default {
   } {
     return {
       $_barElementResizeObserver: new ResizeObserver(() => { this.$_updatePositionAndSize() }),
+      $_partContainerResizeObserver: new ResizeObserver(() => { this.$_updatePositionAndSize() }),
       $_partNoteElements: new Map(),
       $_partNoteChordElements: new Map(),
       $_partTieStartPointOffsets: new Map(),
@@ -237,6 +236,7 @@ export default {
       let noteElements = partNoteElements.get(noteIdx);
       if (noteElements === undefined) return;
       noteElements.set(splitNoteIdx, splitNoteElement);
+      this.$_updateMarginTopAndBottom();
     },
 
     $_onSplitNoteElementBeforeUnmount(partIdx: PartIdx, { noteIdx, splitNoteIdx }: { noteIdx: NoteIdx, splitNoteIdx: SplitNoteIdx }) {
@@ -280,7 +280,7 @@ export default {
       } else {
         this.$data.$_partTieEndPointOffsets.set(partIdx, tieEndPointOffset);
       }
-      this.$_updatePositionAndSize();
+      this.$_emitTiePointUpdate();
     },
 
     $_updatePositionAndSize() {
