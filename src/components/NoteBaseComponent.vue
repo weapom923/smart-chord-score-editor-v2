@@ -107,6 +107,7 @@ export default {
     splitNoteElementBeforeUnmount: (event: SplitNoteIdx) => true,
     clickNote: () => true,
     tiePointUpdate: (event: { tieStartPointOffset: DOMPoint, tieEndPointOffset: DOMPoint } | undefined) => true,
+    resize: () => true,
   },
 
   components: {
@@ -280,7 +281,7 @@ export default {
     $_onSplitNoteElementMounted(splitNoteIdx: SplitNoteIdx, splitNoteElement: HTMLElement) {
       this.$data.$_splitNoteElements.set(splitNoteIdx, splitNoteElement);
       this.$emit('splitNoteElementMounted', { splitNoteIdx, splitNoteElement });
-      this.$nextTick(() => this.$_updateTiePropsAndStyles());
+      this.$_updateTiePropsAndStyles();
     },
 
     $_onSplitNoteElementBeforeUnmount(splitNoteIdx: SplitNoteIdx) {
@@ -289,7 +290,7 @@ export default {
       this.$data.$_splitNoteTieStartOffsets.delete(splitNoteIdx);
       this.$data.$_splitNoteTieEndOffsets.delete(splitNoteIdx);
       this.$emit('splitNoteElementBeforeUnmount', splitNoteIdx);
-      this.$nextTick(() => this.$_updateTiePropsAndStyles());
+      this.$_updateTiePropsAndStyles();
     },
 
     $_onNoteWidthUpdate(splitNoteIdx: SplitNoteIdx, widthPx: number) {
@@ -343,6 +344,7 @@ export default {
       }
       this.$data.$_tieProps = tieProps;
       this.$data.$_tieStyles = tieStyles;
+      this.$emit('resize');
     },
 
     assertDefined: assertDefined,
