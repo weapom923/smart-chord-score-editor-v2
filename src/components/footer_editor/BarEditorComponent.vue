@@ -306,20 +306,6 @@ export default {
 
     $_selectedSectionAndBarRange(): SectionAndBarRange { return new SectionAndBarRange(this.selectedSectionAndBarIdx) },
 
-    $_selectedPart: {
-      get(): PartInBar { return this.selectedPart },
-      async set(partInBar: PartInBar) {
-        await this.$store.dispatch(
-          'score/replacePart',
-          {
-            sectionAndBarIdx: this.selectedSectionAndBarIdx,
-            partIdx: this.selectedPartIdx,
-            partInBar,
-          },
-        );
-      },
-    },
-
     $_isNoteSelected() {
       return (this.$_selectedNoteIdx !== undefined);
     },
@@ -332,7 +318,7 @@ export default {
     $_selectedNote: {
       get(): Note | undefined {
         if (this.$_selectedNoteIdx === undefined) return undefined;
-        return this.$_selectedPart.getNote(this.$_selectedNoteIdx)
+        return this.selectedPart.getNote(this.$_selectedNoteIdx)
       },
       async set(note: Note) {
         if (this.$_selectedNoteIdx === undefined) return undefined;
@@ -350,24 +336,24 @@ export default {
 
     $_previousNote(): Note | undefined {
       if (this.$_selectedNoteIdx === undefined) return undefined;
-      if (this.$_selectedPart.firstNoteIdx === undefined) return undefined;
-      if (this.$_selectedNoteIdx > this.$_selectedPart.firstNoteIdx) {
-        return this.$_selectedPart.getNote(this.$_selectedNoteIdx - 1);
+      if (this.selectedPart.firstNoteIdx === undefined) return undefined;
+      if (this.$_selectedNoteIdx > this.selectedPart.firstNoteIdx) {
+        return this.selectedPart.getNote(this.$_selectedNoteIdx - 1);
       } else {
         if (this.previousBar === undefined) return undefined;
-        let selectedPreviousPart = this.previousBar.findSameTypedPart(this.$_selectedPart.type);
+        let selectedPreviousPart = this.previousBar.findSameTypedPart(this.selectedPart.type);
         return selectedPreviousPart?.lastNote;
       }
     },
 
     $_nextNote(): Note | undefined {
       if (this.$_selectedNoteIdx === undefined) return undefined;
-      if (this.$_selectedPart.lastNoteIdx === undefined) return undefined;
-      if (this.$_selectedNoteIdx < this.$_selectedPart.lastNoteIdx) {
-        return this.$_selectedPart.getNote(this.$_selectedNoteIdx + 1);
+      if (this.selectedPart.lastNoteIdx === undefined) return undefined;
+      if (this.$_selectedNoteIdx < this.selectedPart.lastNoteIdx) {
+        return this.selectedPart.getNote(this.$_selectedNoteIdx + 1);
       } else {
         if (this.nextBar === undefined) return undefined;
-        let selectedNextPart = this.nextBar.findSameTypedPart(this.$_selectedPart.type);
+        let selectedNextPart = this.nextBar.findSameTypedPart(this.selectedPart.type);
         if (selectedNextPart === undefined) return undefined;
         return selectedNextPart.firstNote;
       }
@@ -378,7 +364,7 @@ export default {
     },
 
     $_isSelectedNoteTypeChord(): boolean {
-      if (this.$_selectedPart.type !== 'chord') return false;
+      if (this.selectedPart.type !== 'chord') return false;
       if (this.$_isSelectedNoteTypeRest) return false;
       return true;
     },
@@ -423,7 +409,7 @@ export default {
     $_remainingNoteValue() {
       let barValue = this.selectedBar.value.clone();
       let totalExistingNoteValue = nv.zero;
-      for (let note of this.$_selectedPart.notes) {
+      for (let note of this.selectedPart.notes) {
         totalExistingNoteValue.add(note.value);
       }
       return barValue.subtract(totalExistingNoteValue);
@@ -447,7 +433,7 @@ export default {
               if (!this.$_isSelectedNoteTieable) break;
               return this.$_toggleSelectedNoteTied();
             case 'KeyD':
-              return this.$_removeSelectedNote();
+              return await this.$_removeSelectedNote();
             case 'KeyF':
               if (this.$_isFillBarWithNoteButtonDisabled) break;
               return await this.$_fillBarWithNote(false);
@@ -540,13 +526,20 @@ export default {
       return true;
     },
 
-    $_removeSelectedNote() {
+    async $_removeSelectedNote() {
       if (this.$_selectedNoteIdx === undefined) return false;
       let selectedNoteIdx = this.$_selectedNoteIdx;
       this.$_selectedNoteIdx = undefined;
-      let newPart = this.$_selectedPart.clone();
+      let newPart = this.selectedPart.clone();
       newPart.notes.splice(selectedNoteIdx, 1);
-      this.$_selectedPart = newPart;
+      await this.$store.dispatch(
+        'score/replacePart',
+        {
+          sectionAndBarIdx: this.selectedSectionAndBarIdx,
+          partIdx: this.selectedPartIdx,
+          newPart,
+        },
+      );
       return true;
     },
 
@@ -556,12 +549,12 @@ export default {
 
     async $_fillBarWithNote(withShiftKey: boolean): Promise<boolean> {
       let remainingNoteValue = this.$_remainingNoteValue.clone();
-      let numExistingNotes = this.$_selectedPart.numNotes;
+      let numExistingNotes = this.selectedPart.numNotes;
       let note: Note;
       if (withShiftKey) {
         note = new Note(null, remainingNoteValue, 'rest', false);
       } else {
-        switch (this.$_selectedPart.type) {
+        switch (this.selectedPart.type) {
           case 'chord':
             note = new Note(null, remainingNoteValue, 'normal', false);
             break;
