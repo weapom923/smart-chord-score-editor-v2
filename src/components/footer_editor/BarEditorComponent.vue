@@ -97,13 +97,13 @@
       <v-tooltip
         location="bottom"
         v-bind:text="$t('removeNote')"
-        v-bind:disabled="!$_isNoteSelected"
+        v-bind:disabled="!$_isTiedByNextNote || !$_isNoteSelected"
       >
         <template v-slot:activator="{ props }">
           <v-btn
             icon="mdi-eraser" size="x-small"
             v-bind="props"
-            v-bind:disabled="!$_isNoteSelected"
+            v-bind:disabled="!$_isTiedByNextNote || !$_isNoteSelected"
             v-on:click="$_removeSelectedNote"
           >
           </v-btn>
@@ -436,6 +436,7 @@ export default {
               if (!this.$_isSelectedNoteTieable) break;
               return this.$_toggleSelectedNoteTied();
             case 'KeyD':
+              if (!this.$_isTiedByNextNote) break;
               return await this.$_removeSelectedNote();
             case 'KeyF':
               if (this.$_isFillBarWithNoteButtonDisabled) break;
