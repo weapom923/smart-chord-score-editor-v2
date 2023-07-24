@@ -129,10 +129,6 @@ export default {
       deep: true,
       flush: 'post',
     },
-
-    '$store.state.config.systemMarginTopPx'() { this.$_updateMarginTopAndBottom() },
-
-    '$store.state.config.systemMarginBottomPx'() { this.$_updateMarginTopAndBottom() },
   },
 
   mounted() {
