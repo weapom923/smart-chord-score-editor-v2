@@ -8,6 +8,7 @@
 
     <v-main v-on:mousedown.left="$_onClickBackground">
       <div
+        v-if="!$data.$_isForcedReloading"
         id="score-page-container"
         class="d-flex flex-column align-center"
       >
@@ -148,9 +149,11 @@ const App = defineComponent({
       immediate: true,
     },
 
-    '$store.state.config.locale'(locale: string) {
-      this.$i18n.locale = locale;
-    },
+    '$store.state.config.locale'(locale: string) { this.$i18n.locale = locale },
+    '$store.state.config.staffLineStepPx'() { this.$_reloadScore() },
+    '$store.state.config.systemMarginTopPx'() { this.$_reloadScore() },
+    '$store.state.config.systemMarginBottomPx'() { this.$_reloadScore() },
+    '$store.state.config.chordFontSizePx'() { this.$_reloadScore() },
 
     '$store.state.score.score': {
       handler(score: Score) {
@@ -177,6 +180,14 @@ const App = defineComponent({
 
   props: {
     score: { type: Score },
+  },
+
+  data(): {
+    $_isForcedReloading: boolean,
+  } {
+    return {
+      $_isForcedReloading: false,
+    };
   },
 
   computed: {
@@ -228,6 +239,12 @@ const App = defineComponent({
   },
 
   methods: {
+    $_reloadScore() {
+      if (this.$data.$_isForcedReloading) return;
+      this.$data.$_isForcedReloading = true;
+      this.$nextTick(() => { this.$data.$_isForcedReloading = false });
+    },
+
     $_getEditorComponent(): InstanceType<typeof EditorComponent> | undefined | null {
       return this.$refs.editorComponent as any;
     },
