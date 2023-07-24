@@ -1,7 +1,7 @@
 <template>
   <v-app id="app">
     <app-bar
-      class="no-print" theme="dark"
+      class="no-print" color="secondary" flat
       v-if="!$store.state.appState.isPrintLayoutEnabled"
     >
     </app-bar>
@@ -45,7 +45,7 @@
       v-bind:app="!$store.state.appState.isPrintLayoutEnabled"
     >
       <v-card class="w-100 rounded-0">
-        <v-toolbar theme="dark" height="20">
+        <v-toolbar color="primary" height="20">
           <v-spacer></v-spacer>
           <v-btn
             size="small" icon

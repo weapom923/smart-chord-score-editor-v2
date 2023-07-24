@@ -1,7 +1,7 @@
 <template>
   <div id="chord-component-selector-container">
     <v-btn-toggle
-      mandatory
+      mandatory color="primary"
       class="chord-component-selector root"
       v-model="$_rootNoteSymbolText"
     >
@@ -17,7 +17,7 @@
     </v-btn-toggle>
 
     <v-btn-toggle
-      mandatory tile
+      mandatory tile color="primary"
       class="chord-component-selector accidental-sign"
       v-model="$_rootNoteAccidentalSign"
     >
@@ -34,7 +34,7 @@
     </v-btn-toggle>
 
     <v-btn-toggle
-      mandatory tile
+      mandatory tile color="primary"
       class="chord-component-selector"
       v-model="$_triadText"
     >
@@ -51,7 +51,7 @@
     </v-btn-toggle>
 
     <v-btn-toggle
-      tile
+      tile color="primary"
       class="chord-component-selector"
       v-model="$_sixthOrSeventhText"
     >
@@ -68,7 +68,7 @@
     </v-btn-toggle>
 
     <v-btn-toggle
-      multiple tile
+      multiple tile color="primary"
       class="chord-component-selector"
       v-model="$_tensionNoteTexts"
     >
@@ -86,7 +86,7 @@
     </v-btn-toggle>
 
     <v-btn-toggle
-      tile
+      tile color="primary"
       class="chord-component-selector"
       v-model="$_bassNoteSymbolText"
     >
@@ -103,7 +103,7 @@
     </v-btn-toggle>
 
     <v-btn-toggle
-      mandatory tile
+      mandatory tile color="primary"
       class="chord-component-selector accidental-sign"
       v-model="$_bassNoteAccidentalSign"
     >

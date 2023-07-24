@@ -8,7 +8,7 @@
         v-on:keydown.down.stop
       >
         <v-range-slider
-          density="compact" hide-details
+          density="compact" color="primary" hide-details
           v-if="$data.$_noteValueSliderValues !== undefined"
           v-model="$data.$_noteValueSliderValues"
           v-bind:min="0"
