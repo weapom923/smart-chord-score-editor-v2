@@ -332,7 +332,7 @@ export default {
 
   mounted() {
     this.$data.$_systemElementResizeObserver.observe(this.$_systemElement);
-    this.$_updatePositionAndSize();
+    this.$_updateTiePropsAndStyles();
   },
 
   beforeUnmount() {
@@ -383,6 +383,7 @@ export default {
 
     $_deleteBarElement(barIdx: BarIdx) {
       this.$data.$_barElements.delete(barIdx);
+      this.$_updateTiePropsAndStyles();
     },
 
     $_onTiePointUpdate(barIdx: BarIdx, { tieStartPointOffsets, tieEndPointOffsets }: { tieStartPointOffsets: Map<BarIdx, DOMPoint>, tieEndPointOffsets: Map<BarIdx, DOMPoint> }) {
@@ -411,10 +412,6 @@ export default {
 
     $_onMousedownStaff(barIdx: BarIdx, event: MouseEvent) {
       this.$emit('mousedownStaff', { barIdx, event });
-    },
-
-    $_updatePositionAndSize() {
-      this.$_updateTiePropsAndStyles();
     },
 
     $_updateTiePropsAndStyles() {
