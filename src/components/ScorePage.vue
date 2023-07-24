@@ -26,8 +26,11 @@
 <style scoped>
 #score-page {
   user-select: none;
-  break-after: page;
   border: 1px #cccccc dotted;
+}
+
+#score-page:not(:last-of-type) {
+  break-after: page;
 }
 
 @media print {
