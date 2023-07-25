@@ -145,6 +145,7 @@ export default {
   watch: {
     async $_isFirstOfSelection() { this.$_tryScrollTo() },
     async $_isLastOfSelection() { this.$_tryScrollTo() },
+    '$data.$_barElements'() { this.$_updateTiePropsAndStyles() },
     $_isTiedToNextSystem: {
       handler() { this.$_updateTiePropsAndStyles() },
       flush: 'post',
@@ -378,12 +379,10 @@ export default {
 
     $_setBarElement(barIdx: BarIdx, barElement: HTMLElement) {
       this.$data.$_barElements.set(barIdx, barElement);
-      this.$_updateTiePropsAndStyles();
     },
 
     $_deleteBarElement(barIdx: BarIdx) {
       this.$data.$_barElements.delete(barIdx);
-      this.$_updateTiePropsAndStyles();
     },
 
     $_onTiePointUpdate(barIdx: BarIdx, { tieStartPointOffsets, tieEndPointOffsets }: { tieStartPointOffsets: Map<BarIdx, DOMPoint>, tieEndPointOffsets: Map<BarIdx, DOMPoint> }) {
