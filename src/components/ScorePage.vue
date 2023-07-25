@@ -86,14 +86,15 @@ export default {
       let sectionDefinitions: SectionComponentPropsType[] = [];
       if (this.$_numSections === 0) return sectionDefinitions;
       for (let currentSectionIdx of this.sectionAndBarRange.sectionIndices()) {
+        let currentSection = this.$_score.getSection(currentSectionIdx);
 
         let firstBarIdxOfCurrentSection =
           (currentSectionIdx === this.sectionAndBarRange.first.sectionIdx)?
-          this.sectionAndBarRange.first.barIdx : this.$_score.getSection(currentSectionIdx).firstBarIdx;
+          this.sectionAndBarRange.first.barIdx : currentSection.firstBarIdx;
 
         let lastBarIdxOfCurrentSection =
           (currentSectionIdx === this.sectionAndBarRange.last.sectionIdx)?
-          this.sectionAndBarRange.last.barIdx : this.$_score.getSection(currentSectionIdx).lastBarIdx;
+          this.sectionAndBarRange.last.barIdx : currentSection.lastBarIdx;
 
         let showBeatOnFirstBarOfCurrentSection = false;
         let currentSectionAndFirstBarIdx = new SectionAndBarIdx(currentSectionIdx, firstBarIdxOfCurrentSection);
