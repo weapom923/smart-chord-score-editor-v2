@@ -73,7 +73,7 @@
     <v-tooltip location="top" v-bind:text="$t('clearLoop')" v-if="loopDefinition !== undefined">
       <template v-slot:activator="{ props }">
         <v-btn
-          icon="mdi-restart-off" size="small" class="loop-enabled"
+          icon="mdi-ray-start-end" size="small" class="loop-enabled"
           
           v-bind="props"
           v-on:mousedown.stop="$_clearLoop"
@@ -96,7 +96,7 @@
     <v-tooltip location="top" v-bind:text="$t('setLoopEnd')" v-else-if="$_isTempLoopEndNotSet">
       <template v-slot:activator="{ props }">
         <v-btn
-          icon="mdi-ray-start-end" size="small"
+          icon="mdi-ray-end" size="small" class="loop-enabled"
           v-bind="props"
           v-bind:disabled="$_isSetTempLoopEndButtonDisabled"
           v-on:mousedown.stop="$_setLoopEnd"
