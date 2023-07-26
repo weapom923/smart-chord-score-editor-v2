@@ -74,13 +74,13 @@ export default defineComponent({
     },
 
     '$data.$_loopDefinition'(loopDefinition?: AudioPlaybackLoopDefinition) {
-      if (this.$_latestAudioBufferSourceNode !== undefined) {
-        this.$_latestAudioBufferSourceNode.loop = (loopDefinition !== undefined);
-      }
+      if (this.$_latestAudioBufferSourceNode === undefined) return;
       if (loopDefinition === undefined) {
-        this.$_seekInstantlyInSec(this.$_getPlayTimeSec());
+        this.$_seekInSec(this.$_getPlayTimeSec());
+        this.$_latestAudioBufferSourceNode.loop = false;
       } else {
         this.$_seekInstantlyInSec(loopDefinition.beginTimeSec);
+        this.$_latestAudioBufferSourceNode.loop = true;
       }
     },
   },
