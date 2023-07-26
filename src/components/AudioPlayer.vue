@@ -76,7 +76,7 @@ export default defineComponent({
         this.$_latestAudioBufferSourceNode.loop = (loopDefinition !== undefined);
       }
       if (loopDefinition === undefined) {
-        this.$_seekInSec(this.$_getPlayTimeSec());
+        this.$_seekInstantlyInSec(this.$_getPlayTimeSec());
       } else {
         this.$_seekInstantlyInSec(loopDefinition.beginTimeSec);
       }
