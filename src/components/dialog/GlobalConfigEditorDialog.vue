@@ -1,8 +1,5 @@
 <template>
-  <dialog-base
-    v-model:shows="$_shows"
-    v-bind:ok-callback="$_ok"
-  >
+  <dialog-base v-bind:ok-callback="$_ok">
     <template v-slot:body>
       <v-card-title>{{ $t('globalConfig') }}</v-card-title>
   
@@ -138,6 +135,8 @@ const chordFontSizePxMin = 6;
 const pageWidthOnPrintPxMin = 640;
 
 export default {
+  extends: DialogBase,
+
   components: {
     DialogBase,
     DialogTextField,
@@ -169,11 +168,6 @@ export default {
   },
 
   computed: {
-    $_shows: {
-      get(): boolean            { return this.$store.state.dialog.shows },
-      async set(shows: boolean) { await this.$store.dispatch('dialog/setShows', shows) },
-    },
-
     $_staffLineStaffPxMin() { return staffLineStaffPxMin },
 
     $_staffLineStaffPxMax() { return staffLineStaffPxMax },

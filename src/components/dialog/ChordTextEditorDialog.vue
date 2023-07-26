@@ -1,6 +1,5 @@
 <template>
   <dialog-base
-    v-model:shows="$_shows"
     v-bind:initialize-callback="$_initialize"
     v-bind:ok-callback="$_ok"
     v-bind:ok-disabled="!$data.$_valid"
@@ -42,6 +41,8 @@ import { SectionAndBarIdx } from '../../modules/SectionAndBarRange';
 import { Note } from '../../modules/Note';
 
 export default {
+  extends: DialogBase,
+
   components: {
     DialogBase,
     DialogTextField,
@@ -71,11 +72,6 @@ export default {
   },
 
   computed: {
-    $_shows: {
-      get(): boolean            { return this.$store.state.dialog.shows },
-      async set(shows: boolean) { await this.$store.dispatch('dialog/setShows', shows) },
-    },
-
     $_hasError() {
       return (this.$data.$_parseErrorMessage !== undefined);
     },
