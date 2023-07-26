@@ -5,7 +5,7 @@
         <v-btn
           icon="mdi-skip-previous" size="small"
           v-bind="props"
-          v-on:mousedown.stop="$_seekToHead"
+          v-on:click="$_seekToHead"
         >
         </v-btn>
       </template>
@@ -16,31 +16,25 @@
         <v-btn
           icon="mdi-rewind" size="small"
           v-bind="props"
-          v-on:mousedown.stop="$_seekBackwardStart"
-          v-on:mouseup.stop="$_seekBackwardEnd"
-          v-on:mouseout.stop="$_seekBackwardEnd"
+          v-on:mousedown="$_seekBackwardStart"
+          v-on:mouseup="$_seekBackwardEnd"
+          v-on:mouseout="$_seekBackwardEnd"
+          v-on:keydown.space="$_seekBackwardStart"
+          v-on:keydown.enter="$_seekBackwardStart"
+          v-on:keyup.space="$_seekBackwardEnd"
+          v-on:keyup.enter="$_seekBackwardEnd"
         >
         </v-btn>
       </template>
     </v-tooltip>
 
-    <v-tooltip location="top" v-bind:text="$t('pause')" v-if="isPlaying">
+    <v-tooltip location="top" v-bind:text="$_playOrPauseButtonTooltipText">
       <template v-slot:activator="{ props }">
         <v-btn
-          icon="mdi-pause" size="small"
-          
+          size="small"
           v-bind="props"
-          v-on:mousedown.stop="$_pause"
-        >
-        </v-btn>
-      </template>
-    </v-tooltip>
-    <v-tooltip location="top" v-bind:text="$t('play')" v-else>
-      <template v-slot:activator="{ props }">
-        <v-btn
-          icon="mdi-play" size="small"
-          v-bind="props"
-          v-on:mousedown.stop="$_play"
+          v-bind:icon="$_playOrPauseButtonIconName"
+          v-on:click="$_onPlayOrPauseButtonClicked"
         >
         </v-btn>
       </template>
@@ -51,9 +45,13 @@
         <v-btn
           icon="mdi-fast-forward" size="small"
           v-bind="props"
-          v-on:mousedown.stop="$_seekForwardStart"
-          v-on:mouseup.stop="$_seekForwardEnd"
-          v-on:mouseout.stop="$_seekForwardEnd"
+          v-on:mousedown="$_seekForwardStart"
+          v-on:mouseup="$_seekForwardEnd"
+          v-on:mouseout="$_seekForwardEnd"
+          v-on:keydown.space="$_seekForwardStart"
+          v-on:keydown.enter="$_seekForwardStart"
+          v-on:keyup.space="$_seekForwardEnd"
+          v-on:keyup.enter="$_seekForwardEnd"
         >
         </v-btn>
       </template>
@@ -64,42 +62,20 @@
         <v-btn
           icon="mdi-skip-next" size="small"
           v-bind="props"
-          v-on:mousedown.stop="$_seekToTail"
+          v-on:click="$_seekToTail"
         >
         </v-btn>
       </template>
     </v-tooltip>
 
-    <v-tooltip location="top" v-bind:text="$t('clearLoop')" v-if="loopDefinition !== undefined">
+    <v-tooltip location="top" v-bind:text="$_loopButtonTooltipText">
       <template v-slot:activator="{ props }">
         <v-btn
-          icon="mdi-ray-start-end" size="small" class="loop-enabled"
-          
+          size="small"
           v-bind="props"
-          v-on:mousedown.stop="$_clearLoop"
-        >
-        </v-btn>
-      </template>
-    </v-tooltip>
-
-    <v-tooltip location="top" v-bind:text="$t('setLoopStart')" v-else-if="$_isTempLoopBeginNotSet">
-      <template v-slot:activator="{ props }">
-        <v-btn
-          icon="mdi-ray-start" size="small"
-          v-bind="props"
-          v-on:mousedown.stop="$_setLoopBegin"
-        >
-        </v-btn>
-      </template>
-    </v-tooltip>
-
-    <v-tooltip location="top" v-bind:text="$t('setLoopEnd')" v-else-if="$_isTempLoopEndNotSet">
-      <template v-slot:activator="{ props }">
-        <v-btn
-          icon="mdi-ray-end" size="small" class="loop-enabled"
-          v-bind="props"
-          v-bind:disabled="$_isSetTempLoopEndButtonDisabled"
-          v-on:mousedown.stop="$_setLoopEnd"
+          v-bind:class="$_loopButtonClassName"
+          v-bind:icon="$_loopButtonIconName"
+          v-on:click="$_onLoopButtonClicked"
         >
         </v-btn>
       </template>
@@ -162,8 +138,40 @@ export default defineComponent({
     },
 
     $_isSetTempLoopEndButtonDisabled() {
-      if (this.tempLoopBeginTimeSec === undefined) return true;
+      if (this.tempLoopBeginTimeSec === undefined) return false;
       return ((this.tempLoopBeginTimeSec + loopDurationSecMin) > this.playTimeSec);
+    },
+
+    $_playOrPauseButtonTooltipText(): string {
+      return (this.isPlaying)? this.$t('pause') : this.$t('play');
+    },
+
+    $_playOrPauseButtonIconName(): string {
+      return (this.isPlaying)? 'mdi-pause' : 'mdi-play';
+    },
+
+    $_onPlayOrPauseButtonClicked(): () => void {
+      return (this.isPlaying)? this.$_pause : this.$_play;
+    },
+
+    $_loopButtonTooltipText(): string {
+      if (this.loopDefinition !== undefined) return this.$t('clearLoop');
+      return (this.$_isTempLoopBeginNotSet)? this.$t('setLoopStart') : this.$t('setLoopEnd');
+    },
+
+    $_loopButtonClassName(): string | undefined {
+      if ((this.loopDefinition !== undefined) || !this.$_isTempLoopBeginNotSet) return 'loop-enabled';
+      return undefined;
+    },
+
+    $_loopButtonIconName(): string {
+      if (this.loopDefinition !== undefined) return 'mdi-ray-start-end';
+      return (this.$_isTempLoopBeginNotSet)? 'mdi-ray-start' : 'mdi-ray-end';
+    },
+
+    $_onLoopButtonClicked(): () => void {
+      if (this.loopDefinition !== undefined) return this.$_clearLoop;
+      return (this.$_isTempLoopBeginNotSet)? this.$_setLoopBegin : this.$_setLoopEnd;
     },
   },
 

@@ -1,5 +1,9 @@
 <template>
-  <v-toolbar id="audio-player-bar" density="compact">
+  <v-toolbar
+    id="audio-player-bar" density="compact"
+    v-on:keydown.stop
+    v-on:click.stop
+  >
     <v-tooltip location="top" v-bind:text="$t('loadAudioFile')">
       <template v-slot:activator="{ props }">
         <v-btn
