@@ -180,9 +180,7 @@ export default defineComponent({
       this.$emit('update:tempLoopBeginTimeSec', undefined);
     },
 
-    $_clearLoop() {
-      this.$emit('update:loopDefinition', undefined);
-    },
+    $_clearLoop() { this.$emit('update:loopDefinition', undefined) },
 
     $_play() { this.$emit('play') },
 
