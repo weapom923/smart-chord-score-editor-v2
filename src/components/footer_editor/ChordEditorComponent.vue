@@ -4,6 +4,7 @@
       mandatory color="primary"
       class="chord-component-selector root"
       v-model="$_rootNoteSymbolText"
+      v-bind:disabled="$_isNoteRest"
     >
       <v-btn
         size="small"
