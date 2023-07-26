@@ -187,7 +187,8 @@ export default {
 
     $_tensionNoteContainerStyle(): CSSProperties {
       return {
-        marginBottom: `${this.$_fontSizePx * 0.2}px`,
+        position: 'absolute',
+        bottom: `${this.$_fontSizePx * 0.5}px`,
       };
     },
 
