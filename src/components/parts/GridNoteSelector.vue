@@ -3,7 +3,6 @@
     v-bind:label="$t('gridNoteValue')"
     v-model="$_gridNoteValueLabel"
     v-bind:items="$_gridNoteValueLabels"
-    v-on:keydown.stop
   />
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <v-card id="editor-component">
+  <v-card id="editor-component" v-on:keydown.stop>
     <bar-editor-toolbar
       density="compact"
       v-model:selected-part-idx="$data.$_selectedPartIdx"

@@ -6,7 +6,6 @@
     v-bind:label="$t('barLineStartKind')"
     v-bind:items="$_allBarLineStarts"
     v-bind:disabled="barLineStart === undefined"
-    v-on:keydown.stop
   />
 </template>
 
