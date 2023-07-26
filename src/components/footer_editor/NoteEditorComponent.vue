@@ -1,25 +1,18 @@
 <template>
   <v-card>
     <v-card-text class="pa-0">
-      <div
-        v-on:keydown.left.stop
-        v-on:keydown.right.stop
-        v-on:keydown.up.stop
-        v-on:keydown.down.stop
-      >
-        <v-range-slider
-          density="compact" color="primary" hide-details
-          v-if="$data.$_noteValueSliderValues !== undefined"
-          v-model="$data.$_noteValueSliderValues"
-          v-bind:min="0"
-          v-bind:max="$_numSliderTicks"
-          v-bind:step="1"
-          v-on:update:model-value="$_onChangeValues"
-          v-on:start="$_onChangeValues"
-          v-on:end="$_onFixValues"
-          v-on:keydown="$_fixCurrentSliderValues"
-        />
-      </div>
+      <v-range-slider
+        density="compact" color="primary" hide-details
+        v-if="$data.$_noteValueSliderValues !== undefined"
+        v-model="$data.$_noteValueSliderValues"
+        v-bind:min="0"
+        v-bind:max="$_numSliderTicks"
+        v-bind:step="1"
+        v-on:update:model-value="$_onChangeValues"
+        v-on:start="$_onChangeValues"
+        v-on:end="$_onFixValues"
+        v-on:keydown="$_fixCurrentSliderValues"
+      />
       <note-value-selector-buttons
         v-if="($_safeNoteValueSliderUnitValue !== undefined) && ($data.$_noteValueSliderUnitValue !== undefined)"
         v-model:unit-note-value="$data.$_noteValueSliderUnitValue"
@@ -61,7 +54,6 @@ export default {
     selectedSectionAndBarIdx() { this.$_initialize() },
     selectedPartIdx() { this.$_initialize() },
     selectedNoteIdx() { this.$_initialize() },
-    $_selectedNote() { this.$_initialize() },
     '$data.$_noteValueSliderUnitValue': {
       handler() { this.$_setNoteValueSliderValues() },
       deep: true,

@@ -8,7 +8,6 @@
       v-bind="$attrs"
       v-bind:rules="$_rules"
       v-bind:min="$_barValueNumeratorMin"
-      v-on:keydown.stop
     />
     <div>/</div>
     <v-select
@@ -16,7 +15,6 @@
       v-model="$_barValueDenominator"
       v-bind="$attrs"
       v-bind:items="$_barValueDenominators"
-      v-on:keydown.stop
     />
   </div>
 </template>

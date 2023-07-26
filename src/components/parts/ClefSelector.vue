@@ -5,7 +5,6 @@
     v-model="$_clef"
     v-bind:label="$t('clefSign')"
     v-bind:items="$_allClefs"
-    v-on:keydown.stop
   />
 </template>
 

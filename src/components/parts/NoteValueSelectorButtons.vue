@@ -8,7 +8,6 @@
       v-for="( props, idx ) of $_divisibleUnitNoteValueButtonProps"
       v-bind:key="idx"
       v-bind="props"
-      v-on:keydown.stop
     >
     </v-btn>
   </v-btn-toggle>

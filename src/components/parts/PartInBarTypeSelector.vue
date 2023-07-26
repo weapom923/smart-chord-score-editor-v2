@@ -7,7 +7,6 @@
     v-bind:label="$t('partType')"
     v-bind:items="$_allPartInBarTypeNames"
     v-bind:rules="$_rules"
-    v-on:keydown.stop
   />
 </template>
 
