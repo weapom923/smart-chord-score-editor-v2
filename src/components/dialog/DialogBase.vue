@@ -6,6 +6,7 @@
     v-bind:retain-focus="$data.$_retainsFocus"
     v-on:update:model-value="$_onShowsChange"
     v-on:keydown.stop
+    v-on:keydown.escape="$_onEscapeKeyDown"
     v-on:keydown.enter="$_onEnterKeyDown"
   >
     <v-card id="dialog-window">
@@ -99,6 +100,11 @@ export default {
       if (this.initializeCallback) {
         this.initializeCallback();
       }
+    },
+
+    $_onEscapeKeyDown(event: KeyboardEvent) {
+      this.$_onCancelClicked();
+      event.preventDefault();
     },
 
     $_onEnterKeyDown(event: KeyboardEvent) {
