@@ -20,7 +20,6 @@
         id="seek-bar-loop"
         class="loop"
         ref="seekBarLoop"
-        v-show="loopDefinition !== undefined"
       >
       </div>
 
@@ -102,6 +101,7 @@ export default defineComponent({
   watch: {
     currentTimeSec(newCurrentTimeSec: number) {
       this.$_updateSeekBarPosition(newCurrentTimeSec, this.$data.$_seekBarScale);
+      this.$_updateLoopRange(this.tempLoopBeginTimeSec, this.loopDefinition, newCurrentTimeSec, this.$data.$_seekBarScale);
     },
 
     durationSec(newDurationSec: number) {
@@ -109,8 +109,12 @@ export default defineComponent({
       this.$_updateSeekBarPosition(this.currentTimeSec, this.$data.$_seekBarScale);
     },
 
+    tempLoopBeginTimeSec(tempLoopBeginTimeSec?: number) {
+      this.$_updateLoopRange(tempLoopBeginTimeSec, this.loopDefinition, this.currentTimeSec, this.$data.$_seekBarScale);
+    },
+
     loopDefinition(loopDefinition?: AudioPlaybackLoopDefinition) {
-      if (loopDefinition !== undefined) this.$_updateLoopRange(loopDefinition, this.$data.$_seekBarScale);
+      this.$_updateLoopRange(this.tempLoopBeginTimeSec, loopDefinition, this.currentTimeSec, this.$data.$_seekBarScale);
     },
 
     '$data.$_seekBarBaseWidthPx'(seekBarBaseWidthPx: number) {
@@ -119,7 +123,7 @@ export default defineComponent({
 
     '$data.$_seekBarScale'(seekBarScale: number) {
       this.$_updateSeekBarPosition(this.currentTimeSec, seekBarScale);
-      if (this.loopDefinition !== undefined) this.$_updateLoopRange(this.loopDefinition, seekBarScale);
+      this.$_updateLoopRange(this.tempLoopBeginTimeSec, this.loopDefinition, this.currentTimeSec, seekBarScale);
     },
   },
 
@@ -143,6 +147,7 @@ export default defineComponent({
     durationSec: { type: Number, required: true },
     isSeeking: { type: Boolean, required: true },
     loopDefinition: { type: AudioPlaybackLoopDefinition },
+    tempLoopBeginTimeSec: { type: Number },
   },
 
   data():{
@@ -170,9 +175,25 @@ export default defineComponent({
       this.$_seekBarPlayed.style.width = `${currentTimeSec / seekBarScale}px`;
     }, 
 
-    $_updateLoopRange(loopDefinition: AudioPlaybackLoopDefinition, seekBarScale: number) {
-      this.$_seekBarLoop.style.left = `${loopDefinition.beginTimeSec / seekBarScale}px`;
-      this.$_seekBarLoop.style.width = `${loopDefinition.loopDurationSec / seekBarScale}px`;
+    $_updateLoopRange(
+      tempLoopBeginTimeSec: number | undefined,
+      loopDefinition: AudioPlaybackLoopDefinition | undefined,
+      currentTimeSec: number,
+      seekBarScale: number,
+    ) {
+      if (tempLoopBeginTimeSec !== undefined) {
+        let loopDurationSec = currentTimeSec - tempLoopBeginTimeSec;
+        if (loopDurationSec < 0) return;
+        this.$_seekBarLoop.style.display = 'initial';
+        this.$_seekBarLoop.style.left = `${tempLoopBeginTimeSec / seekBarScale}px`;
+        this.$_seekBarLoop.style.width = `${loopDurationSec / seekBarScale}px`;
+      } else if (loopDefinition !== undefined) {
+        this.$_seekBarLoop.style.display = 'initial';
+        this.$_seekBarLoop.style.left = `${loopDefinition.beginTimeSec / seekBarScale}px`;
+        this.$_seekBarLoop.style.width = `${loopDefinition.loopDurationSec / seekBarScale}px`;
+      } else {
+        this.$_seekBarLoop.style.display = 'none';
+      }
     },
 
     $_getSeekTimeSecByMouseEvent(mouseEvent: MouseEvent) {

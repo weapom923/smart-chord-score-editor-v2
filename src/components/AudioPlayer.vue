@@ -6,6 +6,7 @@
       v-bind:is-playing="$data.$_isPlaying"
       v-bind:is-seeking="$data.$_isSeeking"
       v-model:loop-definition="$data.$_loopDefinition"
+      v-model:temp-loop-begin-time-sec="$data.$_tempLoopBeginTimeSec"
       v-on:seek-start="$_seekStart"
       v-on:seek-in-sec="$_seekInSec"
       v-on:seek-instantly-in-sec="$_seekInstantlyInSec"
@@ -20,6 +21,7 @@
       v-bind:duration-sec="audioBuffer.duration"
       v-bind:is-seeking="$data.$_isSeeking"
       v-bind:loop-definition="$data.$_loopDefinition"
+      v-bind:temp-loop-begin-time-sec="$data.$_tempLoopBeginTimeSec"
       v-on:seek="$_seekInSec"
       v-on:seek-start="$_seekStart"
       v-on:seek-end="$_seekEnd"
@@ -95,6 +97,7 @@ export default defineComponent({
     $_isSeeking: boolean,
     $_wasPlayingOnSeek: boolean | undefined,
     $_loopDefinition?: AudioPlaybackLoopDefinition,
+    $_tempLoopBeginTimeSec?: number,
 
     $_audioBufferSourceNodePool: AudioBufferSourceNodePool,
     $_audioBufferSourceNodesWaitingForStop: Array<AudioBufferSourceNode>,
@@ -110,6 +113,7 @@ export default defineComponent({
       $_isSeeking: false,
       $_wasPlayingOnSeek: undefined,
       $_loopDefinition: undefined,
+      $_tempLoopBeginTimeSec: undefined,
 
       $_audioBufferSourceNodePool: {},
       $_audioBufferSourceNodesWaitingForStop: [],
