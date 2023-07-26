@@ -1,6 +1,7 @@
 <template>
   <dialog-base
     v-model:shows="$_shows"
+    v-bind:initialize-callback="$_initialize"
     v-bind:ok-callback="$_ok"
     v-bind:ok-disabled="!$data.$_valid"
   >
@@ -63,7 +64,7 @@ export default {
     return {
       $_valid: true,
       $_tempChord: undefined,
-      $_tempChordText: (this.$_chord === undefined)? '' : String(this.$_chord),
+      $_tempChordText: '',
       $_parsedChord: undefined,
       $_parseErrorMessage: undefined,
     };
@@ -94,6 +95,10 @@ export default {
   },
 
   methods: {
+    $_initialize() {
+      this.$data.$_tempChordText = (this.$_chord === undefined)? '' : String(this.$_chord);
+    },
+
     async $_ok() {
       if (this.$data.$_tempChord !== undefined) {
         let note = this.$_note.clone();
