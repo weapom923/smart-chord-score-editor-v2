@@ -157,13 +157,15 @@ export default defineComponent({
 
   methods: {
     onKeydown(keyEventType: KeyEventType, event: KeyboardEvent) {
+      if (document.activeElement !== document.body) return false;
       switch (event.code) {
         case 'Space':
-          (this.$data.$_isPlaying)? this.$_pause() : this.$_play();
-          return true;
-        default:
-          return false;
+          if (keyEventType === 'key') {
+            (this.$data.$_isPlaying)? this.$_pause() : this.$_play();
+            return true;
+          }
       }
+      return false;
     },
 
     /* private */
