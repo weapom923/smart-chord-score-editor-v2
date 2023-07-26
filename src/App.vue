@@ -31,7 +31,6 @@
       
       <component
         v-if="$store.state.dialog.dialog"
-        v-model="$store.state.dialog.shows"
         v-bind:is="$store.state.dialog.dialog?.componentName"
         v-bind="$store.state.dialog.dialog?.props"
       >

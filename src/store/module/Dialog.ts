@@ -8,6 +8,7 @@ export type DialogDefinition = {
 
 export type DialogState = {
   shows: boolean,
+  focusBackElement?: HTMLElement,
   dialog?: DialogDefinition,
 };
 
@@ -22,6 +23,12 @@ const DialogModule: Module<DialogState, RootState> = {
   mutations: {
     setShows(state: DialogState, shows: boolean) {
       state.shows = shows;
+      if (shows) {
+        state.focusBackElement = document.activeElement as HTMLElement ?? undefined;
+        state.focusBackElement?.blur();
+      } else {
+        state.focusBackElement?.focus();
+      }
     },
 
     setDialog(state: DialogState, dialog: DialogDefinition) {
