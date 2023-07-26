@@ -1,5 +1,5 @@
 <template>
-  <dialog-base v-model:shows="$_shows">
+  <dialog-base>
     <template v-slot:body>
       <v-card-title v-text="$t('helpMessage.help')"></v-card-title>
 
@@ -82,15 +82,10 @@
 import DialogBase from './DialogBase.vue';
 
 export default {
+  extends: DialogBase,
+
   components: {
     DialogBase,
-  },
-
-  computed: {
-    $_shows: {
-      get(): boolean            { return this.$store.state.dialog.shows },
-      async set(shows: boolean) { await this.$store.dispatch('dialog/setShows', shows) },
-    },
   },
 }
 </script>

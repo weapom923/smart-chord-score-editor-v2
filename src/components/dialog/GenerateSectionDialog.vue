@@ -1,6 +1,5 @@
 <template>
   <dialog-base
-    v-model:shows="$_shows"
     v-bind:ok-callback="$_ok"
     v-bind:ok-disabled="!$data.$_valid"
   >
@@ -80,6 +79,8 @@ import { PartInBarType } from '../../modules/PartInBar';
 import { isEmptyLike } from '../../modules/utils';
 
 export default {
+  extends: DialogBase,
+
   components: {
     DialogBase,
     DialogTextField,
@@ -119,11 +120,6 @@ export default {
   },
 
   computed: {
-    $_shows: {
-      get(): boolean            { return this.$store.state.dialog.shows },
-      async set(shows: boolean) { await this.$store.dispatch('dialog/setShows', shows) },
-    },
-
     $_rules(): { [key: string]: ((value: any) => string | true)[] } {
       return {
         name: [

@@ -6,8 +6,8 @@
     v-bind:retain-focus="$data.$_retainsFocus"
     v-on:update:model-value="$_onShowsChange"
     v-on:keydown.stop
-    v-on:keydown.escape="$_onEscapeKeyDown"
-    v-on:keydown.enter="$_onEnterKeyDown"
+    v-on:keydown.escape="$_onEscapeKeydown"
+    v-on:keydown.enter="$_onEnterKeydown"
   >
     <v-card id="dialog-window">
       <slot name="body">
@@ -48,12 +48,8 @@
 
 <script lang="ts">
 export default {
-  emits: {
-    'update:shows': (shows: boolean) => true,
-  },
-
   watch: {
-    shows: {
+    '$store.state.dialog.shows': {
       handler(newShows) { if (newShows) this.$_initialize() },
       immediate: true,
     },
@@ -102,12 +98,12 @@ export default {
       }
     },
 
-    $_onEscapeKeyDown(event: KeyboardEvent) {
+    $_onEscapeKeydown(event: KeyboardEvent) {
       this.$_onCancelClicked();
       event.preventDefault();
     },
 
-    $_onEnterKeyDown(event: KeyboardEvent) {
+    $_onEnterKeydown(event: KeyboardEvent) {
       if (this.okDisabled) return;
       this.$_onOkClicked();
       event.preventDefault();
@@ -140,7 +136,7 @@ export default {
           this.$data.$_focusBackElement.focus();
         }
       });
-      this.$emit('update:shows', false);
+      this.$store.dispatch('dialog/setShows', false);
     },
   },
 }
