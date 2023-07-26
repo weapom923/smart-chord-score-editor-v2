@@ -66,6 +66,7 @@ import SystemComponent from './SystemComponent.vue';
 import SectionNameHoverMenu from './parts/SectionNameHoverMenu.vue';
 import { Score } from '../modules/Score';
 import { Section } from '../modules/Section';
+import { Bar } from '../modules/Bar';
 import { bb } from '../modules/BarBreak';
 import { SectionAndBarIdx, BarRange } from '../modules/SectionAndBarRange';
 
@@ -95,27 +96,31 @@ export default {
 
     $_systemComponentProps(): SystemComponentPropsType[] {
       let systemDefinitions: SystemComponentPropsType[] = [];
-      let firstBarIdxOfCurrentSystem: number | undefined = undefined;
+      let firstBarIdxOfCurrentSystem = this.barRange.firstBarIdx;
+      let previousBar: Bar | undefined = undefined;
       for (let barIdx of this.barRange.indices()) {
-        if (firstBarIdxOfCurrentSystem === undefined) firstBarIdxOfCurrentSystem = barIdx;
-        let bar = this.$_section.getBar(barIdx);
+        let currentBar = this.$_section.getBar(barIdx);
         let isSectionLastBar = (barIdx === this.barRange.lastBarIdx);
-        let isSectionBroken = !bar.break.isEqualTo(bb.empty);
+        let isSectionBroken = !currentBar.break.isEqualTo(bb.empty);
         if (isSectionBroken || isSectionLastBar) {
-          let isFirstSystem = (this.sectionIdx === this.score.firstSectionIdx);
-          let showBeatOnFirstBar = isFirstSystem || this.showBeatOnFirstBar;
-          let lastBarIdxOfCurrentSystem = barIdx;
+          let showBeatOnFirstBar = this.showBeatOnFirstBar;
+          if (firstBarIdxOfCurrentSystem !== this.barRange.firstBarIdx) {
+            if (previousBar !== undefined) {
+              showBeatOnFirstBar = !previousBar.value.isEqualTo(currentBar.value);
+            }
+          }
           systemDefinitions.push(
             {
               score: this.score,
               sectionIdx: this.sectionIdx,
-              barRange: new BarRange(firstBarIdxOfCurrentSystem, lastBarIdxOfCurrentSystem),
+              barRange: new BarRange(firstBarIdxOfCurrentSystem, barIdx),
               showBeatOnFirstBar,
               showBarHoverMenu: true,
             },
           );
-          firstBarIdxOfCurrentSystem = undefined;
+          firstBarIdxOfCurrentSystem = barIdx + 1;
         }
+        previousBar = currentBar;
       }
       return systemDefinitions;
     },
