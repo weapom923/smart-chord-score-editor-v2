@@ -1,31 +1,15 @@
 <template>
-  <div
-    id="tension-note"
-    v-bind:style="$_tensionNoteStyle"
-  >
-    <div
-      id="tension-note-sharp-or-flat-text"
-      v-bind:style="$_tensionNoteSharpOrFlatStyle"
-    >
-      {{ $_tensionNoteFlatOrSharpText }}
-    </div>
-    <div id="tension-note-text">{{ $_tensionNoteText }}</div>
+  <div id="tension-note" v-bind:style="$_tensionNoteStyle">
+    <div v-bind:style="$_tensionNoteSharpOrFlatStyle">{{ $_tensionNoteFlatOrSharpText }}</div>
+    <div>{{ $_tensionNoteText }}</div>
   </div>
 </template>
 
 <style scoped>
 #tension-note {
-  display: inline-block;
+  display: flex;
   width: fit-content;
   height: fit-content;
-}
-
-#tension-note-text {
-  display: inline-block;
-}
-
-#tension-note-sharp-or-flat-text {
-  display: inline-block;
 }
 </style>
 
