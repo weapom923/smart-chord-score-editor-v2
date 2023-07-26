@@ -247,6 +247,7 @@ const EditorComponent = defineComponent({
       } else {
         this.$data.$_selectedNoteIdx = 0;
       }
+      this.$data.$_temporalSelectedPart = undefined;
     },
 
     $_truncateSelectedPartIdx(selectedBar?: Bar) {
