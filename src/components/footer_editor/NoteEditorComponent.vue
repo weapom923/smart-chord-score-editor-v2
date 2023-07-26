@@ -17,6 +17,7 @@
           v-on:update:model-value="$_onChangeValues"
           v-on:start="$_onChangeValues"
           v-on:end="$_onFixValues"
+          v-on:keydown="$_fixCurrentSliderValues"
         />
       </div>
       <note-value-selector-buttons
@@ -314,6 +315,11 @@ export default {
       });
     },
 
+    $_fixCurrentSliderValues() {
+      if (this.$data.$_noteValueSliderValues !== undefined) {
+        this.$_onFixValues(this.$data.$_noteValueSliderValues);
+      }
+    },
   },
 }
 </script>
