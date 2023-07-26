@@ -124,6 +124,7 @@ const loopDurationSecMin = 0.1;
 export default defineComponent({
   emits: {
     'update:loopDefinition': (loopDefinition?: AudioPlaybackLoopDefinition) => true,
+    'update:tempLoopBeginTimeSec': (tempLoopBeginTimeSec?: number) => true,
     'seekInstantlyInSec': (timeSec: number) => true,
     'play': () => true,
     'pause': () => true,
@@ -138,35 +139,31 @@ export default defineComponent({
     isPlaying: { type: Boolean, default: false },
     isSeeking: { type: Boolean, default: false },
     loopDefinition: { type: AudioPlaybackLoopDefinition },
+    tempLoopBeginTimeSec: { type: Number },
   },
 
   data(): {
     $_seekTargetTimeSec: number,
     $_intervalId: number | undefined,
-    $_tempLoopBeginTimeSec?: number,
-    $_tempLoopEndTimeSec?: number,
   } {
     return {
       $_seekTargetTimeSec: 0,
       $_intervalId: undefined,
-      $_tempLoopBeginTimeSec: undefined,
-      $_tempLoopEndTimeSec: undefined,
     };
   },
 
   computed: {
-
     $_isTempLoopBeginNotSet() {
-      return (this.$data.$_tempLoopBeginTimeSec === undefined);
+      return (this.tempLoopBeginTimeSec === undefined);
     },
 
     $_isTempLoopEndNotSet() {
-      return (this.$data.$_tempLoopEndTimeSec === undefined);
+      return (!this.$_isTempLoopBeginNotSet && (this.loopDefinition === undefined));
     },
 
     $_isSetTempLoopEndButtonDisabled() {
-      if (this.$data.$_tempLoopBeginTimeSec === undefined) return true;
-      return ((this.$data.$_tempLoopBeginTimeSec + loopDurationSecMin) > this.playTimeSec);
+      if (this.tempLoopBeginTimeSec === undefined) return true;
+      return ((this.tempLoopBeginTimeSec + loopDurationSecMin) > this.playTimeSec);
     },
   },
 
@@ -175,19 +172,15 @@ export default defineComponent({
 
     $_seekToTail() { this.$emit('seekInstantlyInSec', this.durationSec) },
 
-    $_setLoopBegin() {
-      this.$data.$_tempLoopBeginTimeSec = this.playTimeSec;
-    },
+    $_setLoopBegin() { this.$emit('update:tempLoopBeginTimeSec', this.playTimeSec) },
 
     $_setLoopEnd() {
-      if (this.$data.$_tempLoopBeginTimeSec === undefined) return;
-      this.$data.$_tempLoopEndTimeSec = this.playTimeSec;
-      this.$emit('update:loopDefinition', new AudioPlaybackLoopDefinition(this.$data.$_tempLoopBeginTimeSec, this.$data.$_tempLoopEndTimeSec));
+      if (this.tempLoopBeginTimeSec === undefined) return;
+      this.$emit('update:loopDefinition', new AudioPlaybackLoopDefinition(this.tempLoopBeginTimeSec, this.playTimeSec));
+      this.$emit('update:tempLoopBeginTimeSec', undefined);
     },
 
     $_clearLoop() {
-      this.$data.$_tempLoopEndTimeSec = undefined;
-      this.$data.$_tempLoopBeginTimeSec = undefined;
       this.$emit('update:loopDefinition', undefined);
     },
 
