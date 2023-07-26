@@ -3,7 +3,7 @@ import { RootState } from '..';
 
 export type DialogDefinition = {
   componentName: string,
-  props?: {},
+  props?: Record<string, any>,
 }
 
 export type DialogState = {
