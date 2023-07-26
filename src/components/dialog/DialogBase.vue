@@ -2,14 +2,13 @@
   <v-dialog
     width="unset"
     scrollable
-    v-bind:value="shows"
-    v-bind:retain-focus="$data.$_retainsFocus"
+    v-model="$data.$_tempShows"
     v-on:update:model-value="$_onShowsChange"
     v-on:keydown.stop
     v-on:keydown.escape="$_onEscapeKeydown"
     v-on:keydown.enter="$_onEnterKeydown"
   >
-    <v-card id="dialog-window">
+    <v-card id="dialog-window" v-on:vue:unmounted="$_restoreState">
       <slot name="body">
       </slot>
 
@@ -56,21 +55,18 @@ export default {
   },
 
   data(): {
-    $_retainsFocus: boolean,
-    $_focusBackElement: typeof document.activeElement,
+    $_tempShows: boolean,
     $_isOkCallbackCalled: boolean,
     $_isFinalizeCallbackCalled: boolean,
   } {
     return {
-      $_retainsFocus: false,
-      $_focusBackElement: null,
+      $_tempShows: false,
       $_isOkCallbackCalled: false,
       $_isFinalizeCallbackCalled: false,
     };
   },
 
   props: {
-    shows:              { type: Boolean, default: false },
     initializeCallback: { type: Function },
     okCallback:         { type: Function },
     finalizeCallback:   { type: Function },
@@ -89,10 +85,9 @@ export default {
   methods: {
     /* private */
     $_initialize() {
-      this.$data.$_focusBackElement = document.activeElement;
+      this.$data.$_tempShows = true;
       this.$data.$_isOkCallbackCalled = false;
       this.$data.$_isFinalizeCallbackCalled = false;
-      this.$data.$_retainsFocus = true;
       if (this.initializeCallback) {
         this.initializeCallback();
       }
@@ -130,13 +125,11 @@ export default {
         this.finalizeCallback();
         this.$data.$_isFinalizeCallbackCalled = true;
       }
-      this.$data.$_retainsFocus = false;
-      this.$nextTick(() => {
-        if (this.$data.$_focusBackElement instanceof HTMLElement) {
-          this.$data.$_focusBackElement.focus();
-        }
-      });
-      this.$store.dispatch('dialog/setShows', false);
+      this.$data.$_tempShows = false;
+    },
+
+    async $_restoreState() {
+      await this.$store.dispatch('dialog/setShows', false);
     },
   },
 }
