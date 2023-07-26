@@ -21,6 +21,7 @@
       mandatory tile color="primary"
       class="chord-component-selector accidental-sign"
       v-model="$_rootNoteAccidentalSign"
+      v-bind:disabled="!$_chordExists"
     >
       <v-btn
         size="small"
@@ -29,7 +30,6 @@
         v-bind:key="noteAccidentalSign"
         v-bind:value="noteAccidentalSign"
         v-bind:text="noteAccidentalSign"
-        v-bind:disabled="!$_chordExists"
       >
       </v-btn>
     </v-btn-toggle>
@@ -38,6 +38,7 @@
       mandatory tile color="primary"
       class="chord-component-selector"
       v-model="$_triadText"
+      v-bind:disabled="!$_chordExists"
     >
       <v-btn
         size="small"
@@ -46,7 +47,6 @@
         v-bind:key="triadText"
         v-bind:value="triadText"
         v-bind:text="triadText"
-        v-bind:disabled="!$_chordExists"
       >
       </v-btn>
     </v-btn-toggle>
@@ -90,6 +90,7 @@
       tile color="primary"
       class="chord-component-selector"
       v-model="$_bassNoteSymbolText"
+      v-bind:disabled="!$_chordExists"
     >
       <v-btn
         size="small"
@@ -98,7 +99,6 @@
         v-bind:key="bassNoteSymbolText"
         v-bind:value="bassNoteSymbolText"
         v-bind:text="bassNoteSymbolText"
-        v-bind:disabled="!$_chordExists"
       >
       </v-btn>
     </v-btn-toggle>
@@ -119,7 +119,6 @@
       >
       </v-btn>
     </v-btn-toggle>
-
   </div>
 </template>
 
