@@ -281,7 +281,7 @@ export default {
     $_onSplitNoteElementMounted(splitNoteIdx: SplitNoteIdx, splitNoteElement: HTMLElement) {
       this.$data.$_splitNoteElements.set(splitNoteIdx, splitNoteElement);
       this.$emit('splitNoteElementMounted', { splitNoteIdx, splitNoteElement });
-      this.$_updateTiePropsAndStyles();
+      this.$nextTick(() => { this.$_updateTiePropsAndStyles() });
     },
 
     $_onSplitNoteElementBeforeUnmount(splitNoteIdx: SplitNoteIdx) {
@@ -290,7 +290,7 @@ export default {
       this.$data.$_splitNoteTieStartOffsets.delete(splitNoteIdx);
       this.$data.$_splitNoteTieEndOffsets.delete(splitNoteIdx);
       this.$emit('splitNoteElementBeforeUnmount', splitNoteIdx);
-      this.$_updateTiePropsAndStyles();
+      this.$nextTick(() => { this.$_updateTiePropsAndStyles() });
     },
 
     $_onNoteWidthUpdate(splitNoteIdx: SplitNoteIdx, widthPx: number) {
@@ -300,6 +300,7 @@ export default {
     $_onNoteTiePointUpdate(splitNoteIdx: SplitNoteIdx, { tieStartPointOffset, tieEndPointOffset }: { tieStartPointOffset: DOMPoint, tieEndPointOffset: DOMPoint }) {
       this.$data.$_splitNoteTieStartOffsets.set(splitNoteIdx, tieStartPointOffset);
       this.$data.$_splitNoteTieEndOffsets.set(splitNoteIdx, tieEndPointOffset);
+      this.$nextTick(() => { this.$_updateTiePropsAndStyles() });
     },
 
     $_onClickNote() {
