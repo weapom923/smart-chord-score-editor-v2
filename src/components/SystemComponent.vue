@@ -353,7 +353,7 @@ export default {
     },
 
     $_getShowBeat(barIdx: BarIdx): boolean {
-      if (barIdx === 0) return this.showBeatOnFirstBar;
+      if (barIdx === this.barRange.firstBarIdx) return this.showBeatOnFirstBar;
       let currentBarValue = this.$_section.getBar(barIdx).value;
       let previousBarValue = this.$_section.getBar(barIdx - 1).value;
       if (!currentBarValue.isSameAs(previousBarValue)) return true;
