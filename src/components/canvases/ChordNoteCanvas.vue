@@ -34,16 +34,13 @@ const ChordNoteCanvas = defineComponent({
 
     invertStemDirection() { this.$_setDirty(true) },
 
+    $_tieStartPointOffset() { this.$_emitTiePointUpdate() },
+
+    $_tieEndPointOffset() { this.$_emitTiePointUpdate() },
+
     $_noteWidthPx(newCanvasWidthPx: number) {
       this.$_setCanvasWidthPx(newCanvasWidthPx);
-      this.$emit('widthUpdate', newCanvasWidthPx);
-      this.$emit(
-        'tiePointUpdate',
-        {
-          tieStartPointOffset: this.$_tieStartPointOffset,
-          tieEndPointOffset: this.$_tieEndPointOffset,
-        },
-      );
+      this.$_emitWidthUpdate();
     },
 
     $_noteHeightPx(newCanvasHeightPx: number) {
@@ -54,14 +51,8 @@ const ChordNoteCanvas = defineComponent({
   mounted() {
     this.$_setCanvasWidthPx(this.$_noteWidthPx);
     this.$_setCanvasHeightPx(this.$_noteHeightPx);
-    this.$emit('widthUpdate', this.$_noteWidthPx);
-    this.$emit(
-      'tiePointUpdate',
-      {
-        tieStartPointOffset: this.$_tieStartPointOffset,
-        tieEndPointOffset: this.$_tieEndPointOffset,
-      },
-    );
+    this.$_emitWidthUpdate();
+    this.$_emitTiePointUpdate();
     this.$emit('mounted', this.$el);
   },
 
@@ -255,6 +246,22 @@ const ChordNoteCanvas = defineComponent({
         canvas.stroke();
       }
     }
+  },
+
+  methods: {
+    $_emitTiePointUpdate() {
+      this.$emit(
+        'tiePointUpdate',
+        {
+          tieStartPointOffset: this.$_tieStartPointOffset,
+          tieEndPointOffset: this.$_tieEndPointOffset,
+        },
+      );
+    },
+
+    $_emitWidthUpdate() {
+      this.$emit('widthUpdate', this.$_noteWidthPx);
+    },
   },
 })
 
