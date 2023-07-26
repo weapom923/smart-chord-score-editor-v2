@@ -2,6 +2,9 @@
   <v-app-bar
     fixed density="compact"
     v-bind:app="!$store.state.appState.isPrintLayoutEnabled"
+    v-on:click.stop
+    v-on:keydown.stop
+    v-on:keydown.escape="$_blur"
   >
     <v-tooltip
       location="bottom"
@@ -156,6 +159,10 @@ export default {
         ),
       };
     },
+  },
+
+  methods: {
+    $_blur() { if (document.activeElement instanceof HTMLElement) document.activeElement.blur() },
   },
 }
 </script>

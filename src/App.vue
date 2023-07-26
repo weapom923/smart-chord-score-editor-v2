@@ -30,6 +30,7 @@
       </div>
       
       <component
+        ref="dialog"
         v-if="$store.state.dialog.dialog"
         v-bind:is="$store.state.dialog.dialog?.componentName"
         v-bind="$store.state.dialog.dialog?.props"
@@ -107,6 +108,7 @@ import AppBar from './components/AppBar.vue';
 import ScorePage from './components/ScorePage.vue';
 import SnackBar from './components/snack_bar/SnackBar.vue';
 import EditorComponent from './components/footer_editor/EditorComponent.vue';
+import DialogBase from './components/dialog/DialogBase.vue';
 import { Score } from './modules/Score';
 import { BarBreak, bb } from './modules/BarBreak';
 import { SectionAndBarRange, SectionAndBarIdx } from './modules/SectionAndBarRange';
@@ -248,6 +250,10 @@ const App = defineComponent({
       return this.$refs.editorComponent as any;
     },
 
+    $_getDialogComponent(): InstanceType<typeof DialogBase> | undefined | null {
+      return this.$refs.dialog as any;
+    },
+
     async $_onClickBackground() {
       await this.$store.dispatch('score/unselectBar');
       await this.$store.dispatch('appState/setIsPrintLayoutEnabled', false);
@@ -270,18 +276,19 @@ const App = defineComponent({
     },
 
     async onKeydown(event: KeyboardEvent) {
-      if (await this.$_onKeydown(event)) event.preventDefault() 
+      if (await this.$_onKeydown(event)) event.preventDefault();
     },
 
     async $_onKeydown(event: KeyboardEvent) {
-      let keyEventType = getKeyEventType(event);
-      if (await this.$_getEditorComponent()?.onKeydown(keyEventType, event) ?? false) return true;
-      if (this.$_audioPlayerBar.onKeydown(keyEventType, event)) return true;
+      if (document.activeElement !== document.body) return false;
+      if (this.$_getDialogComponent()?.onKeydown(event) ?? false) return true;
+      if (await this.$_getEditorComponent()?.onKeydown(event) ?? false) return true;
+      if (this.$_audioPlayerBar.onKeydown(event)) return true;
       if (this.$store.state.appState.isPrintLayoutEnabled) {
         await this.$store.dispatch('appState/setIsPrintLayoutEnabled', false);
         return true;
       }
-      switch (keyEventType) {
+      switch (getKeyEventType(event)) {
         case 'key':
           switch (event.code) {
             case 'Escape':

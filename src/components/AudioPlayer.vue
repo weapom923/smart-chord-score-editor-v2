@@ -35,7 +35,6 @@ import { defineComponent } from 'vue';
 import AudioPlayerController from './AudioPlayer/AudioPlayerController.vue';
 import AudioPlaybackLoopDefinition from './AudioPlayer/modules/AudioPlaybackLoopDefinition';
 import AudioPlayerSeekBar from './AudioPlayer/AudioPlayerSeekBar.vue';
-import { KeyEventType } from '../modules/KeyEventType';
 
 type AudioBufferSourceNodePool = Record<string, AudioBufferSourceNode>;
 
@@ -156,14 +155,12 @@ export default defineComponent({
   },
 
   methods: {
-    onKeydown(keyEventType: KeyEventType, event: KeyboardEvent) {
+    onKeydown(event: KeyboardEvent): boolean {
       if (document.activeElement !== document.body) return false;
       switch (event.code) {
         case 'Space':
-          if (keyEventType === 'key') {
-            (this.$data.$_isPlaying)? this.$_pause() : this.$_play();
-            return true;
-          }
+          (this.$data.$_isPlaying)? this.$_pause() : this.$_play();
+          return true;
       }
       return false;
     },

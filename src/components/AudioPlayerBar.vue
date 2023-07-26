@@ -1,7 +1,7 @@
 <template>
   <v-toolbar
     id="audio-player-bar" density="compact"
-    v-on:keydown.stop
+    v-on:keydown.stop="onKeydown"
     v-on:click.stop
   >
     <v-tooltip location="top" v-bind:text="$t('loadAudioFile')">
@@ -34,7 +34,6 @@
 import { defineComponent } from 'vue';
 import AudioPlayer from './AudioPlayer.vue';
 import { loadFileAsUint8Array, getFileInterface } from '../modules/utils';
-import { KeyEventType } from '../modules/KeyEventType'
 
 const AudioPlayerBar = defineComponent({
   emits: {
@@ -61,8 +60,17 @@ const AudioPlayerBar = defineComponent({
       return this.$refs.audioPlayer as any;
     },
 
-    onKeydown(keyEventType: KeyEventType, event: KeyboardEvent): boolean {
-      return this.$_getAudioPlayer()?.onKeydown(keyEventType, event) ?? false;
+    onKeydown(event: KeyboardEvent): boolean {
+      if (this.$_getAudioPlayer()?.onKeydown(event) ?? false) return true;
+      switch (event.key) {
+        case 'Escape':
+          if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+            return true;
+          }
+          break;
+      }
+      return false;
     },
 
     async $_loadAudioSource() {

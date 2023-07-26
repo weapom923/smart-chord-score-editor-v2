@@ -4,9 +4,7 @@
     scrollable
     v-model="$data.$_tempShows"
     v-on:update:model-value="$_onShowsChange"
-    v-on:keydown.stop
-    v-on:keydown.escape="$_onEscapeKeydown"
-    v-on:keydown.enter="$_onEnterKeydown"
+    v-on:keydown.stop="onKeydown"
   >
     <v-card id="dialog-window" v-on:vue:unmounted="$_restoreState">
       <slot name="body">
@@ -93,15 +91,17 @@ export default {
       }
     },
 
-    $_onEscapeKeydown(event: KeyboardEvent) {
-      this.$_onCancelClicked();
-      event.preventDefault();
-    },
-
-    $_onEnterKeydown(event: KeyboardEvent) {
-      if (this.okDisabled) return;
-      this.$_onOkClicked();
-      event.preventDefault();
+    onKeydown(event: KeyboardEvent): boolean {
+      switch (event.key) {
+        case 'Enter':
+          if (this.okDisabled) return false;
+          this.$_onOkClicked();
+          return true;
+        case 'Escape':
+          this.$_onCancelClicked();
+          return true;
+      }
+      return false;
     },
 
     $_onCancelClicked() {

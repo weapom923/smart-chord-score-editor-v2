@@ -1,5 +1,5 @@
 <template>
-  <v-card id="editor-component" v-on:keydown.stop>
+  <v-card id="editor-component" v-on:keydown.stop="onKeydown">
     <bar-editor-toolbar
       density="compact"
       v-model:selected-part-idx="$data.$_selectedPartIdx"
@@ -75,7 +75,7 @@ import BarEditorToolbar from '../footer_editor/BarEditorToolbar.vue';
 import BarEditorComponent from '../footer_editor/BarEditorComponent.vue';
 import NoteEditorComponent from '../footer_editor/NoteEditorComponent.vue';
 import BarDetailEditorComponent from '../footer_editor/BarDetailEditorComponent.vue';
-import { KeyEventType } from '../../modules/KeyEventType';
+import { getKeyEventType } from '../../modules/KeyEventType';
 import { Bar } from '../../modules/Bar';
 import { PartInBar, PartInBarType } from '../../modules/PartInBar';
 import { SectionAndBarIdx, SectionAndBarRange } from '../../modules/SectionAndBarRange';
@@ -182,7 +182,8 @@ const EditorComponent = defineComponent({
       return this.$refs.barEditorComponent as any;
     },
 
-    async onKeydown(keyEventType: KeyEventType, event: KeyboardEvent): Promise<boolean> {
+    async onKeydown(event: KeyboardEvent): Promise<boolean> {
+      let keyEventType = getKeyEventType(event);
       if (await this.$_getBarEditorComponent()?.onKeydown(keyEventType, event) ?? false) return true;
       switch (keyEventType) {
         case 'key':
@@ -197,6 +198,12 @@ const EditorComponent = defineComponent({
             case 'KeyB':
               await this.$store.dispatch('score/selectPreviousBar');
               return true;
+            case 'Escape':
+              if (document.activeElement instanceof HTMLElement) {
+                document.activeElement.blur();
+                return true;
+              }
+              break;
           }
           break;
         case 'repeated_key':
