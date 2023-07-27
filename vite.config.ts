@@ -22,6 +22,9 @@ export default defineConfig({
       usePolling: true,
     },
   },
+  build: {
+    outDir: 'smart-chord-score-editor/dist'
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
