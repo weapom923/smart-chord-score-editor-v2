@@ -136,6 +136,16 @@ export default {
             );
           },
         ),
+        enableMobileLayout: new MenuItemDefinition(
+          (this.$store.state.appState.isMobileLayoutEnabled)? 'mdi-tablet-cellphone' : 'mdi-note-outline',
+          this.$t(`${(this.$store.state.appState.isMobileLayoutEnabled)? 'dis' : 'en'}ableMobileLayout`),
+          async () => {
+            await this.$store.dispatch(
+              'appState/setIsMobileLayoutEnabled',
+              !this.$store.state.appState.isMobileLayoutEnabled,
+            );
+          },
+        ),
       };
     },
 
