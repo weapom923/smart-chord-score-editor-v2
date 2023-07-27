@@ -1,6 +1,6 @@
 .DS_Store
 node_modules
-/dist
+smart-chord-score-editor/dist
 
 
 # local env files
