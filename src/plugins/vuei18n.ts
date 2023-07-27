@@ -268,7 +268,7 @@ let messageEn: Messages = {
   saveScore: 'Save score file',
   importScoreFromText: 'Load text score file',
   enablePrintLayout: 'Enable print layout',
-  disablePrintLayout: 'Sisable print layout',
+  disablePrintLayout: 'Disable print layout',
   scoreMetadata: 'Score metadata',
   globalConfig: 'Global configuration',
   help: 'Help',
