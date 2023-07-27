@@ -4,6 +4,7 @@ import { RootState } from '..';
 export type AppState = {
   snackBarMessage?: string,
   isPrintLayoutEnabled: boolean,
+  isMobileLayoutEnabled: boolean,
   isFooterEditorMinimized: boolean,
   isAutoScrollEnabled: boolean,
 };
@@ -14,6 +15,7 @@ const AppStateModule: Module<AppState, RootState> = {
   state: {
     snackBarMessage: undefined,
     isPrintLayoutEnabled: false,
+    isMobileLayoutEnabled: false,
     isFooterEditorMinimized: true,
     isAutoScrollEnabled: false,
   },
@@ -25,6 +27,10 @@ const AppStateModule: Module<AppState, RootState> = {
 
     setIsPrintLayoutEnabled(state: AppState, isPrintLayoutEnabled: boolean) {
       state.isPrintLayoutEnabled = isPrintLayoutEnabled;
+    },
+
+    setIsMobileLayoutEnabled(state: AppState, isMobileLayoutEnabled: boolean) {
+      state.isMobileLayoutEnabled = isMobileLayoutEnabled;
     },
 
     setIsFooterEditorMinimized(state: AppState, isFooterEditorMinimized: boolean) {
@@ -39,6 +45,10 @@ const AppStateModule: Module<AppState, RootState> = {
 
     setIsPrintLayoutEnabled(context: ActionContext<AppState, RootState>, isPrintLayoutEnabled: boolean) {
       context.commit('setIsPrintLayoutEnabled', isPrintLayoutEnabled);
+    },
+
+    setIsMobileLayoutEnabled(context: ActionContext<AppState, RootState>, isMobileLayoutEnabled: boolean) {
+      context.commit('setIsMobileLayoutEnabled', isMobileLayoutEnabled);
     },
 
     setIsFooterEditorMinimized(context: ActionContext<AppState, RootState>, isFooterEditorMinimized: boolean) {

@@ -20,11 +20,9 @@
         >
         </v-btn>
         <score-page
-          v-for="(scorePageSectionAndBarRange, scorePageDefinitionIdx) of $_scorePageSectionAndBarRanges"
+          v-for="(scorePageProp, scorePageDefinitionIdx) of $_scorePageProps"
           v-bind:key="scorePageDefinitionIdx"
-          v-bind:section-and-bar-range="scorePageSectionAndBarRange"
-          v-bind:score-page-index="scorePageDefinitionIdx"
-          v-bind:num-score-pages="$_scorePageSectionAndBarRanges.length"
+          v-bind="scorePageProp"
         >
         </score-page>
       </div>
@@ -196,8 +194,8 @@ const App = defineComponent({
 
     $_score(): Score { return this.$store.state.score.score },
 
-    $_scorePageSectionAndBarRanges(): SectionAndBarRange[] {
-      let sectionAndBarRanges: SectionAndBarRange[] = [];
+    $_scorePageProps(): InstanceType<typeof ScorePage>['$props'][] {
+      let sectionAndBarRanges: SectionAndBarRange[] = []
       let sectionAndBarIdx: SectionAndBarIdx | undefined = this.$_score.firstSectionAndBarIdx;
       let pageFirstSectionAndBarIdx: SectionAndBarIdx | undefined = undefined;
       while (sectionAndBarIdx !== undefined) {
@@ -205,7 +203,7 @@ const App = defineComponent({
           pageFirstSectionAndBarIdx = sectionAndBarIdx.clone();
         }
         let bar = this.$_score.getBar(sectionAndBarIdx);
-        if (bar.break.isEqualTo(bb.page)) {
+        if (bar.break.isEqualTo(bb.page) && !this.$store.state.appState.isMobileLayoutEnabled) {
           sectionAndBarRanges.push(new SectionAndBarRange(pageFirstSectionAndBarIdx, sectionAndBarIdx));
           pageFirstSectionAndBarIdx = undefined;
         }
@@ -219,7 +217,12 @@ const App = defineComponent({
           ),
         );
       }
-      return sectionAndBarRanges;
+      return sectionAndBarRanges.map((sectionAndBarRange, scorePageIndex) => ({
+        sectionAndBarRange,
+        scorePageIndex,
+        numScorePages: sectionAndBarRanges.length,
+        aspectRatio: (this.$store.state.appState.isMobileLayoutEnabled)? undefined : this.$store.state.score.scorePageWHRatio,
+      }));
     },
 
     $_audioPlayerBar(): InstanceType<typeof AudioPlayerBar> {
