@@ -13,12 +13,17 @@ const router = createRouter({
           let response = await fetch(`/scores${to.path}.json`);
           let scoreRawObj = await response.json();
           to.meta.score = Score.loadFromRawObj(scoreRawObj);
-        }
-        finally {
           next();
+        }
+        catch {
+          next({ path: '' });
         }
       },
       props: route => ({ score: route.meta.score }),
+    },
+    {
+      path: '',
+      component: App,
     },
   ],
 })
