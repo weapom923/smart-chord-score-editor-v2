@@ -1,5 +1,5 @@
 <template>
-  <canvas id="clef-canvas" v-bind:style="$_style"></canvas>
+  <canvas id="clef-canvas"></canvas>
 </template>
 
 <style scoped>
@@ -11,7 +11,7 @@
 </style>
 
 <script lang="ts">
-import { defineComponent, CSSProperties } from 'vue';
+import { defineComponent } from 'vue';
 import CanvasBase from './CanvasBase.vue';
 import { Clef, cl } from '../../modules/Clef';
 import { raw } from '../../modules/utils';
@@ -33,11 +33,21 @@ const ClefCanvas = defineComponent({
     $_clefHeightPx(newClefHeightPx: number) {
       this.$_setCanvasHeightPx(newClefHeightPx);
     },
+
+    $_marginTopPx(marginTopPx) {
+      this.$_updateMarginTop(marginTopPx);
+    },
+
+    $_marginBottomPx(marginBottomPx) {
+      this.$_updateMarginBottom(marginBottomPx);
+    },
   },
 
   mounted() {
     this.$_setCanvasWidthPx(this.$_clefWidthPx);
     this.$_setCanvasHeightPx(this.$_clefHeightPx);
+    this.$_updateMarginTop(this.$_marginTopPx);
+    this.$_updateMarginBottom(this.$_marginBottomPx);
   },
 
   props: {
@@ -81,14 +91,6 @@ const ClefCanvas = defineComponent({
         case cl.bass:   return -this.$_staffLineStepPx * 2 + 1;
         default:        return 0;
       } 
-    },
-    $_style(): CSSProperties {
-      return {
-        marginTop: `${this.$_marginTopPx}px`,
-        marginBottom: `${this.$_marginBottomPx}px`,
-        height: `${this.$_clefHeightPx}px`,
-        width: `${this.$_clefWidthPx}px`,
-      };
     },
   },
 
@@ -333,6 +335,16 @@ const ClefCanvas = defineComponent({
       canvas.fill();
     }
   },
+
+  methods: {
+    $_updateMarginTop(marginTopPx: number) {
+      this.$_canvasElement.style.marginTop = `${marginTopPx}px`;
+    },
+
+    $_updateMarginBottom(marginBottomPx: number) {
+      this.$_canvasElement.style.marginBottom = `${marginBottomPx}px`;
+    },
+  }
 });
 
 export default ClefCanvas;

@@ -1,9 +1,9 @@
 <template>
-  <canvas v-bind:style="$_style"></canvas>
+  <canvas></canvas>
 </template>
 
 <script lang="ts">
-import { defineComponent, CSSProperties } from 'vue';
+import { defineComponent } from 'vue';
 import CanvasBase from './CanvasBase.vue';
 import { BarLine, bl } from '../../modules/BarLine';
 import { raw } from '../../modules/utils';
@@ -31,11 +31,21 @@ const BarLineCanvas = defineComponent({
     $_barLineHeightPx(newBarLineHeightPx) {
       this.$_setCanvasHeightPx(newBarLineHeightPx);
     },
+
+    $_marginTopPx(newMarginTopPx) {
+      this.$_updateMarginTop(newMarginTopPx);
+    },
+
+    $_marginBottomPx(newMarginBottomPx) {
+      this.$_updateMarginBottom(newMarginBottomPx);
+    },
   },
 
   mounted() {
     this.$_setCanvasWidthPx(this.$_barLineTotalWidthPx);
     this.$_setCanvasHeightPx(this.$_barLineHeightPx);
+    this.$_updateMarginTop(this.$_marginTopPx);
+    this.$_updateMarginBottom(this.$_marginBottomPx);
   },
 
   props: {
@@ -57,14 +67,8 @@ const BarLineCanvas = defineComponent({
       } 
     },
     $_barLineHeightPx(): number { return this.$_staffLineStepPx * 4 + 1 },
-    $_style(): CSSProperties {
-      return {
-        marginTop: `${-(this.$_staffLineStepPx * 2)}px`,
-        marginBottom: `${-(this.$_staffLineStepPx * 2 + 1)}px`,
-        height: `${this.$_barLineHeightPx}px`,
-        width: `${this.$_barLineTotalWidthPx}px`,
-      };
-    },
+    $_marginTopPx(): number { return -(this.$_staffLineStepPx * 2) },
+    $_marginBottomPx(): number { return -(this.$_staffLineStepPx * 2 + 1) },
   },
 
   created() {
@@ -181,6 +185,16 @@ const BarLineCanvas = defineComponent({
         this.$_barLineDotRadiusPx, 0, 2 * Math.PI);
       canvas.fill();
     }
+  },
+
+  methods: {
+    $_updateMarginTop(marginTopPx: number) {
+      this.$_canvasElement.style.marginTop = `${marginTopPx}px`;
+    },
+
+    $_updateMarginBottom(marginBottomPx: number) {
+      this.$_canvasElement.style.marginBottom = `${marginBottomPx}px`;
+    },
   },
 });
 

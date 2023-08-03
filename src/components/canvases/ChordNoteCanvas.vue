@@ -1,11 +1,11 @@
 <template>
-  <canvas id="note-canvas-container" v-bind:style="$_style"></canvas>
+  <canvas id="note-canvas-container"></canvas>
 </template>
 
 <style src="./styles/noteCanvas.css"></style>
 
 <script lang="ts">
-import { CSSProperties, defineComponent } from 'vue';
+import { defineComponent } from 'vue';
 import CanvasBase from './CanvasBase.vue';
 import { Note } from '../../modules/Note';
 import { NoteValue, nv } from '../../modules/NoteValue';
@@ -46,11 +46,16 @@ const ChordNoteCanvas = defineComponent({
     $_noteHeightPx(newCanvasHeightPx: number) {
       this.$_setCanvasHeightPx(newCanvasHeightPx);
     },
+
+    $_marginTopPx(newMarginTopPx) {
+      this.$_updateMarginTop(newMarginTopPx);
+    },
   },
 
   mounted() {
     this.$_setCanvasWidthPx(this.$_noteWidthPx);
     this.$_setCanvasHeightPx(this.$_noteHeightPx);
+    this.$_updateMarginTop(this.$_marginTopPx);
     this.$_emitWidthUpdate();
     this.$_emitTiePointUpdate();
     this.$emit('mounted', this.$el);
@@ -148,11 +153,11 @@ const ChordNoteCanvas = defineComponent({
         -(this.$_noteHeadHeightPx / 2),
       );
     },
-    $_style(): CSSProperties {
+    $_marginTopPx(): number {
       if (this.$_hasNoteStem && !this.invertStemDirection) {
-        return { marginTop: `${-((this.$_noteHeadHeightPx / 2) + this.$_noteStemLengthPx)}px` };
+        return -((this.$_noteHeadHeightPx / 2) + this.$_noteStemLengthPx);
       } else {
-        return { marginTop: `${-this.$_noteHeadHeightPx / 2}px` };
+        return -this.$_noteHeadHeightPx / 2;
       }
     },
   },
@@ -261,6 +266,10 @@ const ChordNoteCanvas = defineComponent({
 
     $_emitWidthUpdate() {
       this.$emit('widthUpdate', this.$_noteWidthPx);
+    },
+
+    $_updateMarginTop(marginTopPx: number) {
+      this.$_canvasElement.style.marginTop = `${marginTopPx}px`;
     },
   },
 })

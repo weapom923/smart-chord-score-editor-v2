@@ -1,5 +1,5 @@
 <template>
-  <canvas id="key-signature-canvas" v-bind:style="$_style"></canvas>
+  <canvas id="key-signature-canvas"></canvas>
 </template>
 
 <style scoped>
@@ -9,7 +9,6 @@
 </style>
 
 <script lang="ts">
-import { CSSProperties } from 'vue';
 import { defineComponent } from 'vue';
 import CanvasBase from './CanvasBase.vue';
 
@@ -32,11 +31,16 @@ const KeySignature = defineComponent({
     $_keySignatureHeightPx(newKeySignatureHeightPx) {
       this.$_setCanvasHeightPx(newKeySignatureHeightPx);
     },
+
+    $_marginTopPx(newMarginTopPx) {
+      this.$_updateMarginTop(newMarginTopPx);
+    },
   },
 
   mounted() {
     this.$_setCanvasWidthPx(this.$_keySignatureWidthPx);
     this.$_setCanvasHeightPx(this.$_keySignatureHeightPx);
+    this.$_updateMarginTop(this.$_marginTopPx);
   },
 
   props: {
@@ -72,13 +76,6 @@ const KeySignature = defineComponent({
         case -1: return -(this.$_staffLineStepPx * 2.5);
         default: return 0;
       } 
-    },
-    $_style(): CSSProperties {
-      return {
-        marginTop: `${this.$_marginTopPx}px`,
-        height: `${this.$_keySignatureHeightPx}px`,
-        width: `${this.$_keySignatureWidthPx}px`,
-      };
     },
   },
 
@@ -202,6 +199,12 @@ const KeySignature = defineComponent({
       canvas.stroke();
       canvas.fill();
     }
+  },
+
+  methods: {
+    $_updateMarginTop(marginTopPx: number) {
+      this.$_canvasElement.style.marginTop = `${marginTopPx}px`;
+    },
   },
 });
 
