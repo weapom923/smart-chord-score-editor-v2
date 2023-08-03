@@ -284,7 +284,16 @@ const App = defineComponent({
     },
 
     async $_onKeydown(event: KeyboardEvent) {
-      if (document.activeElement !== document.body) return false;
+      if (document.activeElement !== document.body) {
+        switch (event.code) {
+          case 'Escape':
+            if (document.activeElement instanceof HTMLElement) {
+              document.activeElement.blur();
+              return true;
+            }
+            break;
+        }
+      }
       if (this.$_getDialogComponent()?.onKeydown(event) ?? false) return true;
       if (await this.$_getEditorComponent()?.onKeydown(event) ?? false) return true;
       if (this.$_audioPlayerBar.onKeydown(event)) return true;
