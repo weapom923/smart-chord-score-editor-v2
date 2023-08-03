@@ -1,9 +1,8 @@
 <template>
-  <canvas v-bind:style="$_style"></canvas>
+  <canvas></canvas>
 </template>
 
 <script lang="ts">
-import { CSSProperties } from 'vue';
 import CanvasBase from './CanvasBase.vue';
 import { max } from '../../modules/utils';
 
@@ -30,11 +29,16 @@ export default {
     $_tieHeightPx(newTieHeightPx) {
       this.$_setCanvasHeightPx(newTieHeightPx);
     },
+
+    $_marginTopPx(newMarginTopPx) {
+      this.$_updateMarginTop(newMarginTopPx);
+    },
   },
 
   mounted() {
     this.$_setCanvasWidthPx(this.widthPx);
     this.$_setCanvasHeightPx(this.$_tieHeightPx);
+    this.$_updateMarginTop(this.$_marginTopPx);
   },
 
   props: {
@@ -46,13 +50,7 @@ export default {
   computed: {
     $_tieWidthPx(): number { return this.widthPx },
     $_tieHeightPx(): number { return max(-this.startVerticalOffsetPx, -this.endVerticalOffsetPx) + tieTopMarginPx },
-    $_style(): CSSProperties {
-      return {
-        marginTop: `${-this.$_tieHeightPx}px`,
-        height: `${this.$_tieHeightPx}px`,
-        width: `${this.$_tieWidthPx}px`,
-      };
-    },
+    $_marginTopPx(): number { return -this.$_tieHeightPx },
   },
 
   created() {
@@ -75,6 +73,12 @@ export default {
       );
       canvas.stroke();
     });
+  },
+
+  methods: {
+    $_updateMarginTop(marginTopPx: number) {
+      this.$_canvasElement.style.marginTop = `${marginTopPx}px`;
+    },
   },
 }
 </script>

@@ -1,12 +1,12 @@
 <template>
-  <canvas id="note-canvas-container" v-bind:style="$_style"></canvas>
+  <canvas id="note-canvas-container"></canvas>
 </template>
 
 <style src="./styles/noteCanvas.css">
 </style>
 
 <script lang="ts">
-import { CSSProperties, defineComponent } from 'vue';
+import { defineComponent } from 'vue';
 import CanvasBase from './CanvasBase.vue';
 import { NoteValue, nv } from '../../modules/NoteValue';
 import { NotePitch } from '../../modules/NotePitch';
@@ -45,11 +45,16 @@ const RestNoteCanvas = defineComponent({
     $_noteHeightPx(newCanvasHeightPx) {
       this.$_setCanvasHeightPx(newCanvasHeightPx);
     },
+
+    $_marginTopPx(newMarginTopPx) {
+      this.$_updateMarginTop(newMarginTopPx);
+    },
   },
 
   mounted() {
     this.$_setCanvasWidthPx(this.$_noteWidthPx);
     this.$_setCanvasHeightPx(this.$_noteHeightPx);
+    this.$_updateMarginTop(this.$_marginTopPx);
     this.$emit('widthUpdate', this.$_noteWidthPx);
     this.$emit('mounted', this.$el);
   },
@@ -139,15 +144,15 @@ const RestNoteCanvas = defineComponent({
       }
     },
 
-    $_style(): CSSProperties {
-      if (this.$_undottedNoteValue.isEqualTo(nv.divisible.whole))        return { marginTop: `${-this.$_staffLineStepPx}px` };
-      if (this.$_undottedNoteValue.isEqualTo(nv.divisible.half))         return { marginTop: `${-(this.$_noteHeightPx)}px` };
-      if (this.$_undottedNoteValue.isEqualTo(nv.divisible.quarter))      return { marginTop: `${-(this.$_staffLineStepPx * 1.5)}px` };
-      if (this.$_undottedNoteValue.isEqualTo(nv.divisible.eighth))       return { marginTop: `${-(this.$_staffLineStepPx * 1)}px` };
-      if (this.$_undottedNoteValue.isEqualTo(nv.divisible.sixteenth))    return { marginTop: `${-(this.$_staffLineStepPx * 1)}px` };
-      if (this.$_undottedNoteValue.isEqualTo(nv.divisible.thirtySecond)) return { marginTop: `${-(this.$_staffLineStepPx * 1.8)}px` };
-      if (this.$_undottedNoteValue.isEqualTo(nv.divisible.sixtyFourth))  return { marginTop: `${-(this.$_staffLineStepPx * 2.6)}px` };
-      return {};
+    $_marginTopPx(): number {
+      if (this.$_undottedNoteValue.isEqualTo(nv.divisible.whole))        return -this.$_staffLineStepPx;
+      if (this.$_undottedNoteValue.isEqualTo(nv.divisible.half))         return -(this.$_noteHeightPx);
+      if (this.$_undottedNoteValue.isEqualTo(nv.divisible.quarter))      return -(this.$_staffLineStepPx * 1.5);
+      if (this.$_undottedNoteValue.isEqualTo(nv.divisible.eighth))       return -(this.$_staffLineStepPx * 1);
+      if (this.$_undottedNoteValue.isEqualTo(nv.divisible.sixteenth))    return -(this.$_staffLineStepPx * 1);
+      if (this.$_undottedNoteValue.isEqualTo(nv.divisible.thirtySecond)) return -(this.$_staffLineStepPx * 1.8);
+      if (this.$_undottedNoteValue.isEqualTo(nv.divisible.sixtyFourth))  return -(this.$_staffLineStepPx * 2.6);
+      return 0;
     },
     $_restNoteCircleRadius() { return this.$_staffLineStepPx * 0.2 },
     $_noteDotRadiusPx() { return this.$_staffLineStepPx * noteDotRadiusRate; },
@@ -447,6 +452,12 @@ const RestNoteCanvas = defineComponent({
         this.$_restNoteCircleRadius, 0, 2 * Math.PI);
       canvas.fill();
     }
+  },
+
+  methods: {
+    $_updateMarginTop(marginTopPx: number) {
+      this.$_canvasElement.style.marginTop = `${marginTopPx}px`;
+    },
   },
 });
 
