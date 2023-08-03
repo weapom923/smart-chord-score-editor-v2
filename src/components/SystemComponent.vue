@@ -13,6 +13,7 @@
       v-bind:key="partIdx"
     >
       <tie-canvas
+        class="tie-canvas"
         v-if="$data.$_firstTieProps.has(partIdx)"
         v-bind="assertDefined($data.$_firstTieProps.get(partIdx))"
         v-bind:style="assertDefined($data.$_firstTieStyles.get(partIdx))"
@@ -24,17 +25,17 @@
       v-bind:key="barProps.barIdx"
     >
       <template
+        v-if="$data.$_tieProps.has(barProps.barIdx)"
         v-for="partIdx of $_partIdcs.get(barProps.barIdx)"
         v-bind:key="partIdx"
       >
-        <template v-if="$data.$_tieProps.has(barProps.barIdx)">
-          <tie-canvas
-            v-if="assertDefined($data.$_tieProps.get(barProps.barIdx)).has(partIdx)"
-            v-bind="assertDefined(assertDefined($data.$_tieProps.get(barProps.barIdx)).get(partIdx))"
-            v-bind:style="assertDefined(assertDefined($data.$_tieStyles.get(barProps.barIdx)).get(partIdx))"
-          >
-          </tie-canvas>
-        </template>
+        <tie-canvas
+          class="tie-canvas"
+          v-if="assertDefined($data.$_tieProps.get(barProps.barIdx)).has(partIdx)"
+          v-bind="assertDefined(assertDefined($data.$_tieProps.get(barProps.barIdx)).get(partIdx))"
+          v-bind:style="assertDefined(assertDefined($data.$_tieStyles.get(barProps.barIdx)).get(partIdx))"
+        >
+        </tie-canvas>
       </template>
       <div class="bar-container">
         <bar-component
@@ -107,6 +108,10 @@
 
 .bar-container {
   position: relative;
+}
+
+.tie-canvas {
+  position: absolute;
 }
 </style>
 
@@ -459,7 +464,6 @@ export default {
           firstTieStyles.set(
             partIdxInFirstBar,
             {
-              position: 'absolute',
               left: `${firstTieStartHorizontalOffsetPx}px`,
             },
           );
@@ -521,7 +525,6 @@ export default {
             tieStyles.get(currentBarIdx)?.set(
               currentPartIdx,
               {
-                position: 'absolute',
                 left: `${tieStartHorizontalOffsetPx}px`,
               },
             );
