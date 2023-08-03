@@ -49,7 +49,7 @@
           </v-table>
         </v-card-text>
 
-        <v-card-subtitle>Bar editor</v-card-subtitle>
+        <v-card-subtitle>{{ $t('helpMessage.barEditor') }}</v-card-subtitle>
         <v-card-text>
           <v-table density="compact" class="text-left">
             <thead>
