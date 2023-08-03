@@ -254,6 +254,7 @@ const App = defineComponent({
     },
 
     $_getDialogComponent(): InstanceType<typeof DialogBase> | undefined | null {
+      if (!this.$store.state.dialog.shows) return undefined;
       return this.$refs.dialog as any;
     },
 
