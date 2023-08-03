@@ -257,7 +257,7 @@ export default {
         if (bassNoteSymbolText !== undefined) {
           let bassNoteSymbol = this.$_bassNoteSymbolTextToInstance.get(bassNoteSymbolText);
           if (bassNoteSymbol !== undefined) {
-            bassNotePitch = NotePitch.findPredefinedNotePitch(bassNoteSymbol, this.chord.root.shift);
+            bassNotePitch = NotePitch.findPredefinedNotePitch(bassNoteSymbol, this.chord.bass?.shift ?? 0);
           }
         }
         let newChord = new Chord(
