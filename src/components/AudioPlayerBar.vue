@@ -1,7 +1,7 @@
 <template>
   <v-toolbar
     id="audio-player-bar" density="compact"
-    v-on:keydown.stop="onKeydown"
+    v-on:keydown="onKeydown"
     v-on:click.stop
   >
     <v-tooltip location="top" v-bind:text="$t('loadAudioFile')">
@@ -62,14 +62,6 @@ const AudioPlayerBar = defineComponent({
 
     onKeydown(event: KeyboardEvent): boolean {
       if (this.$_getAudioPlayer()?.onKeydown(event) ?? false) return true;
-      switch (event.key) {
-        case 'Escape':
-          if (document.activeElement instanceof HTMLElement) {
-            document.activeElement.blur();
-            return true;
-          }
-          break;
-      }
       return false;
     },
 

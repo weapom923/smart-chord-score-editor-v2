@@ -1,5 +1,5 @@
 <template>
-  <v-card id="editor-component" v-on:keydown.stop="onKeydown">
+  <v-card id="editor-component" v-on:keydown="onKeydown">
     <bar-editor-toolbar
       density="compact"
       v-model:selected-part-idx="$data.$_selectedPartIdx"
@@ -198,12 +198,6 @@ const EditorComponent = defineComponent({
             case 'KeyB':
               await this.$store.dispatch('score/selectPreviousBar');
               return true;
-            case 'Escape':
-              if (document.activeElement instanceof HTMLElement) {
-                document.activeElement.blur();
-                return true;
-              }
-              break;
           }
           break;
         case 'repeated_key':
