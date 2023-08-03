@@ -5,6 +5,7 @@
       v-bind:play-time-sec="$data.$_playTimeSec"
       v-bind:is-playing="$data.$_isPlaying"
       v-bind:is-seeking="$data.$_isSeeking"
+      v-model:volume="$_volume"
       v-model:loop-definition="$data.$_loopDefinition"
       v-model:temp-loop-begin-time-sec="$data.$_tempLoopBeginTimeSec"
       v-on:seek-start="$_seekStart"
@@ -39,6 +40,10 @@ import AudioPlayerSeekBar from './AudioPlayer/AudioPlayerSeekBar.vue';
 type AudioBufferSourceNodePool = Record<string, AudioBufferSourceNode>;
 
 export default defineComponent({
+  emits: {
+    'update:volume': (volume: number) => true,
+  },
+
   components: {
     AudioPlayerController,
     AudioPlayerSeekBar,
@@ -83,6 +88,8 @@ export default defineComponent({
   props: {
     audioBuffer:    { type: AudioBuffer, required: true },
     audioContext:   { type: AudioContext, required: true },
+    gainNode:       { type: GainNode, required: true },
+    volume:         { type: Number, required: true },
   },
 
   data(): {
@@ -128,7 +135,12 @@ export default defineComponent({
 
     $_audioPlayerSeekBar(): InstanceType<typeof AudioPlayerSeekBar> {
       return this.$refs.audioPlayerSeekBar as InstanceType<typeof AudioPlayerSeekBar>;
-    }
+    },
+
+    $_volume: {
+      get(): number       { return this.volume }, 
+      set(volume: number) { this.$emit('update:volume', volume) },
+    },
   },
 
   mounted() {
@@ -231,6 +243,7 @@ export default defineComponent({
       this.$data.$_audioBufferSourceNodePool[newAudioBufferSourceNodeId] = newAudioBufferSourceNode;
       newAudioBufferSourceNode.buffer = this.audioBuffer;
       newAudioBufferSourceNode.connect(this.audioContext.destination);
+      newAudioBufferSourceNode.connect(this.gainNode);
       newAudioBufferSourceNode.onended = () => {
         delete this.$data.$_audioBufferSourceNodePool[newAudioBufferSourceNodeId];
         this.$_suspend();

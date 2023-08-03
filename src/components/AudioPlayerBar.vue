@@ -16,9 +16,11 @@
     </v-tooltip>
     <audio-player
       ref="audioPlayer" class="pr-4"
-      v-if="($data.$_audioContext !== undefined) && ($data.$_audioBuffer !== undefined)"
+      v-if="($data.$_audioContext !== undefined) && ($data.$_audioBuffer !== undefined) && ($data.$_gainNode !== undefined)"
+      v-model:volume="$data.$_volume"
       v-bind:audio-context="$data.$_audioContext"
       v-bind:audio-buffer="$data.$_audioBuffer"
+      v-bind:gain-node="$data.$_gainNode"
     >
     </audio-player>
   </v-toolbar>
@@ -41,6 +43,13 @@ const AudioPlayerBar = defineComponent({
     'updatePlayTime': (playTimeSec: number) => true,
   },
 
+  watch: {
+    $_gainValue(gainValue: number) {
+      if (this.$data.$_gainNode === undefined) return;
+      this.$data.$_gainNode.gain.value = gainValue;
+    },
+  },
+
   components: {
     AudioPlayer,
   },
@@ -48,11 +57,19 @@ const AudioPlayerBar = defineComponent({
   data(): {
     $_audioContext?: AudioContext,
     $_audioBuffer?: AudioBuffer,
+    $_gainNode?: GainNode,
+    $_volume: number,
   } {
     return {
       $_audioContext: undefined,
       $_audioBuffer: undefined,
+      $_gainNode: undefined,
+      $_volume: 1,
     };
+  },
+
+  computed: {
+    $_gainValue(): number { return this.$data.$_volume - 1 },
   },
 
   methods: {
@@ -73,6 +90,9 @@ const AudioPlayerBar = defineComponent({
       this.$data.$_audioContext = new AudioContext();
       this.$data.$_audioContext.suspend();
       this.$data.$_audioBuffer = await this.$data.$_audioContext.decodeAudioData(audioUint8Array.buffer);
+      this.$data.$_gainNode = this.$data.$_audioContext.createGain();
+      this.$data.$_gainNode.connect(this.$data.$_audioContext.destination);
+      this.$data.$_gainNode.gain.value = this.$_gainValue;
     },
   },
 });
