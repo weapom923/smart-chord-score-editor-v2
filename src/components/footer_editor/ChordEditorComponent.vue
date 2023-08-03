@@ -82,7 +82,6 @@
         v-bind:text="tensionNotePitchText"
         v-bind:disabled="$_isTensionNoteDisabled.get(tensionNotePitchText) && true"
       >
-        {{ tensionNotePitchText }}
       </v-btn>
     </v-btn-toggle>
 
