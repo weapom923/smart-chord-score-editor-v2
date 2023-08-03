@@ -39,10 +39,6 @@ import AudioPlayerSeekBar from './AudioPlayer/AudioPlayerSeekBar.vue';
 type AudioBufferSourceNodePool = Record<string, AudioBufferSourceNode>;
 
 export default defineComponent({
-  emits: {
-    'updatePlayTime': (playTimeSec: number) => true,
-  },
-
   components: {
     AudioPlayerController,
     AudioPlayerSeekBar,
@@ -274,7 +270,6 @@ export default defineComponent({
       let playTimeSec = this.$_getPlayTimeSec();
       this.$data.$_previousTimeSec = this.$data.$_playTimeSec;
       this.$data.$_playTimeSec = playTimeSec;
-      this.$emit('updatePlayTime', playTimeSec);
     },
 
     $_requestAudioBufferSourceNodeToStop() {
