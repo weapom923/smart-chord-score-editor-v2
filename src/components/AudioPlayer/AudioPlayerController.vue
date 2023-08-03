@@ -68,6 +68,34 @@
       </template>
     </v-tooltip>
 
+    <v-menu>
+      <template v-slot:activator="{ props: menuProps }">
+        <v-tooltip location="top" v-bind:text="$t('volume')">
+          <template v-slot:activator="{ props: tooltipProps }">
+            <v-btn
+              size="small"
+              v-bind:icon="$_volumeButtonIconName"
+              v-bind="mergeProps(menuProps, tooltipProps)"
+            >
+            </v-btn>
+          </template>
+        </v-tooltip>
+      </template>
+
+      <v-card>
+        <v-card-text>
+          <v-slider
+            min="0" max="1" hide-details
+            direction="vertical" density="compact"
+            v-bind:prepend-icon="$_volumeButtonIconName"
+            v-model="$_volume"
+            v-on:click.stop
+          >
+          </v-slider>
+        </v-card-text>
+      </v-card>
+    </v-menu>
+
     <v-tooltip location="top" v-bind:text="$_loopButtonTooltipText">
       <template v-slot:activator="{ props }">
         <v-btn
@@ -90,7 +118,7 @@
 </style>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, mergeProps } from 'vue';
 import AudioPlaybackLoopDefinition from './modules/AudioPlaybackLoopDefinition';
 
 const seekIntervalTimeSec = 0.1;
@@ -101,6 +129,8 @@ export default defineComponent({
   emits: {
     'update:loopDefinition': (loopDefinition?: AudioPlaybackLoopDefinition) => true,
     'update:tempLoopBeginTimeSec': (tempLoopBeginTimeSec?: number) => true,
+    'update:volume': (volume: number) => true,
+    'update:playbackRate': (playbackRate: number) => true,
     'seekInstantlyInSec': (timeSec: number) => true,
     'play': () => true,
     'pause': () => true,
@@ -114,6 +144,7 @@ export default defineComponent({
     playTimeSec: { type: Number, default: 0 },
     isPlaying: { type: Boolean, default: false },
     isSeeking: { type: Boolean, default: false },
+    volume: { type: Number, default: 1 },
     loopDefinition: { type: AudioPlaybackLoopDefinition },
     tempLoopBeginTimeSec: { type: Number },
   },
@@ -129,6 +160,11 @@ export default defineComponent({
   },
 
   computed: {
+    $_volume: {
+      get(): number       { return this.volume },
+      set(volume: number) { this.$emit('update:volume', volume) },
+    },
+
     $_isTempLoopBeginNotSet() {
       return (this.tempLoopBeginTimeSec === undefined);
     },
@@ -169,6 +205,13 @@ export default defineComponent({
       return (this.$_isTempLoopBeginNotSet)? 'mdi-ray-start' : 'mdi-ray-end';
     },
 
+    $_volumeButtonIconName(): string {
+      if (this.volume > 0.7) return 'mdi-volume-high';
+      if (this.volume > 0.3) return 'mdi-volume-medium';
+      if (this.volume > 0) return 'mdi-volume-low';
+      return 'mdi-volume-mute'
+    },
+
     $_onLoopButtonClicked(): () => void {
       if (this.loopDefinition !== undefined) return this.$_clearLoop;
       return (this.$_isTempLoopBeginNotSet)? this.$_setLoopBegin : this.$_setLoopEnd;
@@ -176,6 +219,8 @@ export default defineComponent({
   },
 
   methods: {
+    mergeProps,
+
     $_seekToHead() { this.$emit('seekInstantlyInSec', 0) },
 
     $_seekToTail() { this.$emit('seekInstantlyInSec', this.durationSec) },
