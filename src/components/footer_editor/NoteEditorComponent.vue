@@ -11,7 +11,7 @@
         v-on:update:model-value="$_onChangeValues"
         v-on:start="$_onChangeValues"
         v-on:end="$_onFixValues"
-        v-on:keydown="$_fixCurrentSliderValues"
+        v-on:keydown.stop="$_fixCurrentSliderValues"
       />
       <note-value-selector-buttons
         v-if="($_safeNoteValueSliderUnitValue !== undefined) && ($data.$_noteValueSliderUnitValue !== undefined)"
