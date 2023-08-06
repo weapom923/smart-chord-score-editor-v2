@@ -19,9 +19,8 @@ const BarLineCanvas = defineComponent({
 
   watch: {
     barLine: {
-      handler() { this.$_setDirty(true) },
+      handler() { this.$_setDirty() },
       deep: true,
-      immediate: true,
     },
 
     $_barLineTotalWidthPx(newBarLineTotalWidthPx) {

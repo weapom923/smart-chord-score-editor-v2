@@ -13,13 +13,11 @@ export default {
 
   watch: {
     startVerticalOffsetPx: {
-      handler() { this.$_setDirty(true) },
-      immediate: true,
+      handler() { this.$_setDirty() },
     },
 
     endVerticalOffsetPx: {
-      handler() { this.$_setDirty(true) },
-      immediate: true,
+      handler() { this.$_setDirty() },
     },
 
     $_tieWidthPx(newTieWidthPx) {

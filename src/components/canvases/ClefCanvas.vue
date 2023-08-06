@@ -21,7 +21,7 @@ const ClefCanvas = defineComponent({
 
   watch: {
     clef: {
-      handler() { this.$_setDirty(true) },
+      handler() { this.$_setDirty() },
       deep: true,
       immediate: true,
     },

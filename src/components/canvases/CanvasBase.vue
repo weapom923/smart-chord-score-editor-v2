@@ -3,18 +3,19 @@ import { Color, cl } from '../../modules/Color';
 
 export default {
   watch: {
-    color: {
-      handler() { this.$_setDirty(true) },
-      immediate: true,
-    },
-    '$data.$_isDirty': {
-      handler(isDirty: boolean) { if (isDirty) this.$_draw() },
-      immediate: true,
-    },
+    color() { this.$_setDirty() },
+  },
+
+  created() {
+    this.$store.dispatch('canvas/addCanvas', this);
   },
 
   mounted() {
-    this.$nextTick(() => { this.$_draw() });
+    this.draw();
+  },
+
+  beforeUnmount() {
+    this.$store.dispatch('canvas/removeCanvas', this);
   },
 
   props: {
@@ -22,11 +23,9 @@ export default {
   },
 
   data(): {
-    $_isDirty: boolean,
     $_drawCallback?: (canvas: CanvasRenderingContext2D) => void,
   } {
     return {
-      $_isDirty: false,
       $_drawCallback: undefined,
     };
   },
@@ -42,7 +41,9 @@ export default {
   },
 
   methods: {
-    $_setDirty(isDirty: boolean) { this.$data.$_isDirty = isDirty },
+    $_setDirty() {
+      this.$store.dispatch('canvas/setDirty', this);
+    },
 
     $_setCallback(drawCallback: (canvas: CanvasRenderingContext2D) => void) {
       this.$data.$_drawCallback = drawCallback;
@@ -53,7 +54,7 @@ export default {
         this.$_canvasElement.style.width = `${canvasWidthPx}px`;
       }
       this.$_canvasElement.width = canvasWidthPx;
-      this.$_setDirty(true);
+      this.$_setDirty();
     },
 
     $_setCanvasHeightPx(canvasHeightPx: number, setStyle: boolean = true) {
@@ -61,20 +62,17 @@ export default {
         this.$_canvasElement.style.height = `${canvasHeightPx}px`;
       }
       this.$_canvasElement.height = canvasHeightPx;
-      this.$_setDirty(true);
+      this.$_setDirty();
     },
 
-    $_draw() {
-      if (!this.$data.$_isDirty) return;
+    draw() {
       if (this.$data.$_drawCallback === undefined) return;
-
       let canvas = this.$_canvasElement.getContext('2d');
       if (canvas === null) return;
       canvas.beginPath();
       canvas.clearRect(0, 0, this.$_canvasElement.width, this.$_canvasElement.height);
       this.$data.$_drawCallback(canvas);
-      this.$_setDirty(false);
-    }
+    },
   }
 }
 </script>
