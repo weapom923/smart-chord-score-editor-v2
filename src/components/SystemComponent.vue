@@ -151,10 +151,7 @@ export default {
     async $_isFirstOfSelection() { this.$_tryScrollTo() },
     async $_isLastOfSelection() { this.$_tryScrollTo() },
     '$data.$_barElements'() { this.$_updateTiePropsAndStyles() },
-    $_isTiedToNextSystem: {
-      handler() { this.$_updateTiePropsAndStyles() },
-      flush: 'post',
-    },
+    $_isTiedToNextSystem() { this.$_updateTiePropsAndStyles() },
   },
 
   props: {
@@ -338,7 +335,6 @@ export default {
 
   mounted() {
     this.$data.$_systemElementResizeObserver.observe(this.$_systemElement);
-    this.$_updateTiePropsAndStyles();
   },
 
   beforeUnmount() {
@@ -394,6 +390,7 @@ export default {
       this.$data.$_barNoteTieStartPointOffsets.set(barIdx, tieStartPointOffsets);
       this.$data.$_barNoteTieEndPointOffsets.set(barIdx, tieEndPointOffsets);
       this.$_updateTiePropsAndStyles();
+      this.$nextTick(() => { this.$store.dispatch('canvas/drawCanvas') });
     },
 
     $_onMarginTopPxUpdate(barIdx: BarIdx, marginTopPx: number) {

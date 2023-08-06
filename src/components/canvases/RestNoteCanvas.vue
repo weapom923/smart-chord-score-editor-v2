@@ -28,12 +28,12 @@ const RestNoteCanvas = defineComponent({
 
   watch: {
     noteValue: {
-      handler() { this.$_setDirty(true) },
+      handler() { this.$_setDirty() },
       deep: true,
     },
 
     restNotePitch: {
-      handler() { this.$_setDirty(true) },
+      handler() { this.$_setDirty() },
       deep: true,
     },
 

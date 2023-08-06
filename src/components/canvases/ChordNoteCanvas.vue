@@ -30,9 +30,9 @@ const ChordNoteCanvas = defineComponent({
   extends: CanvasBase,
 
   watch: {
-    note() { this.$_setDirty(true) },
+    note() { this.$_setDirty() },
 
-    invertStemDirection() { this.$_setDirty(true) },
+    invertStemDirection() { this.$_setDirty() },
 
     $_tieStartPointOffset() { this.$_emitTiePointUpdate() },
 
