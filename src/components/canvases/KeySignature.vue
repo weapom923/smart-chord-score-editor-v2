@@ -18,7 +18,7 @@ const KeySignature = defineComponent({
   extends: CanvasBase,
 
   watch: {
-    keyShiftAmount() { this.$_setDirty() },
+    keyShiftAmount() { this.draw() },
 
     $_keySignatureWidthPx(newKeySignatureWidthPx) {
       this.$_setCanvasWidthPx(newKeySignatureWidthPx);

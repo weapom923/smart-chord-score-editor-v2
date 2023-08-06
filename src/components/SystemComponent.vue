@@ -390,7 +390,6 @@ export default {
       this.$data.$_barNoteTieStartPointOffsets.set(barIdx, tieStartPointOffsets);
       this.$data.$_barNoteTieEndPointOffsets.set(barIdx, tieEndPointOffsets);
       this.$_updateTiePropsAndStyles();
-      this.$nextTick(() => { this.$store.dispatch('canvas/drawCanvas') });
     },
 
     $_onMarginTopPxUpdate(barIdx: BarIdx, marginTopPx: number) {
@@ -532,6 +531,7 @@ export default {
       this.$data.$_firstTieStyles = firstTieStyles;
       this.$data.$_tieProps = tieProps;
       this.$data.$_tieStyles = tieStyles;
+      this.$nextTick(() => { this.$store.dispatch('canvas/drawTieCanvas') });
     },
 
     $_tryScrollTo() {

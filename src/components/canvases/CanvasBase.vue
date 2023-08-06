@@ -3,19 +3,11 @@ import { Color, cl } from '../../modules/Color';
 
 export default {
   watch: {
-    color() { this.$_setDirty() },
-  },
-
-  created() {
-    this.$store.dispatch('canvas/addCanvas', this);
+    color() { this.draw() },
   },
 
   mounted() {
     this.draw();
-  },
-
-  beforeUnmount() {
-    this.$store.dispatch('canvas/removeCanvas', this);
   },
 
   props: {
@@ -41,10 +33,6 @@ export default {
   },
 
   methods: {
-    $_setDirty() {
-      this.$store.dispatch('canvas/setDirty', this);
-    },
-
     $_setCallback(drawCallback: (canvas: CanvasRenderingContext2D) => void) {
       this.$data.$_drawCallback = drawCallback;
     },
@@ -54,7 +42,7 @@ export default {
         this.$_canvasElement.style.width = `${canvasWidthPx}px`;
       }
       this.$_canvasElement.width = canvasWidthPx;
-      this.$_setDirty();
+      this.draw();
     },
 
     $_setCanvasHeightPx(canvasHeightPx: number, setStyle: boolean = true) {
@@ -62,7 +50,7 @@ export default {
         this.$_canvasElement.style.height = `${canvasHeightPx}px`;
       }
       this.$_canvasElement.height = canvasHeightPx;
-      this.$_setDirty();
+      this.draw();
     },
 
     draw() {

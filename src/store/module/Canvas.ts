@@ -5,56 +5,36 @@ import CanvasBase from '../../components/canvases/CanvasBase.vue';
 type CanvasInstance = InstanceType<typeof CanvasBase>;
 
 export type CanvasState = {
-  canvas: Map<CanvasInstance, boolean>,
+  tieCanvas: Set<CanvasInstance>,
 };
 
 const AppStateModule: Module<CanvasState, RootState> = {
   namespaced: true,
 
   state: {
-    canvas: new Map(),
+    tieCanvas: new Set(),
   },
 
   mutations: {
-    addCanvas(state: CanvasState, canvas: CanvasInstance) {
-      state.canvas.set(canvas, true);
+    reserveTieCanvas(state: CanvasState, tieCanvas: CanvasInstance) {
+      state.tieCanvas.add(tieCanvas);
     },
 
-    setDirty(state: CanvasState, canvas: CanvasInstance) {
-      if (state.canvas.has(canvas)) {
-        state.canvas.set(canvas, true);
-      }
-    },
-
-    removeCanvas(state: CanvasState, canvas: CanvasInstance) {
-      state.canvas.delete(canvas);
-    },
-
-    drawCanvas(state: CanvasState) {
-      for (let [ canvas, isDirty ] of state.canvas.entries()) {
-        if (isDirty) {
-          canvas.draw();
-          state.canvas.set(canvas, false);
-        }
+    drawTieCanvas(state: CanvasState) {
+      for (let tieCanvas of state.tieCanvas) {
+        tieCanvas.draw();
+        state.tieCanvas.delete(tieCanvas);
       }
     },
   },
 
   actions: {
-    addCanvas(context: ActionContext<CanvasState, RootState>, canvas: CanvasInstance) {
-      context.commit('addCanvas', canvas);
+    reserveTieCanvas(context: ActionContext<CanvasState, RootState>, tieCanvas: CanvasInstance) {
+      context.commit('reserveTieCanvas', tieCanvas);
     },
 
-    setDirty(context: ActionContext<CanvasState, RootState>, canvas: CanvasInstance) {
-      context.commit('setDirty', canvas);
-    },
-
-    removeCanvas(context: ActionContext<CanvasState, RootState>, canvas: CanvasInstance) {
-      context.commit('removeCanvas', canvas);
-    },
-
-    drawCanvas(context: ActionContext<CanvasState, RootState>) {
-      context.commit('drawCanvas');
+    drawTieCanvas(context: ActionContext<CanvasState, RootState>) {
+      context.commit('drawTieCanvas');
     },
   },
 }
