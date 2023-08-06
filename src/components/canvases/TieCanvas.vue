@@ -13,19 +13,21 @@ export default {
 
   watch: {
     startVerticalOffsetPx: {
-      handler() { this.$_setDirty() },
+      handler() { this.draw() },
     },
 
     endVerticalOffsetPx: {
-      handler() { this.$_setDirty() },
+      handler() { this.draw() },
     },
 
     $_tieWidthPx(newTieWidthPx) {
       this.$_setCanvasWidthPx(newTieWidthPx);
+      this.$store.dispatch('canvas/reserveTieCanvas', this);
     },
 
     $_tieHeightPx(newTieHeightPx) {
       this.$_setCanvasHeightPx(newTieHeightPx);
+      this.$store.dispatch('canvas/reserveTieCanvas', this);
     },
 
     $_marginTopPx(newMarginTopPx) {

@@ -19,7 +19,7 @@ const BarLineCanvas = defineComponent({
 
   watch: {
     barLine: {
-      handler() { this.$_setDirty() },
+      handler() { this.draw() },
       deep: true,
     },
 
