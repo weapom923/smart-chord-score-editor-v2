@@ -38,35 +38,16 @@
 
     <snack-bar class="no-print"></snack-bar>
 
-    <v-footer
-      class="pa-0 no-print"
-      v-show="!$store.state.appState.isPrintLayoutEnabled"
-      v-bind:app="!$store.state.appState.isPrintLayoutEnabled"
+    <audio-player-bar
+      ref="audioPlayerBar" color="primary"
+      location="bottom"
     >
-      <v-card class="w-100 rounded-0">
-        <v-toolbar color="primary" height="20">
-          <v-spacer></v-spacer>
-          <v-btn
-            size="small" icon
-            v-show="$store.state.score.selectedBars !== undefined"
-            v-on:click="$_toggleFooterEditorMaximizedAndMinimized"
-          >
-            <v-icon>
-              <template v-if="$store.state.appState.isFooterEditorMinimized">mdi-window-maximize</template>
-              <template v-else>mdi-window-minimize</template>
-            </v-icon>
-          </v-btn>
-        </v-toolbar>
+    </audio-player-bar>
 
-        <audio-player-bar ref="audioPlayerBar"></audio-player-bar>
-
-        <editor-component
-          ref="editorComponent"
-          v-if="($store.state.score.selectedBars !== undefined) && !$store.state.appState.isFooterEditorMinimized"
-        >
-        </editor-component>
-      </v-card>
-    </v-footer>
+    <bar-editor-drawer
+      v-if="($store.state.score.selectedBars !== undefined) && (!$store.state.appState.isPrintLayoutEnabled)"
+    >
+    </bar-editor-drawer>
   </v-app>
 </template>
 
@@ -105,7 +86,7 @@ import AudioPlayerBar from './components/AudioPlayerBar.vue';
 import AppBar from './components/AppBar.vue';
 import ScorePage from './components/ScorePage.vue';
 import SnackBar from './components/snack_bar/SnackBar.vue';
-import EditorComponent from './components/footer_editor/EditorComponent.vue';
+import BarEditorDrawer from './components/BarEditorDrawer.vue';
 import DialogBase from './components/dialog/DialogBase.vue';
 import { Score } from './modules/Score';
 import { BarBreak, bb } from './modules/BarBreak';
@@ -122,7 +103,7 @@ const App = defineComponent({
     AudioPlayerBar,
     ScorePage,
     SnackBar,
-    EditorComponent,
+    BarEditorDrawer,
     GlobalConfigEditorDialog,
     ScoreMetadataEditorDialog,
     SectionEditorDialog,
@@ -249,7 +230,7 @@ const App = defineComponent({
       this.$nextTick(() => { this.$data.$_isForcedReloading = false });
     },
 
-    $_getEditorComponent(): InstanceType<typeof EditorComponent> | undefined | null {
+    $_getBarEditorDrawerElement(): InstanceType<typeof BarEditorDrawer> | undefined | null {
       return this.$refs.editorComponent as any;
     },
 
@@ -295,7 +276,7 @@ const App = defineComponent({
         }
       }
       if (this.$_getDialogComponent()?.onKeydown(event) ?? false) return true;
-      if (await this.$_getEditorComponent()?.onKeydown(event) ?? false) return true;
+      if (this.$_getBarEditorDrawerElement()?.onKeydown(event) ?? false) return true;
       if (this.$_audioPlayerBar.onKeydown(event)) return true;
       if (this.$store.state.appState.isPrintLayoutEnabled) {
         await this.$store.dispatch('appState/setIsPrintLayoutEnabled', false);

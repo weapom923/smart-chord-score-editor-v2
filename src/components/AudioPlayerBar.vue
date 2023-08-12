@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar
+  <v-app-bar
     id="audio-player-bar" density="compact"
     v-on:keydown="onKeydown"
     v-on:click.stop
@@ -23,7 +23,7 @@
       v-bind:gain-node="$data.$_gainNode"
     >
     </audio-player>
-  </v-toolbar>
+  </v-app-bar>
 </template>
 
 <style scoped>
