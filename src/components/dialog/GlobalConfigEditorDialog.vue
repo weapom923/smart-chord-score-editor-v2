@@ -79,6 +79,17 @@
               <v-col sm="4" cols="12">
                 <v-select
                   density="compact"
+                  v-model="$data.$_barEditorLocation"
+                  v-bind:items="$_barEditorLocationItems"
+                  v-bind:rules="$_rules.barEditorLocation"
+                  v-bind:label="$t('barEditorLocation')"
+                >
+                </v-select>
+              </v-col>
+
+              <v-col sm="4" cols="12">
+                <v-select
+                  density="compact"
                   v-model="$data.$_locale"
                   v-bind:items="$_localeItems"
                   v-bind:rules="$_rules.locale"
@@ -125,7 +136,7 @@ import DialogTextField from '../parts/DialogTextField.vue';
 import GridNoteSelector from '../parts/GridNoteSelector.vue';
 import { NoteValue } from '../../modules/NoteValue';
 import { isEmptyLike } from '../../modules/utils';
-import { PublicConfig, defaultConfig } from '../../store/module/Config'
+import { PublicConfig, defaultConfig, BarEditorLocationType } from '../../store/module/Config'
 
 const staffLineStaffPxMin = 5;
 const staffLineStaffPxMax = 15;
@@ -152,6 +163,7 @@ export default {
     $_chordFontSizePx: number,
     $_pageWidthOnPrintPx: number,
     $_locale: string,
+    $_barEditorLocation: BarEditorLocationType,
   } {
     return {
       $_valid: true,
@@ -162,6 +174,7 @@ export default {
       $_chordFontSizePx: this.$store.state.config.chordFontSizePx,
       $_pageWidthOnPrintPx: this.$store.state.config.pageWidthOnPrintPx,
       $_locale: this.$store.state.config.locale,
+      $_barEditorLocation: this.$store.state.config.barEditorLocation,
       // $_defaultChord: undefined,
       // $_selectedNoteColor: undefined,
     };
@@ -184,6 +197,14 @@ export default {
       return [
         { title: '日本語', value: 'ja' },
         { title: 'English', value: 'en' },
+      ];
+    },
+
+    $_barEditorLocationItems(): { title: string, value: BarEditorLocationType }[] {
+      return [
+        { title: this.$t('left'), value: 'left' },
+        { title: this.$t('right'), value: 'right' },
+        { title: this.$t('bottom'), value: 'bottom' },
       ];
     },
 
@@ -247,6 +268,8 @@ export default {
 
         locale: [],
 
+        barEditorLocation: [],
+
         // defaultChord: [
         //   () => { return true }
         // ],
@@ -268,6 +291,7 @@ export default {
         chordFontSizePx: Number(this.$data.$_chordFontSizePx),
         pageWidthOnPrintPx: Number(this.$data.$_pageWidthOnPrintPx),
         locale: this.$data.$_locale,
+        barEditorLocation: this.$data.$_barEditorLocation,
       };
       this.$store.dispatch('config/setConfig', publicConfig);
     },
@@ -280,6 +304,7 @@ export default {
       this.$data.$_chordFontSizePx      = defaultConfig.chordFontSizePx;
       this.$data.$_pageWidthOnPrintPx   = defaultConfig.pageWidthOnPrintPx;
       this.$data.$_locale               = defaultConfig.locale;
+      this.$data.$_barEditorLocation    = defaultConfig.barEditorLocation;
     },
   },
 }

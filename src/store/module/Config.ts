@@ -6,6 +6,9 @@ import { Chord, ChordRawObj } from '../../modules/Chord';
 import { Clef, ClefRawObj } from '../../modules/Clef';
 import { Scale, ScaleRawObj } from '../../modules/Scale';
 import { PartInBarType } from '../../modules/PartInBar';
+import { VNavigationDrawer } from 'vuetify/lib/components/index.mjs';
+
+export type BarEditorLocationType = VNavigationDrawer['$props']['location'];
 
 export type ConfigRawObj = {
   staffLineStepPx: number,
@@ -20,6 +23,7 @@ export type ConfigRawObj = {
   defaultPartInBarTypes: PartInBarType[],
   pageWidthOnPrintPx: number,
   locale: string,
+  barEditorLocation: BarEditorLocationType,
 };
 
 export const defaultConfig: Config = {
@@ -35,6 +39,7 @@ export const defaultConfig: Config = {
   defaultScale: Scale.instance.cMajor,
   defaultPartInBarTypes: [ 'chord' ],
   locale: 'ja',
+  barEditorLocation: 'bottom',
 };
 
 export type PublicConfig = {
@@ -45,6 +50,7 @@ export type PublicConfig = {
   chordFontSizePx: number,
   pageWidthOnPrintPx: number,
   locale: string,
+  barEditorLocation: BarEditorLocationType,
 };
 
 export type Config = PublicConfig & {
@@ -71,6 +77,7 @@ const ConfigModule: Module<Config, RootState> = {
     defaultScale: defaultConfig.defaultScale,
     defaultPartInBarTypes: [ ...defaultConfig.defaultPartInBarTypes ],
     locale: defaultConfig.locale,
+    barEditorLocation: defaultConfig.barEditorLocation,
   },
 
   mutations: {
@@ -103,6 +110,7 @@ const ConfigModule: Module<Config, RootState> = {
         state.defaultScale = Scale.loadFromRawObj(rawConfigFromCookie.defaultScale);
         state.defaultPartInBarTypes = rawConfigFromCookie.defaultPartInBarTypes;
         state.locale = rawConfigFromCookie.locale;
+        state.barEditorLocation = rawConfigFromCookie.barEditorLocation;
       }
     },
 
@@ -114,6 +122,7 @@ const ConfigModule: Module<Config, RootState> = {
       state.chordFontSizePx = publicConfig.chordFontSizePx;
       state.pageWidthOnPrintPx = publicConfig.pageWidthOnPrintPx;
       state.locale = publicConfig.locale;
+      state.barEditorLocation = publicConfig.barEditorLocation;
 
       const configRawObj: ConfigRawObj = {
         staffLineStepPx: state.staffLineStepPx,
@@ -128,6 +137,7 @@ const ConfigModule: Module<Config, RootState> = {
         defaultPartInBarTypes: state.defaultPartInBarTypes,
         pageWidthOnPrintPx: state.pageWidthOnPrintPx,
         locale: state.locale,
+        barEditorLocation: state.barEditorLocation,
       }
       window.localStorage.setItem('config', JSON.stringify(configRawObj));
     },

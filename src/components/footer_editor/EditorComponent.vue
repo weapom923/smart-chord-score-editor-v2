@@ -5,7 +5,7 @@
       v-model:selected-part-idx="$data.$_selectedPartIdx"
     >
     </bar-editor-toolbar>
-    <v-container id="editor-container">
+    <v-container id="editor-container" class="overflow-auto">
       <v-row>
         <v-col cols="3">
           <v-card>
@@ -53,11 +53,6 @@
 </template>
 
 <style>
-#editor-component {
-  max-height: 70vh;
-  width: 100%;
-}
-
 #editor-container {
   max-height: 70vh;
   overflow-y: scroll;
