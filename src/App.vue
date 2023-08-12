@@ -38,10 +38,7 @@
 
     <snack-bar class="no-print"></snack-bar>
 
-    <audio-player-bar
-      ref="audioPlayerBar" color="primary"
-      location="bottom"
-    >
+    <audio-player-bar ref="audioPlayerBar" color="primary" location="bottom">
     </audio-player-bar>
 
     <bar-editor-drawer
