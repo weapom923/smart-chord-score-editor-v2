@@ -1,5 +1,5 @@
 <template>
-  <v-card id="editor-component" v-on:keydown="onKeydown">
+  <div class="overflow-x-hidden overflow-y-auto" v-on:keydown="onKeydown">
     <bar-editor-toolbar
       density="compact"
       v-model:selected-part-idx="$data.$_selectedPartIdx"
@@ -49,16 +49,10 @@
         </v-col>
       </v-row>
     </v-container>
-  </v-card>
+  </div>
 </template>
 
 <style>
-#editor-container {
-  max-height: 70vh;
-  overflow-y: scroll;
-  overflow-x: hidden;
-}
-
 #bar-component-container {
   position: relative;
 }
