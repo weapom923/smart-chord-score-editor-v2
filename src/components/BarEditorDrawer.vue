@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer
-    class="pa-0 ma-0 no-print" rail-width="40"
+    class="pa-0 ma-0" rail-width="40"
     permanent
     v-bind:width="$_barEditorDrawerWidth"
     v-bind:rail="$store.state.appState.isBarEditorDrawerMinimized"
