@@ -62,7 +62,7 @@ export default {
     sectionAndBarRange: { type: SectionAndBarRange, required: true },
     scorePageIndex: { type: Number, default: 0 },
     numScorePages: { type: Number, default: 0 },
-    aspectRatio: { type: Number },
+    aspectRatio: { type: Number, required: true },
   },
 
   computed: {
@@ -78,8 +78,10 @@ export default {
 
     $_pageStyle(): CSSProperties {
       let pageStyle: CSSProperties = {};
-      pageStyle.width = `${this.$store.state.config.pageWidthOnPrintPx}px`;
-      if (this.aspectRatio !== undefined) {
+      if (this.$store.state.appState.isMobileLayoutEnabled) {
+        pageStyle.width = '100vw';
+      } else {
+        pageStyle.width = `${this.$store.state.config.pageWidthOnPrintPx}px`;
         pageStyle.aspectRatio = `${this.aspectRatio}`;
       }
       return pageStyle;
