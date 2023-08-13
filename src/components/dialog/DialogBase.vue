@@ -44,10 +44,29 @@
 </style>
 
 <script lang="ts">
-export default {
+import { defineComponent } from 'vue';
+
+function initialize(self: InstanceType<typeof DialogBase>) {
+  self.$data.$_tempShows = true;
+  self.$data.$_isOkCallbackCalled = false;
+  self.$data.$_isFinalizeCallbackCalled = false;
+  if (self.initializeCallback) {
+    self.initializeCallback();
+  }
+}
+
+function finalize(self: InstanceType<typeof DialogBase>) {
+  if (!self.$data.$_isFinalizeCallbackCalled && self.finalizeCallback) {
+    self.finalizeCallback();
+    self.$data.$_isFinalizeCallbackCalled = true;
+  }
+  self.$data.$_tempShows = false;
+}
+
+const DialogBase = defineComponent({
   watch: {
     '$store.state.dialog.shows': {
-      handler(newShows) { if (newShows) this.$_initialize() },
+      handler(newShows) { if (newShows) initialize(this) },
       immediate: true,
     },
   },
@@ -81,16 +100,6 @@ export default {
   },
 
   methods: {
-    /* private */
-    $_initialize() {
-      this.$data.$_tempShows = true;
-      this.$data.$_isOkCallbackCalled = false;
-      this.$data.$_isFinalizeCallbackCalled = false;
-      if (this.initializeCallback) {
-        this.initializeCallback();
-      }
-    },
-
     onKeydown(event: KeyboardEvent): boolean {
       switch (event.key) {
         case 'Enter':
@@ -104,8 +113,9 @@ export default {
       return false;
     },
 
+    /* private */
     $_onCancelClicked() {
-      this.$_finalize();
+      finalize(this);
     },
 
     $_onOkClicked() {
@@ -113,24 +123,18 @@ export default {
         this.okCallback();
         this.$data.$_isOkCallbackCalled = true;
       }
-      this.$_finalize();
+      finalize(this);
     },
 
     $_onShowsChange(shows: boolean) {
-      if (!shows) this.$_finalize();
-    },
-
-    $_finalize() {
-      if (!this.$data.$_isFinalizeCallbackCalled && this.finalizeCallback) {
-        this.finalizeCallback();
-        this.$data.$_isFinalizeCallbackCalled = true;
-      }
-      this.$data.$_tempShows = false;
+      if (!shows) finalize(this);
     },
 
     async $_restoreState() {
       await this.$store.dispatch('dialog/setShows', false);
     },
   },
-}
+});
+
+export default DialogBase;
 </script>
