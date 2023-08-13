@@ -80,7 +80,6 @@ export default {
   },
 
   created() {
-    window.addEventListener('keydown', this.onKeydown);
     window.addEventListener('resize', this.$_updateBarEditorDrawerSize);
   },
 
@@ -89,7 +88,6 @@ export default {
   },
 
   beforeUnmount() {
-    window.removeEventListener('keydown', this.onKeydown);
     window.removeEventListener('resize', this.$_updateBarEditorDrawerSize);
   },
 
