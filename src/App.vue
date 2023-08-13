@@ -207,7 +207,7 @@ const App = defineComponent({
         sectionAndBarRange,
         scorePageIndex,
         numScorePages: sectionAndBarRanges.length,
-        aspectRatio: (this.$store.state.appState.isMobileLayoutEnabled)? undefined : this.$store.state.score.scorePageWHRatio,
+        aspectRatio: this.$store.state.score.scorePageWHRatio,
       }));
     },
 
