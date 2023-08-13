@@ -1,5 +1,6 @@
 <template>
   <dialog-base
+    v-bind:initialize-callback="$_loadData"
     v-bind:ok-callback="$_ok"
     v-bind:ok-disabled="!$data.$_valid"
   >
@@ -52,7 +53,7 @@ export default {
   } {
     return {
       $_valid: true,
-      $_sectionName: this.$store.state.score.score.getSection(this.sectionIdx).name,
+      $_sectionName: '',
     };
   },
 
@@ -67,6 +68,10 @@ export default {
   },
 
   methods: {
+    $_loadData() {
+      this.$data.$_sectionName = this.$store.state.score.score.getSection(this.sectionIdx).name;
+    },
+
     async $_ok() {
       await this.$store.dispatch(
         'score/setSectionName',

@@ -1,5 +1,8 @@
 <template>
-  <dialog-base v-bind:ok-callback="$_ok">
+  <dialog-base
+    v-bind:initialize-callback="$_loadData"
+    v-bind:ok-callback="$_ok"
+  >
     <template v-slot:body>
       <v-card-title>{{ $t('globalConfig') }}</v-card-title>
   
@@ -167,14 +170,14 @@ export default {
   } {
     return {
       $_valid: true,
-      $_staffLineStepPx: this.$store.state.config.staffLineStepPx,
-      $_systemMarginTopPx: this.$store.state.config.systemMarginTopPx,
-      $_systemMarginBottomPx: this.$store.state.config.systemMarginBottomPx,
-      $_defaultGridNoteValue: this.$store.state.config.defaultGridNoteValue.clone(),
-      $_chordFontSizePx: this.$store.state.config.chordFontSizePx,
-      $_pageWidthOnPrintPx: this.$store.state.config.pageWidthOnPrintPx,
-      $_locale: this.$store.state.config.locale,
-      $_barEditorLocation: this.$store.state.config.barEditorLocation,
+      $_staffLineStepPx: defaultConfig.staffLineStepPx,
+      $_systemMarginTopPx: defaultConfig.systemMarginTopPx,
+      $_systemMarginBottomPx: defaultConfig.systemMarginBottomPx,
+      $_defaultGridNoteValue: defaultConfig.defaultGridNoteValue.clone(),
+      $_chordFontSizePx: defaultConfig.chordFontSizePx,
+      $_pageWidthOnPrintPx: defaultConfig.pageWidthOnPrintPx,
+      $_locale: defaultConfig.locale,
+      $_barEditorLocation: defaultConfig.barEditorLocation,
       // $_defaultChord: undefined,
       // $_selectedNoteColor: undefined,
     };
@@ -282,6 +285,17 @@ export default {
   },
 
   methods: {
+    $_loadData() {
+      this.$data.$_staffLineStepPx = this.$store.state.config.staffLineStepPx;
+      this.$data.$_systemMarginTopPx = this.$store.state.config.systemMarginTopPx;
+      this.$data.$_systemMarginBottomPx = this.$store.state.config.systemMarginBottomPx;
+      this.$data.$_defaultGridNoteValue = this.$store.state.config.defaultGridNoteValue.clone();
+      this.$data.$_chordFontSizePx = this.$store.state.config.chordFontSizePx;
+      this.$data.$_pageWidthOnPrintPx = this.$store.state.config.pageWidthOnPrintPx;
+      this.$data.$_locale = this.$store.state.config.locale;
+      this.$data.$_barEditorLocation = this.$store.state.config.barEditorLocation;
+    },
+
     $_ok() {
       let publicConfig: PublicConfig = {
         staffLineStepPx: Number(this.$data.$_staffLineStepPx),

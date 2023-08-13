@@ -1,5 +1,6 @@
 <template>
   <dialog-base
+    v-bind:initialize-callback="$_loadData"
     v-bind:ok-callback="$_ok"
     v-bind:ok-disabled="!$data.$_valid"
   >
@@ -111,11 +112,11 @@ export default {
     return {
       $_valid: true,
       $_name: '',
-      $_barValue: this.barValue ?? this.$store.state.config.defaultBarValue,
-      $_clef: this.clef ?? this.$store.state.config.defaultClef,
-      $_scale: this.scale ?? this.$store.state.config.defaultScale,
-      $_partInBarTypes: this.partInBarTypes ?? this.$store.state.config.defaultPartInBarTypes,
-      $_gridNoteValue: this.gridNoteValue ?? this.$store.state.config.defaultGridNoteValue,
+      $_barValue: this.$store.state.config.defaultBarValue,
+      $_clef: this.$store.state.config.defaultClef,
+      $_scale: this.$store.state.config.defaultScale,
+      $_partInBarTypes: this.$store.state.config.defaultPartInBarTypes,
+      $_gridNoteValue: this.$store.state.config.defaultGridNoteValue,
     };
   },
 
@@ -130,6 +131,15 @@ export default {
   },
 
   methods: {
+    $_loadData() {
+      this.$data.$_name = '';
+      this.$data.$_barValue = this.barValue ?? this.$store.state.config.defaultBarValue;
+      this.$data.$_clef = this.clef ?? this.$store.state.config.defaultClef;
+      this.$data.$_scale = this.scale ?? this.$store.state.config.defaultScale;
+      this.$data.$_partInBarTypes = this.partInBarTypes ?? this.$store.state.config.defaultPartInBarTypes;
+      this.$data.$_gridNoteValue = this.gridNoteValue ?? this.$store.state.config.defaultGridNoteValue;
+    },
+
     async $_ok() {
       await this.$store.dispatch(
         'score/insertSection',
