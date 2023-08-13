@@ -52,6 +52,7 @@ export default {
               {
                 sectionAndBarIdx: this.$_sectionAndBarIdx,
                 bars: [ this.$store.state.score.score.getBar(this.$_sectionAndBarIdx).generateEmptyFrom() ],
+                selects: false,
               },
             );
           },
@@ -80,6 +81,7 @@ export default {
               {
                 sectionAndBarIdx: this.$_nextBarIdxInCurrentSection,
                 bars: [ this.$store.state.score.score.getBar(this.$_sectionAndBarIdx).generateEmptyFrom() ],
+                selects: false,
               },
             );
           },
