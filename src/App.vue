@@ -274,7 +274,7 @@ const App = defineComponent({
         }
       }
       if (this.$_getDialogComponent()?.onKeydown(event) ?? false) return true;
-      if (this.$_getBarEditorDrawerComponent()?.onKeydown(event) ?? false) return true;
+      if (await this.$_getBarEditorDrawerComponent()?.onKeydown(event) ?? false) return true;
       if (this.$_audioPlayerBar.onKeydown(event)) return true;
       if (this.$store.state.appState.isPrintLayoutEnabled) {
         await this.$store.dispatch('appState/setIsPrintLayoutEnabled', false);
