@@ -108,7 +108,7 @@ export default {
     },
 
     async onKeydown(event: KeyboardEvent): Promise<boolean> {
-      if (this.$_getBarEditorComponent()?.onKeydown(event) ?? false) return true;
+      if (await this.$_getBarEditorComponent()?.onKeydown(event) ?? false) return true;
       return false;
     },
   },
