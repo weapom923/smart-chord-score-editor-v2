@@ -128,6 +128,7 @@ export default {
     $_selectedBarsLineStart: {
       get(): BarLine | undefined {
         if (this.$_selectedSectionAndBarRange === undefined) return undefined;
+        if (!this.$_selectedSectionAndBarRange.includeSingleBarOnly) return undefined;
         let uniqueBarLineStart = this.$_score.getBar(this.$_selectedSectionAndBarRange.first).lineStart;
         for (let sectionAndBarIdx of this.$_score.getSectionAndBarIdxIterator(this.$_selectedSectionAndBarRange)) {
           if (!uniqueBarLineStart.isEqualTo(this.$_score.getBar(sectionAndBarIdx).lineStart)) return undefined;
@@ -147,6 +148,7 @@ export default {
     $_selectedBarsLineEnd: {
       get(): BarLine | undefined {
         if (this.$_selectedSectionAndBarRange === undefined) return undefined;
+        if (!this.$_selectedSectionAndBarRange.includeSingleBarOnly) return undefined;
         let uniqueBarLineEnd = this.$_score.getBar(this.$_selectedSectionAndBarRange.first).lineEnd;
         for (let sectionAndBarIdx of this.$_score.getSectionAndBarIdxIterator(this.$_selectedSectionAndBarRange)) {
           if (!uniqueBarLineEnd.isEqualTo(this.$_score.getBar(sectionAndBarIdx).lineEnd)) return undefined;
@@ -166,6 +168,7 @@ export default {
     $_selectedBarsRepeatEnding: {
       get(): BarRepeatEnding | undefined {
         if (this.$_selectedSectionAndBarRange === undefined) return undefined;
+        if (!this.$_selectedSectionAndBarRange.includeSingleBarOnly) return undefined;
         let uniqueBarRepeatEnding = this.$_score.getBar(this.$_selectedSectionAndBarRange.first).repeatEnding;
         for (let sectionAndBarIdx of this.$_score.getSectionAndBarIdxIterator(this.$_selectedSectionAndBarRange)) {
           if (!uniqueBarRepeatEnding.isEqualTo(this.$_score.getBar(sectionAndBarIdx).repeatEnding)) return undefined;
@@ -185,6 +188,7 @@ export default {
     $_selectedBarsBreak: {
       get(): BarBreak | undefined {
         if (this.$_selectedSectionAndBarRange === undefined) return undefined;
+        if (!this.$_selectedSectionAndBarRange.includeSingleBarOnly) return undefined;
         let uniqueBarBreak = this.$_score.getBar(this.$_selectedSectionAndBarRange.first).break;
         for (let sectionAndBarIdx of this.$_score.getSectionAndBarIdxIterator(this.$_selectedSectionAndBarRange)) {
           if (!uniqueBarBreak.isEqualTo(this.$_score.getBar(sectionAndBarIdx).break)) return undefined;
