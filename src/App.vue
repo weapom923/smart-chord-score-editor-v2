@@ -38,11 +38,18 @@
 
     <snack-bar class="no-print"></snack-bar>
 
-    <audio-player-bar ref="audioPlayerBar" color="primary" location="bottom">
+    <audio-player-bar
+      ref="audioPlayerBar"
+      class="no-print"
+      color="primary"
+      location="bottom"
+      v-if="!$store.state.appState.isPrintLayoutEnabled"
+    >
     </audio-player-bar>
 
     <bar-editor-drawer
       ref="barEditorDrawer"
+      class="no-print"
       v-if="($store.state.score.selectedBars !== undefined) && (!$store.state.appState.isPrintLayoutEnabled)"
     >
     </bar-editor-drawer>
