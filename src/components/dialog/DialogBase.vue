@@ -6,7 +6,7 @@
     v-on:update:model-value="$_onShowsChange"
     v-on:keydown.stop="onKeydown"
   >
-    <v-card id="dialog-window" v-on:vue:unmounted="$_restoreState">
+    <v-card id="dialog-window" v-on:vue:unmounted="$_onUnmounted">
       <slot name="body">
       </slot>
 
@@ -130,7 +130,7 @@ const DialogBase = defineComponent({
       if (!shows) finalize(this);
     },
 
-    async $_restoreState() {
+    async $_onUnmounted() {
       await this.$store.dispatch('dialog/setShows', false);
     },
   },
