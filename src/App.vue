@@ -42,6 +42,7 @@
     </audio-player-bar>
 
     <bar-editor-drawer
+      ref="barEditorDrawer"
       v-if="($store.state.score.selectedBars !== undefined) && (!$store.state.appState.isPrintLayoutEnabled)"
     >
     </bar-editor-drawer>
@@ -227,8 +228,8 @@ const App = defineComponent({
       this.$nextTick(() => { this.$data.$_isForcedReloading = false });
     },
 
-    $_getBarEditorDrawerElement(): InstanceType<typeof BarEditorDrawer> | undefined | null {
-      return this.$refs.editorComponent as any;
+    $_getBarEditorDrawerComponent(): InstanceType<typeof BarEditorDrawer> | undefined | null {
+      return this.$refs.barEditorDrawer as any;
     },
 
     $_getDialogComponent(): InstanceType<typeof DialogBase> | undefined | null {
@@ -273,7 +274,7 @@ const App = defineComponent({
         }
       }
       if (this.$_getDialogComponent()?.onKeydown(event) ?? false) return true;
-      if (this.$_getBarEditorDrawerElement()?.onKeydown(event) ?? false) return true;
+      if (this.$_getBarEditorDrawerComponent()?.onKeydown(event) ?? false) return true;
       if (this.$_audioPlayerBar.onKeydown(event)) return true;
       if (this.$store.state.appState.isPrintLayoutEnabled) {
         await this.$store.dispatch('appState/setIsPrintLayoutEnabled', false);

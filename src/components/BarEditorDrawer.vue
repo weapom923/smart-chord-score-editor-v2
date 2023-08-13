@@ -15,7 +15,7 @@
     </v-btn>
 
     <bar-editor
-      ref="editorComponent"
+      ref="barEditor"
       v-show="!$store.state.appState.isBarEditorDrawerMinimized"
     >
     </bar-editor>
@@ -99,16 +99,16 @@ export default {
       this.$data.$_barEditorDrawerHeightPx = (barEditorDrawerHeightPxMax > idealDrawerHeightPx)? idealDrawerHeightPx : barEditorDrawerHeightPxMax;
     },
 
-    $_getEditorComponent(): InstanceType<typeof BarEditor> | undefined | null {
-      return this.$refs.editorComponent as any;
+    $_getBarEditorComponent(): InstanceType<typeof BarEditor> | undefined | null {
+      return this.$refs.barEditor as any;
     },
 
     async $_toggleBarEditorMaximizedAndMinimized() {
       await this.$store.dispatch('appState/setIsBarEditorMinimized', !this.$store.state.appState.isBarEditorDrawerMinimized);
     },
 
-    onKeydown(event: KeyboardEvent): boolean {
-      if (this.$_getEditorComponent()?.onKeydown(event) ?? false) return true;
+    async onKeydown(event: KeyboardEvent): Promise<boolean> {
+      if (this.$_getBarEditorComponent()?.onKeydown(event) ?? false) return true;
       return false;
     },
   },
