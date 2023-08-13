@@ -1,6 +1,6 @@
 <template>
   <dialog-base
-    v-bind:initialize-callback="$_initialize"
+    v-bind:initialize-callback="$_loadData"
     v-bind:ok-callback="$_ok"
     v-bind:ok-disabled="!$data.$_valid"
   >
@@ -91,7 +91,7 @@ export default {
   },
 
   methods: {
-    $_initialize() {
+    $_loadData() {
       this.$data.$_tempChordText = (this.$_chord === undefined)? '' : String(this.$_chord);
     },
 
