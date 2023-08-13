@@ -464,6 +464,7 @@ const App = defineComponent({
           {
             sectionAndBarIdx: targetSectionAndBarIdx,
             bars: [ baseBar.generateEmptyFrom() ],
+            selects: true,
           },
         );
         return true;
@@ -479,6 +480,7 @@ const App = defineComponent({
           {
             sectionAndBarIdx: targetSectionAndBarIdx,
             bars: [ baseBar.generateEmptyFrom() ],
+            selects: true,
           },
         );
         return true;

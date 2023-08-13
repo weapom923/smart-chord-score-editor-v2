@@ -480,6 +480,7 @@ export default {
         {
           sectionAndBarIdx: this.selectedSectionAndBarIdx,
           bars: [ this.selectedBar.generateEmptyFrom() ],
+          selects: true,
         },
       );
     },
@@ -493,6 +494,7 @@ export default {
             this.selectedSectionAndBarIdx.barIdx + 1,
           ),
           bars: [ this.selectedBar.generateEmptyFrom() ],
+          selects: true,
         },
       );
     },

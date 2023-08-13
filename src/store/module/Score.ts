@@ -154,7 +154,7 @@ const ScoreModule: Module<ScoreState, RootState> = {
       );
     },
 
-    insertBars(state: ScoreState, { sectionAndBarIdx, bars }: { sectionAndBarIdx: SectionAndBarIdx, bars: Bar[] }) {
+    insertBars(state: ScoreState, { sectionAndBarIdx, bars, selects }: { sectionAndBarIdx: SectionAndBarIdx, bars: Bar[], selects: boolean }) {
       const targetSectionAndBarIdx = sectionAndBarIdx.clone();
       const newBars = bars.map(bar => bar.clone());
       const numBars = bars.length;
@@ -163,17 +163,22 @@ const ScoreModule: Module<ScoreState, RootState> = {
           redo() {
             state.score.getSection(targetSectionAndBarIdx.sectionIdx).bars.splice(targetSectionAndBarIdx.barIdx, 0, ...newBars.map(bar => bar.clone()));
             if (state.selectedBars !== undefined) {
-              if (state.selectedBars.includeSingleBarOnly) {
-                if (state.selectedBars.idx.isPosteriorOrEqualTo(targetSectionAndBarIdx)) {
-                  state.selectedBars.first.barIdx += numBars;
-                  state.selectedBars.last.barIdx += numBars;
-                }
+              if (selects) {
+                state.selectedBars.last.barIdx = targetSectionAndBarIdx.barIdx;
+                state.selectedBars.first.barIdx = targetSectionAndBarIdx.barIdx;
               } else {
-                if (state.selectedBars.first.isPosteriorOrEqualTo(targetSectionAndBarIdx)) {
-                  state.selectedBars.first.barIdx += numBars;
-                }
-                if (state.selectedBars.last.isPosteriorOrEqualTo(targetSectionAndBarIdx)) {
-                  state.selectedBars.last.barIdx += numBars;
+                if (state.selectedBars.includeSingleBarOnly) {
+                  if (state.selectedBars.idx.isPosteriorOrEqualTo(targetSectionAndBarIdx)) {
+                    state.selectedBars.first.barIdx += numBars;
+                    state.selectedBars.last.barIdx += numBars;
+                  }
+                } else {
+                  if (state.selectedBars.first.isPosteriorOrEqualTo(targetSectionAndBarIdx)) {
+                    state.selectedBars.first.barIdx += numBars;
+                  }
+                  if (state.selectedBars.last.isPosteriorOrEqualTo(targetSectionAndBarIdx)) {
+                    state.selectedBars.last.barIdx += numBars;
+                  }
                 }
               }
             }
@@ -182,7 +187,12 @@ const ScoreModule: Module<ScoreState, RootState> = {
             state.score.getSection(targetSectionAndBarIdx.sectionIdx).bars.splice(targetSectionAndBarIdx.barIdx, numBars);
             if (state.selectedBars !== undefined) {
               if (state.selectedBars.includes(targetSectionAndBarIdx)) {
-                if (!state.selectedBars.includeSingleBarOnly) state.selectedBars.last.barIdx -= numBars;
+                if (state.selectedBars.includeSingleBarOnly) {
+                  state.selectedBars.first.barIdx -= numBars;
+                  state.selectedBars.last.barIdx -= numBars;
+                } else {
+                  state.selectedBars.last.barIdx -= numBars;
+                }
               } else {
                 if (targetSectionAndBarIdx.isPriorOrEqualTo(state.selectedBars.first)) {
                   state.selectedBars.first.barIdx -= numBars;
@@ -590,8 +600,8 @@ const ScoreModule: Module<ScoreState, RootState> = {
       context.commit('insertSections', { sectionIdx, sections: [ section ] });
     },
 
-    insertBars(context: ActionContext<ScoreState, RootState>, { sectionAndBarIdx, bars }: { sectionAndBarIdx: SectionAndBarIdx, bars: Bar[] }) {
-      context.commit('insertBars', { sectionAndBarIdx, bars });
+    insertBars(context: ActionContext<ScoreState, RootState>, { sectionAndBarIdx, bars, selects }: { sectionAndBarIdx: SectionAndBarIdx, bars: Bar[], selects: boolean }) {
+      context.commit('insertBars', { sectionAndBarIdx, bars, selects });
     },
 
     removeBars(context: ActionContext<ScoreState, RootState>, sectionAndBarRange: SectionAndBarRange) {
