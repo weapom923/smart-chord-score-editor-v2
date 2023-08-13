@@ -37,7 +37,7 @@ import AudioPlayerController from './AudioPlayer/AudioPlayerController.vue';
 import AudioPlaybackLoopDefinition from './AudioPlayer/modules/AudioPlaybackLoopDefinition';
 import AudioPlayerSeekBar from './AudioPlayer/AudioPlayerSeekBar.vue';
 
-type AudioBufferSourceNodePool = Record<string, AudioBufferSourceNode>;
+type AudioBufferSourceNodePool = Set<AudioBufferSourceNode>;
 
 export default defineComponent({
   emits: {
@@ -51,36 +51,20 @@ export default defineComponent({
 
   watch: {
     async '$data.$_audioBufferSourceNodePool'(audioBufferSourceNodePool: AudioBufferSourceNodePool) {
-      if (Object.keys(audioBufferSourceNodePool).length === 0) {
+      if (audioBufferSourceNodePool.size === 0) {
         await this.$_suspend();
         this.$_seekInSec(0);
       }
     },
 
-    '$data.$_audioBufferSourceNodesWaitingForStop'(audioBufferSourceNodesWaitingForStop: Array<AudioBufferSourceNode>) {
-      if (this.$data.$_isPlaying) {
-        if (audioBufferSourceNodesWaitingForStop.length === 0) return;
-        let audioBufferSourceNodeWaitingForStop = this.$data.$_audioBufferSourceNodesWaitingForStop.pop();
-        audioBufferSourceNodeWaitingForStop?.stop();
-      }
-    },
-
-    '$data.$_isPlaying'(isPLaying: boolean) {
-      if (isPLaying) {
-        if (this.$data.$_audioBufferSourceNodesWaitingForStop.length === 0) return;
-        let audioBufferSourceNodeWaitingForStop = this.$data.$_audioBufferSourceNodesWaitingForStop.pop();
-        audioBufferSourceNodeWaitingForStop?.stop();
-      }
-    },
-
     '$data.$_loopDefinition'(loopDefinition?: AudioPlaybackLoopDefinition) {
-      if (this.$_latestAudioBufferSourceNode === undefined) return;
+      if (this.$data.$_latestAudioBufferSourceNode === undefined) return;
       if (loopDefinition === undefined) {
         this.$_seekInSec(this.$_getPlayTimeSec());
-        this.$_latestAudioBufferSourceNode.loop = false;
+        this.$data.$_latestAudioBufferSourceNode.loop = false;
       } else {
         this.$_seekInstantlyInSec(loopDefinition.beginTimeSec);
-        this.$_latestAudioBufferSourceNode.loop = true;
+        this.$data.$_latestAudioBufferSourceNode.loop = true;
       }
     },
   },
@@ -93,7 +77,6 @@ export default defineComponent({
   },
 
   data(): {
-    $_previousTimeSec: number,
     $_playTimeSec: number,
     $_isPlaying: boolean,
     $_isSeeking: boolean,
@@ -102,14 +85,12 @@ export default defineComponent({
     $_tempLoopBeginTimeSec?: number,
 
     $_audioBufferSourceNodePool: AudioBufferSourceNodePool,
-    $_audioBufferSourceNodesWaitingForStop: Array<AudioBufferSourceNode>,
     $_audioBufferSourceNodeStartOffsetSec: number,
-    $_latestAudioBufferSourceNodeId: string | undefined,
+    $_latestAudioBufferSourceNode: AudioBufferSourceNode | undefined,
     $_originOfCurrentTime: number,
     $_animtionFrameRequestId: number | undefined,
   } {
     return {
-      $_previousTimeSec: 0,
       $_playTimeSec: 0,
       $_isPlaying: false,
       $_isSeeking: false,
@@ -117,22 +98,15 @@ export default defineComponent({
       $_loopDefinition: undefined,
       $_tempLoopBeginTimeSec: undefined,
 
-      $_audioBufferSourceNodePool: {},
-      $_audioBufferSourceNodesWaitingForStop: [],
+      $_audioBufferSourceNodePool: new Set(),
       $_audioBufferSourceNodeStartOffsetSec: 0,
-      $_latestAudioBufferSourceNodeId: undefined,
+      $_latestAudioBufferSourceNode: undefined,
       $_originOfCurrentTime: 0,
       $_animtionFrameRequestId: undefined,
     };
   },
 
   computed: {
-    $_latestAudioBufferSourceNode(): AudioBufferSourceNode | undefined {
-      if (this.$data.$_latestAudioBufferSourceNodeId === undefined) return undefined;
-      if (!Object.keys(this.$data.$_audioBufferSourceNodePool).includes(this.$data.$_latestAudioBufferSourceNodeId)) return undefined;
-      return this.$data.$_audioBufferSourceNodePool[this.$data.$_latestAudioBufferSourceNodeId];
-    },
-
     $_audioPlayerSeekBar(): InstanceType<typeof AudioPlayerSeekBar> {
       return this.$refs.audioPlayerSeekBar as InstanceType<typeof AudioPlayerSeekBar>;
     },
@@ -155,7 +129,7 @@ export default defineComponent({
     if (this.$data.$_animtionFrameRequestId !== undefined) {
       window.cancelAnimationFrame(this.$data.$_animtionFrameRequestId);
     }
-    if (this.$_latestAudioBufferSourceNode !== undefined) {
+    if (this.$data.$_latestAudioBufferSourceNode !== undefined) {
       this.$_requestAudioBufferSourceNodeToStop();
       await this.$_resume();
     }
@@ -197,7 +171,7 @@ export default defineComponent({
     },
 
     async $_resume() {
-      if (this.$_latestAudioBufferSourceNode === undefined) {
+      if (this.$data.$_latestAudioBufferSourceNode === undefined) {
         this.$_seekInSec(0);
         this.$_createNewAudioBufferSourceNode();
       }
@@ -237,15 +211,14 @@ export default defineComponent({
     },
 
     $_createNewAudioBufferSourceNode() {
-      let newAudioBufferSourceNodeId = String(new Date().getTime());
       let newAudioBufferSourceNode = this.audioContext.createBufferSource();
-      this.$data.$_latestAudioBufferSourceNodeId = newAudioBufferSourceNodeId;
-      this.$data.$_audioBufferSourceNodePool[newAudioBufferSourceNodeId] = newAudioBufferSourceNode;
+      this.$data.$_latestAudioBufferSourceNode = newAudioBufferSourceNode;
+      this.$data.$_audioBufferSourceNodePool.add(newAudioBufferSourceNode);
       newAudioBufferSourceNode.buffer = this.audioBuffer;
       newAudioBufferSourceNode.connect(this.audioContext.destination);
       newAudioBufferSourceNode.connect(this.gainNode);
       newAudioBufferSourceNode.onended = () => {
-        delete this.$data.$_audioBufferSourceNodePool[newAudioBufferSourceNodeId];
+        this.$data.$_audioBufferSourceNodePool.delete(newAudioBufferSourceNode);
         this.$_suspend();
       };
       if (this.$data.$_loopDefinition !== undefined) {
@@ -260,12 +233,12 @@ export default defineComponent({
 
     $_getPlayTimeSec() {
       let offsetTime = this.audioContext.currentTime - this.$data.$_originOfCurrentTime;
-      if (this.$_latestAudioBufferSourceNode === undefined) return offsetTime;
-      if (this.$_latestAudioBufferSourceNode.loop) {
-        if (offsetTime > this.$_latestAudioBufferSourceNode.loopStart) {
-          let loopDuration = this.$_latestAudioBufferSourceNode.loopEnd - this.$_latestAudioBufferSourceNode.loopStart;
-          let offsetFromLoopStart = (offsetTime - this.$_latestAudioBufferSourceNode.loopStart) % loopDuration;
-          offsetTime = this.$_latestAudioBufferSourceNode.loopStart + offsetFromLoopStart;
+      if (this.$data.$_latestAudioBufferSourceNode === undefined) return offsetTime;
+      if (this.$data.$_latestAudioBufferSourceNode.loop) {
+        if (offsetTime > this.$data.$_latestAudioBufferSourceNode.loopStart) {
+          let loopDuration = this.$data.$_latestAudioBufferSourceNode.loopEnd - this.$data.$_latestAudioBufferSourceNode.loopStart;
+          let offsetFromLoopStart = (offsetTime - this.$data.$_latestAudioBufferSourceNode.loopStart) % loopDuration;
+          offsetTime = this.$data.$_latestAudioBufferSourceNode.loopStart + offsetFromLoopStart;
         }
       }
       return offsetTime;
@@ -281,15 +254,14 @@ export default defineComponent({
 
     $_update() {
       let playTimeSec = this.$_getPlayTimeSec();
-      this.$data.$_previousTimeSec = this.$data.$_playTimeSec;
       this.$data.$_playTimeSec = playTimeSec;
     },
 
     $_requestAudioBufferSourceNodeToStop() {
-      for (let [ audioBufferSourceNodeId, audioBufferSourceNode ] of Object.entries(this.$data.$_audioBufferSourceNodePool)) {
-        delete this.$data.$_audioBufferSourceNodePool[audioBufferSourceNodeId];
-        this.$data.$_audioBufferSourceNodesWaitingForStop.push(audioBufferSourceNode);
+      for (let audioBufferSourceNode of this.$data.$_audioBufferSourceNodePool) {
+        this.$data.$_audioBufferSourceNodePool.delete(audioBufferSourceNode);
         audioBufferSourceNode.onended = null;
+        audioBufferSourceNode.stop();
       }
     },
   },
