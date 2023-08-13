@@ -3,27 +3,27 @@
     class="pa-0 ma-0 no-print" rail-width="40"
     permanent
     v-bind:width="$_barEditorDrawerWidth"
-    v-bind:rail="$store.state.appState.isFooterEditorMinimized"
+    v-bind:rail="$store.state.appState.isBarEditorDrawerMinimized"
     v-bind:location="$store.state.config.barEditorLocation"
   >
     <v-btn
       class="w-100 h-100" rounded="0" size="small"
-      v-show="$store.state.appState.isFooterEditorMinimized"
+      v-show="$store.state.appState.isBarEditorDrawerMinimized"
       v-bind:icon="$_barEditorMaximizeIcon"
-      v-on:click="$_toggleFooterEditorMaximizedAndMinimized"
+      v-on:click="$_toggleBarEditorMaximizedAndMinimized"
     >
     </v-btn>
 
-    <editor-component
+    <bar-editor
       ref="editorComponent"
-      v-show="!$store.state.appState.isFooterEditorMinimized"
+      v-show="!$store.state.appState.isBarEditorDrawerMinimized"
     >
-    </editor-component>
+    </bar-editor>
   </v-navigation-drawer>
 </template>
 
 <script lang="ts">
-import EditorComponent from './footer_editor/EditorComponent.vue';
+import BarEditor from './BarEditor.vue';
 import { SectionAndBarRange } from '../modules/SectionAndBarRange';
 
 const idealDrawerWidthPx = 800;
@@ -31,13 +31,13 @@ const idealDrawerHeightPx = 700;
 
 export default {
   components: {
-    EditorComponent,
+    BarEditor,
   },
 
   watch: {
     '$store.state.score.selectedBars'(selectedBars?: SectionAndBarRange) {
       if (selectedBars === undefined) {
-        this.$store.dispatch('appState/setIsFooterEditorMinimized', true);
+        this.$store.dispatch('appState/setIsBarEditorMinimized', true);
       }
     },
   },
@@ -101,12 +101,12 @@ export default {
       this.$data.$_barEditorDrawerHeightPx = (barEditorDrawerHeightPxMax > idealDrawerHeightPx)? idealDrawerHeightPx : barEditorDrawerHeightPxMax;
     },
 
-    $_getEditorComponent(): InstanceType<typeof EditorComponent> | undefined | null {
+    $_getEditorComponent(): InstanceType<typeof BarEditor> | undefined | null {
       return this.$refs.editorComponent as any;
     },
 
-    async $_toggleFooterEditorMaximizedAndMinimized() {
-      await this.$store.dispatch('appState/setIsFooterEditorMinimized', !this.$store.state.appState.isFooterEditorMinimized);
+    async $_toggleBarEditorMaximizedAndMinimized() {
+      await this.$store.dispatch('appState/setIsBarEditorMinimized', !this.$store.state.appState.isBarEditorDrawerMinimized);
     },
 
     onKeydown(event: KeyboardEvent): boolean {

@@ -536,7 +536,7 @@ export default {
 
     $_tryScrollTo() {
       if (!this.$store.state.appState.isAutoScrollEnabled) return;
-      if (this.$store.state.appState.isFooterEditorMinimized) return;
+      if (this.$store.state.appState.isBarEditorDrawerMinimized) return;
       // FIXME
       // this.$vuetify.goTo(this.$_systemElement);
     },

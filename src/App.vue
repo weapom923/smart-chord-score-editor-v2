@@ -241,8 +241,8 @@ const App = defineComponent({
       await this.$store.dispatch('appState/setIsPrintLayoutEnabled', false);
     },
 
-    async $_toggleFooterEditorMaximizedAndMinimized() {
-      await this.$store.dispatch('appState/setIsFooterEditorMinimized', !this.$store.state.appState.isFooterEditorMinimized);
+    async $_toggleBarEditorMaximizedAndMinimized() {
+      await this.$store.dispatch('appState/setIsBarEditorMinimized', !this.$store.state.appState.isBarEditorDrawerMinimized);
     },
 
     async $_generateNewSection() {
@@ -301,7 +301,7 @@ const App = defineComponent({
               this.$store.dispatch('dialog/setDialog', { componentName: 'help-dialog' });
               return true;
             case 'KeyE':
-              await this.$store.dispatch('appState/setIsFooterEditorMinimized', !this.$store.state.appState.isFooterEditorMinimized);
+              await this.$store.dispatch('appState/setIsBarEditorMinimized', !this.$store.state.appState.isBarEditorDrawerMinimized);
               return true;
             case 'KeyP':
               await this.$store.dispatch('appState/setIsPrintLayoutEnabled', true);
