@@ -5,7 +5,7 @@ export type AppState = {
   snackBarMessage?: string,
   isPrintLayoutEnabled: boolean,
   isMobileLayoutEnabled: boolean,
-  isFooterEditorMinimized: boolean,
+  isBarEditorDrawerMinimized: boolean,
   isAutoScrollEnabled: boolean,
 };
 
@@ -16,7 +16,7 @@ const AppStateModule: Module<AppState, RootState> = {
     snackBarMessage: undefined,
     isPrintLayoutEnabled: false,
     isMobileLayoutEnabled: false,
-    isFooterEditorMinimized: true,
+    isBarEditorDrawerMinimized: true,
     isAutoScrollEnabled: false,
   },
 
@@ -33,8 +33,8 @@ const AppStateModule: Module<AppState, RootState> = {
       state.isMobileLayoutEnabled = isMobileLayoutEnabled;
     },
 
-    setIsFooterEditorMinimized(state: AppState, isFooterEditorMinimized: boolean) {
-      state.isFooterEditorMinimized = isFooterEditorMinimized;
+    setIsBarEditorMinimized(state: AppState, isBarEditorDrawerMinimized: boolean) {
+      state.isBarEditorDrawerMinimized = isBarEditorDrawerMinimized;
     },
   },
 
@@ -51,8 +51,8 @@ const AppStateModule: Module<AppState, RootState> = {
       context.commit('setIsMobileLayoutEnabled', isMobileLayoutEnabled);
     },
 
-    setIsFooterEditorMinimized(context: ActionContext<AppState, RootState>, isFooterEditorMinimized: boolean) {
-      context.commit('setIsFooterEditorMinimized', isFooterEditorMinimized);
+    setIsBarEditorMinimized(context: ActionContext<AppState, RootState>, isBarEditorDrawerMinimized: boolean) {
+      context.commit('setIsBarEditorMinimized', isBarEditorDrawerMinimized);
     },
 
     reserveScroll(context: ActionContext<AppState, RootState>, element: HTMLElement) {

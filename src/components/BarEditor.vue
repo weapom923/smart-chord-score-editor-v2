@@ -23,7 +23,7 @@
           id="bar-component-container"
           v-if="($_selectedSectionAndBarIdx !== undefined) && ($data.$_selectedPartIdx !== undefined) && ($_selectedBar !== undefined)"
         >
-          <bar-editor-component
+          <bar-editor-buttons-component
             ref="barEditorComponent"
             flat class="pa-0"
             v-if="$_selectedPart !== undefined"
@@ -35,7 +35,7 @@
             v-model:selected-part-idx="$data.$_selectedPartIdx"
             v-model:selected-note-idx="$data.$_selectedNoteIdx"
           >
-          </bar-editor-component>
+          </bar-editor-buttons-component>
           <note-editor-component
             flat class="pa-0"
             v-if="$data.$_selectedNoteIdx !== undefined"
@@ -60,19 +60,19 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import BarEditorToolbar from '../footer_editor/BarEditorToolbar.vue';
-import BarEditorComponent from '../footer_editor/BarEditorComponent.vue';
-import NoteEditorComponent from '../footer_editor/NoteEditorComponent.vue';
-import BarDetailEditorComponent from '../footer_editor/BarDetailEditorComponent.vue';
-import { getKeyEventType } from '../../modules/KeyEventType';
-import { Bar } from '../../modules/Bar';
-import { PartInBar, PartInBarType } from '../../modules/PartInBar';
-import { SectionAndBarIdx, SectionAndBarRange } from '../../modules/SectionAndBarRange';
+import BarEditorToolbar from './BarEditor/BarEditorToolbar.vue';
+import BarEditorButtonsComponent from './BarEditor/BarEditorButtonsComponent.vue';
+import NoteEditorComponent from './BarEditor/NoteEditorComponent.vue';
+import BarDetailEditorComponent from './BarEditor/BarDetailEditorComponent.vue';
+import { getKeyEventType } from '../modules/KeyEventType';
+import { Bar } from '../modules/Bar';
+import { PartInBar, PartInBarType } from '../modules/PartInBar';
+import { SectionAndBarIdx, SectionAndBarRange } from '../modules/SectionAndBarRange';
 
-const EditorComponent = defineComponent({
+const BarEditor = defineComponent({
   components: {
     BarEditorToolbar,
-    BarEditorComponent,
+    BarEditorButtonsComponent,
     NoteEditorComponent,
     BarDetailEditorComponent,
   },
@@ -167,13 +167,13 @@ const EditorComponent = defineComponent({
   },
 
   methods: {
-    $_getBarEditorComponent(): InstanceType<typeof BarEditorComponent> | undefined | null {
+    $_getBarEditorButtonsComponent(): InstanceType<typeof BarEditorButtonsComponent> | undefined | null {
       return this.$refs.barEditorComponent as any;
     },
 
     async onKeydown(event: KeyboardEvent): Promise<boolean> {
       let keyEventType = getKeyEventType(event);
-      if (await this.$_getBarEditorComponent()?.onKeydown(keyEventType, event) ?? false) return true;
+      if (await this.$_getBarEditorButtonsComponent()?.onKeydown(keyEventType, event) ?? false) return true;
       switch (keyEventType) {
         case 'key':
           switch (event.code) {
@@ -202,7 +202,7 @@ const EditorComponent = defineComponent({
       }
       return false;
 
-      type This = InstanceType<typeof EditorComponent>;
+      type This = InstanceType<typeof BarEditor>;
       function incrementNoteIdx(this: This) {
         if (this.$_numNotesInSelectedPart === undefined) return false;
         if (this.$_numNotesInSelectedPart === 0) return false;
@@ -270,5 +270,5 @@ const EditorComponent = defineComponent({
   },
 });
 
-export default EditorComponent;
+export default BarEditor;
 </script>

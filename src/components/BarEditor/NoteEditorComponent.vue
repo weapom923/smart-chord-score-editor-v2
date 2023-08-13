@@ -39,7 +39,7 @@ import { NoteValue, nv } from '../../modules/NoteValue';
 import { Chord } from '../../modules/Chord';
 import { NotePitch } from '../../modules/NotePitch';
 import NoteValueSelectorButtons from '../parts/NoteValueSelectorButtons.vue';
-import ChordEditorComponent from '../footer_editor/ChordEditorComponent.vue';
+import ChordEditorComponent from './ChordEditorComponent.vue';
 import { SectionAndBarIdx } from '../../modules/SectionAndBarRange';
 
 export default {
