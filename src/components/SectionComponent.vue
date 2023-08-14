@@ -112,6 +112,7 @@ export default {
           systemDefinitions.push(
             {
               score: this.score,
+              section: this.$_section,
               sectionIdx: this.sectionIdx,
               barRange: new BarRange(firstBarIdxOfCurrentSystem, barIdx),
               showBeatOnFirstBar,

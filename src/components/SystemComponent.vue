@@ -156,6 +156,7 @@ export default {
 
   props: {
     score: { type: Score, required: true },
+    section: { type: Section, required: true },
     sectionIdx: { type: Number, required: true },
     barRange: { type: BarRange, required: true },
     selectedPartIdx: { type: Number },
@@ -199,10 +200,6 @@ export default {
   },
 
   computed: {
-    $_section(): Section {
-      return this.score.getSection(this.sectionIdx);
-    },
-
     $_barIdcs(): BarIdx[] { return [ ...this.barRange.indices() ] },
 
     $_selectedPartIdx: {
@@ -218,8 +215,8 @@ export default {
     $_partIdcs(): Map<BarIdx, PartIdx[]> {
       let partIdcs = new Map<BarIdx, PartIdx[]>();
       for (let barIdx of this.barRange.indices()) {
-        if (barIdx >= this.$_section.numBars) continue;
-        partIdcs.set(barIdx, [ ...this.$_section.getBar(barIdx).partIndices() ]);
+        if (barIdx >= this.section.numBars) continue;
+        partIdcs.set(barIdx, [ ...this.section.getBar(barIdx).partIndices() ]);
       }
       return partIdcs;
     },
@@ -279,7 +276,7 @@ export default {
     $_barProps(): BarComponentPropsType[] {
       return [ ...this.barRange.indices() ].map((barIdx: BarIdx): BarComponentPropsType => {
         return {
-          bar: this.$_section.getBar(barIdx),
+          bar: this.section.getBar(barIdx),
           sectionIdx: this.sectionIdx,
           barIdx: barIdx,
           showClef: this.$_getShowClef(barIdx),
@@ -295,8 +292,8 @@ export default {
       let sameTypedPartIdxInNextBar = new Map<BarIdx, Map<PartIdx, { sectionAndBarIdx: SectionAndBarIdx, partIdx: PartIdx }>>();
       for (let barIdx of this.barRange.indices()) {
         let sameTypedPartIdx = new Map<PartIdx, { sectionAndBarIdx: SectionAndBarIdx, partIdx: PartIdx }>();
-        if (!this.$_section.barRange.includes(barIdx)) continue;
-        for (let partIdx of this.$_section.getBar(barIdx).partIndices()) {
+        if (!this.section.barRange.includes(barIdx)) continue;
+        for (let partIdx of this.section.getBar(barIdx).partIndices()) {
           let found = this.score.findSameTypedPartIndexInNextBar({
             sectionAndBarIdx: new SectionAndBarIdx(this.sectionIdx, barIdx),
             partIdx,
@@ -312,8 +309,8 @@ export default {
     $_isTiedToNextSystem(): Map<PartIdx, boolean> | undefined {
       let isTiedToNextSystem = new Map<PartIdx, boolean>();
       let currentPartIdcs = this.$_partIdcs.get(this.barRange.lastBarIdx) as PartIdx[];
-      if (!this.$_section.barRange.includes(this.barRange.lastBarIdx)) return undefined;
-      let currentBar = this.$_section.getBar(this.barRange.lastBarIdx);
+      if (!this.section.barRange.includes(this.barRange.lastBarIdx)) return undefined;
+      let currentBar = this.section.getBar(this.barRange.lastBarIdx);
       for (let currentPartIdx of currentPartIdcs) {
         let currentPart = currentBar.getPart(currentPartIdx);
         let lastNoteOfCurrentPart = currentPart.lastNote;
@@ -344,8 +341,8 @@ export default {
   methods: {
     $_getShowClef(barIdx: BarIdx): boolean {
       if (barIdx === 0) return true;
-      let currentBar = this.$_section.getBar(barIdx);
-      let previousBar = this.$_section.getBar(barIdx - 1);
+      let currentBar = this.section.getBar(barIdx);
+      let previousBar = this.section.getBar(barIdx - 1);
       if (!previousBar.break.isEqualTo(bb.empty)) return true;
       let currentClef = currentBar.clef;
       let previousClef = previousBar.clef;
@@ -355,8 +352,8 @@ export default {
 
     $_getShowBeat(barIdx: BarIdx): boolean {
       if (barIdx === this.barRange.firstBarIdx) return this.showBeatOnFirstBar;
-      let currentBarValue = this.$_section.getBar(barIdx).value;
-      let previousBarValue = this.$_section.getBar(barIdx - 1).value;
+      let currentBarValue = this.section.getBar(barIdx).value;
+      let previousBarValue = this.section.getBar(barIdx - 1).value;
       if (!currentBarValue.isSameAs(previousBarValue)) return true;
       return false;
     },
@@ -365,8 +362,8 @@ export default {
       if (barIdx === this.barRange.firstBarIdx) {
         return true;
       } else {
-        let previousBar = this.$_section.getBar(barIdx - 1)
-        let currentBar = this.$_section.getBar(barIdx);
+        let previousBar = this.section.getBar(barIdx - 1)
+        let currentBar = this.section.getBar(barIdx);
         if (currentBar.scale.isEqualTo(previousBar.scale)) return false;
         if (currentBar.scale.isRelativeTo(previousBar.scale)) return false;
         return true;
@@ -419,7 +416,7 @@ export default {
       let firstTieStyles = new Map<PartIdx, CSSProperties>();
       let tieProps = new Map<BarIdx, Map<PartIdx, TieCanvasProps>>();
       let tieStyles = new Map<BarIdx, Map<PartIdx, CSSProperties>>();
-      let firstBar = this.$_section.getBar(this.barRange.firstBarIdx);
+      let firstBar = this.section.getBar(this.barRange.firstBarIdx);
       if (this.$_systemElement.nodeType === Node.COMMENT_NODE) return;
       let systemElementBoundingClientRect = this.$_systemElement.getBoundingClientRect();
       let partIdcs = this.$_partIdcs.get(this.barRange.firstBarIdx) as PartIdx[];
@@ -469,10 +466,10 @@ export default {
       for (let currentBarIdx of this.barRange.indices()) {
         tieProps.set(currentBarIdx, new Map<PartIdx, TieCanvasProps>());
         tieStyles.set(currentBarIdx, new Map<PartIdx, CSSProperties>());
-        if (!this.$_section.barRange.includes(currentBarIdx)) continue;
+        if (!this.section.barRange.includes(currentBarIdx)) continue;
         let currentPartIdcs = this.$_partIdcs.get(currentBarIdx) as PartIdx[];
         for (let currentPartIdx of currentPartIdcs) {
-          let currentPart = this.$_section.getBar(currentBarIdx).getPart(currentPartIdx);
+          let currentPart = this.section.getBar(currentBarIdx).getPart(currentPartIdx);
           if (currentPart.lastNote === undefined) continue;
           if (currentPart.lastNote.type === 'rest') continue;
           let found = this.$_sameTypedPartIdxInNextBar.get(currentBarIdx)?.get(currentPartIdx);

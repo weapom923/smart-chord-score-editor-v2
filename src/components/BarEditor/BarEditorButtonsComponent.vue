@@ -217,6 +217,7 @@
     <v-card-text class="pa-0">
       <system-component
         v-bind:score="$_temporalScore"
+        v-bind:section="$_temporalSection"
         v-bind:sectionIdx="0"
         v-bind:bar-range="$_temporalBarRange"
         v-bind:show-beat-on-first-bar="true"
@@ -273,7 +274,7 @@ export default {
   },
 
   computed: {
-    $_temporalScore(): Score {
+    $_temporalSection(): Section {
       let tempBars: Bar[] = [];
       if (this.previousBar !== undefined) {
         let previousBar = this.previousBar.clone();
@@ -287,12 +288,11 @@ export default {
       if (this.nextBar !== undefined) {
         tempBars.push(this.nextBar);
       }
-      return new Score(
-        this.$store.state.score.score.metadata,
-        [
-          new Section('temporalSection', tempBars),
-        ],
-      );
+      return new Section('temporalSection', tempBars);
+    },
+
+    $_temporalScore(): Score {
+      return new Score(this.$store.state.score.score.metadata, [ this.$_temporalSection ]);
     },
 
     $_temporalSelectedBarIdx(): BarIdx {
