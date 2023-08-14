@@ -78,10 +78,8 @@ export default {
 
     $_pageStyle(): CSSProperties {
       let pageStyle: CSSProperties = {};
-      if (this.$store.state.appState.isMobileLayoutEnabled) {
-        pageStyle.width = '100vw';
-      } else {
-        pageStyle.width = `${this.$store.state.config.pageWidthOnPrintPx}px`;
+      pageStyle.width = `${this.$store.state.config.pageWidthOnPrintPx}px`;
+      if (!this.$store.state.appState.isMobileLayoutEnabled) {
         pageStyle.aspectRatio = `${this.aspectRatio}`;
       }
       return pageStyle;
