@@ -15,6 +15,8 @@
 
 <script lang="ts">
 import { Bar } from '../../modules/Bar';
+import { Section } from '../../modules/Section';
+import { SectionAndBarRange, SectionAndBarIdx } from '../../modules/SectionAndBarRange';
 
 type SectionNameHoverMenuItemType = {
   icon: string,
@@ -23,15 +25,47 @@ type SectionNameHoverMenuItemType = {
 
 export default {
   props: {
+    section: { type: Section, required: true },
     sectionIdx: { type: Number, required: true },
   },
 
   computed: {
+    $_sectionAndBarRange(): SectionAndBarRange {
+      return new SectionAndBarRange(
+        new SectionAndBarIdx(this.sectionIdx, this.section.firstBarIdx),
+        new SectionAndBarIdx(this.sectionIdx, this.section.lastBarIdx),
+      );
+    },
+
     $_menuItemDefinitions(): SectionNameHoverMenuItemType[] {
       return [
         {
           icon: 'mdi-plus',
           callback: () => { this.generateNewSection(this.sectionIdx) },
+        },
+        {
+          icon: 'mdi-select-all',
+          callback: async () => {
+            await this.$store.dispatch('score/selectBars', this.$_sectionAndBarRange)
+          },
+        },
+        {
+          icon: 'mdi-delete',
+          callback: async () => {
+            await this.$store.dispatch('score/removeBars', this.$_sectionAndBarRange)
+          },
+        },
+        {
+          icon: 'mdi-content-copy',
+          callback: async () => {
+            await this.$store.dispatch('score/setCopiedBars', this.$_sectionAndBarRange)
+          },
+        },
+        {
+          icon: 'mdi-content-paste',
+          callback: async () => {
+            await this.$store.dispatch('score/pasteCopiedBarsPartOnly', this.$_sectionAndBarRange)
+          },
         },
         {
           icon: 'mdi-file-cog',

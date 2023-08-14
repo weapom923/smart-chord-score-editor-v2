@@ -25,7 +25,11 @@
               </div>
             </template>
   
-            <section-name-hover-menu v-bind:section-idx="sectionIdx">
+            <section-name-hover-menu
+              width="200"
+              v-bind:section="$_section"
+              v-bind:section-idx="sectionIdx"
+            >
             </section-name-hover-menu>
           </v-menu>
         </template>
