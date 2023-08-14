@@ -1,15 +1,24 @@
 <template>
   <v-card>
     <v-btn-group class="d-flex" density="compact" color="secondary" variant="text">
-      <v-btn
-        size="x-small" class="flex-grow-1"
-        v-for="({ icon, callback, disabled }, menuItemIdx) in $_menuItems"
+      <v-tooltip
+        location="bottom"
+        v-for="({ icon, text, callback, disabled }, menuItemIdx) in $_menuItems"
         v-bind:key="menuItemIdx"
+        v-bind:text="text"
         v-bind:disabled="disabled"
-        v-bind:icon="icon"
-        v-on:click="callback"
       >
-      </v-btn>
+        <template v-slot:activator="{ props }">
+          <v-btn
+            size="x-small" class="flex-grow-1"
+            v-bind="props"
+            v-bind:disabled="disabled"
+            v-bind:icon="icon"
+            v-on:click="callback"
+          >
+          </v-btn>
+        </template>
+      </v-tooltip>
     </v-btn-group>
   </v-card>
 </template>
@@ -19,6 +28,7 @@ import { SectionAndBarIdx, SectionAndBarRange } from '../../modules/SectionAndBa
 
 type BarHoverMenuItem = {
   icon: string,
+  text: string,
   callback: Function,
   disabled: boolean,
 };
@@ -46,6 +56,7 @@ export default {
       return [
         {
           icon: 'mdi-plus',
+          text: this.$t('insertBarBefore'),
           callback: async () => {
             await this.$store.dispatch(
               'score/insertBars',
@@ -60,21 +71,25 @@ export default {
         },
         {
           icon: 'mdi-delete',
+          text: this.$t('removeBar'),
           callback: async () => { await this.$store.dispatch('score/removeBars', this.$_sectionAndBarRange) },
           disabled: false,
         },
         {
           icon: 'mdi-content-copy',
+          text: this.$t('copyBar'),
           callback: async () => { await this.$store.dispatch('score/setCopiedBars', this.$_sectionAndBarRange) },
           disabled: false,
         },
         {
           icon: 'mdi-content-paste',
+          text: this.$t('pasteBar'),
           callback: async () => { await this.$store.dispatch('score/pasteCopiedBarsPartOnly', this.$_sectionAndBarRange) },
           disabled: (this.$store.state.score.copiedBars.length === 0),
         },
         {
           icon: 'mdi-plus',
+          text: this.$t('insertBarAfter'),
           callback: async () => {
             await this.$store.dispatch(
               'score/insertBars',
