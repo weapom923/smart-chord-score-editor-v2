@@ -70,6 +70,7 @@
           </template>
 
           <bar-hover-menu
+            width="200"
             v-bind:section-idx="sectionIdx"
             v-bind:bar-idx="barProps.barIdx"
           >
