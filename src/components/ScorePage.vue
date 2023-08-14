@@ -1,7 +1,7 @@
 <template>
   <v-sheet
     id="score-page"
-    class="d-flex flex-column overflow-y-hidden mb-5"
+    class="d-flex flex-column overflow-y-hidden px-2"
     color="background"
     v-bind:style="$_pageStyle"
   >
@@ -31,6 +31,7 @@
 
 #score-page:not(:last-of-type) {
   break-after: page;
+  margin-bottom: 5px;
 }
 
 @media print {
