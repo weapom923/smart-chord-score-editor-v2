@@ -1,6 +1,6 @@
 <template>
   <v-toolbar>
-    <div class="d-flex" id="bar-editor-toolbar">
+    <v-container class="d-flex flex-row align-center" id="bar-editor-toolbar-item-container">
       <div v-if="$_selectedSectionAndBarRange !== undefined">
         <span>
           <span class="section-index">{{ $_selectedSectionAndBarRange.first.sectionIdx + 1 }}</span>
@@ -20,32 +20,26 @@
       </div>
       <v-spacer />
       <bar-part-type-selector
-        id="part-type-selector"
+        id="part-type-selector" density="compact"
         v-if="($_sectionAndBarIdx !== undefined) && ($_selectedPartIdx !== undefined)"
         v-bind:section-and-bar-idx="$_sectionAndBarIdx"
         v-model:selected-part-idx="$_selectedPartIdx"
       />
-    </div>
+    </v-container>
   </v-toolbar>
 </template>
 
 <style scoped>
-#bar-editor-toolbar {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-#bar-editor-toolbar div:not(:last-child) {
+#bar-editor-toolbar-item-container div:not(:last-child) {
   margin-right: 10px;
 }
 
-#bar-editor-toolbar div {
+#bar-editor-toolbar-item-container div {
   font-size: 12px;
   line-height: 12px;
 }
 
-#bar-editor-toolbar div span:not(:last-child) {
+#bar-editor-toolbar-item-container div span:not(:last-child) {
   margin-right: 5px;
 }
 
