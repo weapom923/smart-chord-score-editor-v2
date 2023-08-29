@@ -116,7 +116,7 @@ export class TensionNotePitch {
         if (isFlat) {
           return tnp.flatNinth;
         } else if (isSharp) {
-          return tnp.flatThirteenth;
+          return tnp.sharpNinth;
         } else {
           return tnp.ninth;
         }
