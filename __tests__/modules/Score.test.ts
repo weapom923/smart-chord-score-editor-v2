@@ -1,3 +1,4 @@
+import { test, expect } from '@jest/globals'
 import { Chord } from '../../src/modules/Chord'
 import { Bar } from '../../src/modules/Bar'
 import { BarRepeatEnding } from '../../src/modules/BarRepeatEnding'
