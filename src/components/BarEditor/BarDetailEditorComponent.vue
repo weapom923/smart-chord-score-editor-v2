@@ -51,12 +51,19 @@
         v-model:scale="$_selectedBarsScale"
       >
       </scale-selector>
+
+      <transpose-target-scale-selector
+        density="compact"
+        v-model:bars="$_selectedBars"
+      >
+      </transpose-target-scale-selector>
     </v-card-text>
   </v-card>
 </template>
 
 <script lang="ts">
 import ScaleSelector from '../parts/ScaleSelector.vue';
+import TransposeTargetScaleSelector from '../parts/TransposeTargetScaleSelector.vue';
 import ClefSelector from '../parts/ClefSelector.vue';
 import BarBreakSelector from '../parts/BarBreakSelector.vue';
 import BarRepeatEndingNumberSelector from '../parts/BarRepeatEndingNumberSelector.vue';
@@ -76,6 +83,7 @@ import { SectionAndBarRange, SectionAndBarIdx } from '../../modules/SectionAndBa
 export default {
   components: {
     ScaleSelector,
+    TransposeTargetScaleSelector,
     ClefSelector,
     BarBreakSelector,
     BarRepeatEndingNumberSelector,

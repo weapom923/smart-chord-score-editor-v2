@@ -1,6 +1,7 @@
 import { raw } from './utils';
 import { NotePitch, NotePitchRawObj, np } from './NotePitch';
 import { TensionNotePitch, TensionNotePitchRawObj, tnp  } from './TensionNotePitch';
+import { Scale } from './Scale';
 
 export type ChordTriadType = typeof Chord.Triad[number];
 export type ChordSixthOrSeventhType = typeof Chord.SixthOrSeventh[number];
@@ -388,5 +389,14 @@ export class Chord {
       self.#isValid = isValid;
     }
     return self.#isValid;
+  }
+
+  transpose(scale: Scale, targetScale: Scale): Chord {
+    let newChord = this.clone();
+    newChord.root = newChord.root.transpose(scale, targetScale);
+    if (newChord.bass !== undefined) {
+      newChord.bass = newChord.bass.transpose(scale, targetScale);
+    }
+    return newChord;
   }
 }
