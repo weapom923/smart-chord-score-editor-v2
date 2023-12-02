@@ -198,4 +198,26 @@ export class Bar {
       },
     };
   }
+
+  transpose(pitchOffset: number): Bar {
+    let targetScale = this.scale.transposeByPitchOffset(pitchOffset);
+    let newBar = this.clone();
+    newBar.scale = targetScale;
+    for (let part of newBar.parts) {
+      switch (part.type) {
+        case 'chord':
+        case 'normal':
+          for (let note of part.notes) {
+            switch (note.type) {
+              case 'normal':
+                if (note.pitchOrChord !== null) {
+                  note.pitchOrChord = note.pitchOrChord.transpose(this.scale, targetScale);
+                }
+            }
+          }
+          break;
+      }
+    }
+    return newBar;
+  }
 }

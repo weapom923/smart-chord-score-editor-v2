@@ -212,6 +212,12 @@ export class Scale {
         }
     }
   }
+
+  transposeByPitchOffset(pitchOffset: number): Scale {
+    let transposedTonicNoteNumber = NotePitch.convertToCyclicNoteNumber(this.tonicNotePitch.noteNumber + pitchOffset);
+    let transposedTonicNotePitches = NotePitch.findAllPredefinedPitchesFromCyclicNoteNumber(transposedTonicNoteNumber);
+    return Scale.findPredefinedScale(transposedTonicNotePitches[0], this.type);
+  }
 }
 
 export const sc = Scale.instance;

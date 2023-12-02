@@ -1,5 +1,6 @@
 import { raw } from './utils';
 import { NotePitchSymbol, NotePitchSymbolRawObj, nps } from './NotePitchSymbol'
+import { Scale } from './Scale';
 
 const numPitchesInOctave = 12;
 
@@ -43,11 +44,16 @@ export class NotePitch {
     if (this.shift < -2) throw 'too many flats';
   }
 
+  static convertToCyclicNoteNumber(noteNumber: number): number {
+    while (noteNumber < 0) noteNumber += numPitchesInOctave;
+    return noteNumber % numPitchesInOctave;
+  }
+
   #cyclicNoteNumber?: number;
   get cyclicNoteNumber() {
     const self = raw(this);
     if (self.#cyclicNoteNumber === undefined) {
-      self.#cyclicNoteNumber = self.noteNumber % numPitchesInOctave;
+      self.#cyclicNoteNumber = NotePitch.convertToCyclicNoteNumber(self.noteNumber);
     }
     return self.#cyclicNoteNumber;
   }
@@ -181,6 +187,58 @@ export class NotePitch {
           case 1:  return np.gSharp;
         }
         break;
+    }
+    throw new RangeError();
+  }
+
+  static findAllPredefinedPitchesFromCyclicNoteNumber(cyclicNoteNumber: number): NotePitch[] {
+    switch (cyclicNoteNumber) {
+      case 0:  return [ np.bSharp, np.c ];
+      case 1:  return [ np.cSharp, np.dFlat ];
+      case 2:  return [ np.d ];
+      case 3:  return [ np.dSharp, np.eFlat ];
+      case 4:  return [ np.e, np.fFlat ];
+      case 5:  return [ np.eSharp, np.f ];
+      case 6:  return [ np.fSharp, np.gFlat ];
+      case 7:  return [ np.g ];
+      case 8:  return [ np.gSharp, np.aFlat ];
+      case 9:  return [ np.a ];
+      case 10: return [ np.aSharp, np.bFlat];
+      case 11: return [ np.b, np.cFlat ];
+    }
+    throw new RangeError();
+  }
+
+  transpose(scale: Scale, targetScale: Scale): NotePitch {
+    let pitchOffset = targetScale.tonicNotePitch.cyclicNoteNumber - scale.tonicNotePitch.cyclicNoteNumber;
+    for (let scaleNotePitch of scale.notePitches) {
+      if (scaleNotePitch.symbol.isEqualTo(this.symbol)) {
+        let offsetFromScaleNotePitch = this.shift - scaleNotePitch.shift;
+        let transposedNoteNumber = this.noteNumber + pitchOffset;
+        let transposedCyclicNoteNumber = NotePitch.convertToCyclicNoteNumber(transposedNoteNumber);
+        for (let targetScaleNotePitch of targetScale.notePitches) {
+          let offsetTargetScaleNotePitch: NotePitch;
+          try {
+            offsetTargetScaleNotePitch = NotePitch.findPredefinedNotePitch(
+              targetScaleNotePitch.symbol,
+              targetScaleNotePitch.shift + offsetFromScaleNotePitch,
+            );
+          } catch (error)  {
+            if (error instanceof RangeError) {
+              continue;
+            } else {
+              throw error;
+            }
+          }
+          if (offsetTargetScaleNotePitch.cyclicNoteNumber === transposedCyclicNoteNumber) {
+            let transposedNotePitchCandidates = NotePitch.findAllPredefinedPitchesFromCyclicNoteNumber(transposedCyclicNoteNumber);
+            for (let transposedNotePitchCandidate of transposedNotePitchCandidates) {
+              if (transposedNotePitchCandidate.isEqualTo(offsetTargetScaleNotePitch)) return transposedNotePitchCandidate;
+            }
+          }
+        }
+        break;
+      }
     }
     throw new RangeError();
   }
