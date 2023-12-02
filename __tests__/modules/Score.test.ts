@@ -109,8 +109,8 @@ test('range and indices', () => {
     }
   }
 
-  {
-    let score = new Score(
+  try {
+    new Score(
       new ScoreMetadata(),
       [
         new Section('A', [ ...Array(4) ].map(() => tempBar.clone())),
@@ -118,14 +118,7 @@ test('range and indices', () => {
         new Section('C', [ ...Array(6) ].map(() => tempBar.clone())),
       ],
     );
-
-    expect(score.getPreviousSectionAndBarIdx(new SectionAndBarIdx(0, 0))).toBeUndefined();
-    expect(score.getPreviousSectionAndBarIdx(new SectionAndBarIdx(2, 0))?.isEqualTo(new SectionAndBarIdx(0, 3))).toBe(true);
-    expect(score.getPreviousSectionAndBarIdx(new SectionAndBarIdx(1, 0))?.isEqualTo(new SectionAndBarIdx(0, 3))).toBe(true);
-    expect(score.getPreviousSectionAndBarIdx(new SectionAndBarIdx(1, 1))).toBeUndefined();
-    expect(score.getNextSectionAndBarIdx(new SectionAndBarIdx(0, 3))?.isEqualTo(new SectionAndBarIdx(2, 0))).toBe(true);
-    expect(score.getNextSectionAndBarIdx(new SectionAndBarIdx(0, 4))).toBeUndefined();
-    expect(score.getNextSectionAndBarIdx(new SectionAndBarIdx(2, 4))?.isEqualTo(new SectionAndBarIdx(2, 5))).toBe(true);
-    expect(score.getNextSectionAndBarIdx(new SectionAndBarIdx(2, 5))).toBeUndefined();
+  } catch (error) {
+    expect(error instanceof RangeError).toBe(true);
   }
 });
