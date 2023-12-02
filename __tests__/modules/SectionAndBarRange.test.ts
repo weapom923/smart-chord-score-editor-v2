@@ -1,3 +1,4 @@
+import { test, expect } from '@jest/globals'
 import { SectionAndBarIdx, BarRange, SectionAndBarRange } from '../../src/modules/SectionAndBarRange'
 
 test('basic', () => {
