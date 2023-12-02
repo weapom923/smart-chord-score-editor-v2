@@ -140,51 +140,65 @@ export class NotePitch {
     switch (raw(symbol)) {
       case nps.a:
         switch (shift) {
+          case -2: return np.g;
           case -1: return np.aFlat;
           case 0:  return np.a;
           case 1:  return np.aSharp;
+          case 2:  return np.b;
         }
         break;
       case nps.b:
         switch (shift) {
+          case -2: return np.a;
           case -1: return np.bFlat;
           case 0:  return np.b;
           case 1:  return np.bSharp;
+          case 2:  return np.cSharp;
         }
         break;
       case nps.c:
         switch (shift) {
+          case -2: return np.bFlat;
           case -1: return np.cFlat;
           case 0:  return np.c;
           case 1:  return np.cSharp;
+          case 2:  return np.d;
         }
         break;
       case nps.d:
         switch (shift) {
+          case -2: return np.c;
           case -1: return np.dFlat;
           case 0:  return np.d;
           case 1:  return np.dSharp;
+          case 2:  return np.e;
         }
         break;
       case nps.e:
         switch (shift) {
+          case -2: return np.d;
           case -1: return np.eFlat;
           case 0:  return np.e;
           case 1:  return np.eSharp;
+          case 2:  return np.fSharp;
         }
         break;
       case nps.f:
         switch (shift) {
+          case -2: return np.eFlat;
           case -1: return np.fFlat;
           case 0:  return np.f;
           case 1:  return np.fSharp;
+          case 2:  return np.g;
         }
         break;
       case nps.g:
         switch (shift) {
+          case -2: return np.f;
           case -1: return np.gFlat;
           case 0:  return np.g;
           case 1:  return np.gSharp;
+          case 2:  return np.a;
         }
         break;
     }
