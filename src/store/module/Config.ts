@@ -81,7 +81,7 @@ const ConfigModule: Module<Config, RootState> = {
   },
 
   mutations: {
-    loadConfigFromCookie(state: Config) {
+    loadConfigFromLocalStorage(state: Config) {
       const configJsonFromCookie = window.localStorage.getItem('config');
       if (configJsonFromCookie !== null) {
         const configKeys = Object.keys(state);
@@ -148,8 +148,8 @@ const ConfigModule: Module<Config, RootState> = {
       context.commit('setConfig', config);
     },
 
-    loadConfigFromCookie(context: ActionContext<Config, RootState>) {
-      context.commit('loadConfigFromCookie');
+    loadConfigFromLocalStorage(context: ActionContext<Config, RootState>) {
+      context.commit('loadConfigFromLocalStorage');
     },
   },
 }

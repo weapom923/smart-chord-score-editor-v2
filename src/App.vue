@@ -221,7 +221,7 @@ const App = defineComponent({
   },
 
   async mounted() {
-    await this.$store.dispatch('config/loadConfigFromCookie');
+    await this.$store.dispatch('config/loadConfigFromLocalStorage');
   },
 
   beforeUnmount() {
