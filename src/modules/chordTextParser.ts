@@ -29,13 +29,21 @@ namespace ChordTextParser {
     [ 'G#', np.gSharp ],
   ]);
 
+  export const validTensionLikeNotes = new Map<string, TensionNotePitch>([
+    [ '-5', tnp.sharpEleventh ],
+  ]);
+
   export const validTensionNotes = new Map<string, TensionNotePitch>([
     [ '9',   tnp.ninth ],
+    [ '-9',  tnp.flatNinth ],
     [ 'b9',  tnp.flatNinth ],
+    [ '+9',  tnp.sharpNinth ],
     [ '#9',  tnp.sharpNinth ],
     [ '11',  tnp.eleventh ],
+    [ '+11', tnp.sharpEleventh ],
     [ '#11', tnp.sharpEleventh ],
     [ '13',  tnp.thirteenth ],
+    [ '-13', tnp.flatThirteenth ],
     [ 'b13', tnp.flatThirteenth ],
   ]);
 
@@ -43,20 +51,24 @@ namespace ChordTextParser {
     [ 'add9', tnp.ninth ],
   ]);
 
-  export type TriadSeventhAndNinthTuple = [ ChordTriadType, ChordSixthOrSeventhType, TensionNotePitch ];
+  export type TriadSeventhAndNinth = {
+    triad: ChordTriadType,
+    sixthOrSeventh: ChordSixthOrSeventhType,
+    ninth: TensionNotePitch,
+  };
 
-  export const validTriadSeventhAndNinths = new Map<string, TriadSeventhAndNinthTuple>([
-    [ '9',    [ 'major',      'dominantSeventh',   tnp.ninth ] ],
-    [ 'm9',   [ 'minor',      'dominantSeventh',   tnp.ninth ] ],
-    [ 'M9',   [ 'major',      'majorSeventh',      tnp.ninth ] ],
-    [ 'mM9',  [ 'major',      'majorSeventh',      tnp.ninth ] ],
-    [ 'dim9', [ 'diminished', 'diminishedSeventh', tnp.ninth ] ],
+  export const validTriadSeventhAndNinths = new Map<string, TriadSeventhAndNinth>([
+    [ '9',    { triad: 'major',      sixthOrSeventh: 'dominantSeventh',   ninth: tnp.ninth } ],
+    [ 'm9',   { triad: 'minor',      sixthOrSeventh: 'dominantSeventh',   ninth: tnp.ninth } ],
+    [ 'M9',   { triad: 'major',      sixthOrSeventh: 'majorSeventh',      ninth: tnp.ninth } ],
+    [ 'mM9',  { triad: 'major',      sixthOrSeventh: 'majorSeventh',      ninth: tnp.ninth } ],
+    [ 'dim9', { triad: 'diminished', sixthOrSeventh: 'diminishedSeventh', ninth: tnp.ninth } ],
   ]);
 
-  export type TriadAndSeventhPair = [ ChordTriadType, ChordSixthOrSeventhType ];
+  export type TriadAndSeventh = { triad: ChordTriadType, seventh: ChordSixthOrSeventhType };
 
-  export const validTriadAndSevenths = new Map<string, TriadAndSeventhPair>([
-    [ 'dim7', [ 'diminished', 'diminishedSeventh' ] ],
+  export const validTriadAndSevenths = new Map<string, TriadAndSeventh>([
+    [ 'dim7', { triad: 'diminished', seventh:'diminishedSeventh' } ],
   ]);
 
   export const validSixthAndSevenths = new Map<string, ChordSixthOrSeventhType>([
@@ -107,11 +119,11 @@ namespace ChordTextParser {
 export default {
   ParseError: ChordTextParser.ParseError,
 
-  parseBassNote(chordText: string): [ string, NotePitch | undefined ] {
+  parseBassNote(chordText: string): { chordText: string, bassNote: NotePitch | undefined } {
     const chordWithBassNoteNotationRegexp = new RegExp('(?<remaining>.+)( on |/)(?<bassNoteNotation>.+)');
     const chordWithBassNoteNotation = chordWithBassNoteNotationRegexp.exec(chordText);
     if (chordWithBassNoteNotation === null) {
-      return [ chordText, undefined ];
+      return { chordText, bassNote: undefined };
     } else {
       const remainingChordText = chordWithBassNoteNotation.groups?.remaining;
       if (remainingChordText === undefined) throw new ChordTextParser.ParseError(chordWithBassNoteNotation.toString());
@@ -119,15 +131,19 @@ export default {
       if (bassNoteNotationCandidate === undefined) throw new ChordTextParser.ParseError(chordWithBassNoteNotation.toString());
       const bassNote = ChordTextParser.validBassNotes.get(bassNoteNotationCandidate);
       if (bassNote === undefined) throw new ChordTextParser.ParseError(bassNoteNotationCandidate);
-      return [ remainingChordText, bassNote ];
+      return { chordText: remainingChordText, bassNote };
     }
   },
 
-  parseTensionNotes(chordText: string): [ string, TensionNotePitch[] | undefined ] {
+  parseTensionNotes(chordText: string): {
+    chordText: string,
+    tensionNotes: Set<TensionNotePitch>,
+    tensionLikeNotes: Set<TensionNotePitch>,
+  } {
     const chordWithTensionNotationRegexp = new RegExp('(?<remaining>.+)\\((?<tensionNotations>.+)\\)');
     const chordWithTensionNotation = chordWithTensionNotationRegexp.exec(chordText);
     if (chordWithTensionNotation === null) {
-      return [ chordText, undefined ];
+      return { chordText, tensionNotes: new Set(), tensionLikeNotes: new Set() };
     } else {
       const remainingChordText = chordWithTensionNotation.groups?.remaining;
       if (remainingChordText === undefined) throw new ChordTextParser.ParseError(chordWithTensionNotation.toString());
@@ -138,28 +154,56 @@ export default {
       if (tensionNotationCandidateSet.size !== tensionNotationCandidates.length) {
         throw new ChordTextParser.ParseError();
       }
-      const tensionNotes = tensionNotationCandidates.map(tensionNotation => ChordTextParser.validTensionNotes.get(tensionNotation));
+      const tensionLikeNotes = new Set<TensionNotePitch>();
+      const tensionNotes = new Set<TensionNotePitch>();
+      for (const tensionNoteCandidate of tensionNotationCandidateSet) {
+        let tensionLikeNote = ChordTextParser.validTensionLikeNotes.get(tensionNoteCandidate);
+        let tensionNote = ChordTextParser.validTensionNotes.get(tensionNoteCandidate);
+        if ((tensionLikeNote === undefined) && (tensionNote === undefined)) {
+          throw new ChordTextParser.ParseError();
+        }
+        if (tensionNote !== undefined) {
+          tensionNotes.add(tensionNote);
+          tensionNotationCandidateSet.delete(tensionNoteCandidate);
+          continue;
+        }
+        if (tensionLikeNote !== undefined) {
+          tensionLikeNotes.add(tensionLikeNote);
+          tensionNotationCandidateSet.delete(tensionNoteCandidate);
+          continue;
+        }
+      }
       for (const tensionNote of tensionNotes) {
         if (tensionNote === undefined) throw new ChordTextParser.ParseError(tensionNote);
       }
-      return [ remainingChordText, tensionNotes as TensionNotePitch[] ];
+      return {
+        chordText: remainingChordText,
+        tensionNotes: tensionNotes,
+        tensionLikeNotes: tensionLikeNotes,
+      };
     }
   },
 
-  parseOtherTension(chordText: string): [ string, TensionNotePitch | undefined ] {
+  parseOtherTension(chordText: string): {
+    chordText: string,
+    otherTensionNote: TensionNotePitch | undefined,
+  } {
     let indexOfOtherTensionNotesNotation = chordText.length;
     if (chordText.endsWith('add9')) {
       indexOfOtherTensionNotesNotation = chordText.lastIndexOf('add9');
     } else {
-      return [ chordText, undefined ];
+      return { chordText, otherTensionNote: undefined };
     }
     const remainingChordText = chordText.slice(0, indexOfOtherTensionNotesNotation);
     const otherTensionNote = ChordTextParser.validOtherTensionNotes.get(chordText.slice(indexOfOtherTensionNotesNotation));
     if (otherTensionNote === undefined) throw new ChordTextParser.ParseError(chordText);
-    return [ remainingChordText, otherTensionNote ];
+    return { chordText: remainingChordText, otherTensionNote };
   },
 
-  parseTriadSeventhAndNinth(chordText: string): [ string, ChordTextParser.TriadSeventhAndNinthTuple | undefined ] {
+  parseTriadSeventhAndNinth(chordText: string, tensionLikeNotes: Set<TensionNotePitch>): {
+    chordText: string,
+    triadSeventhAndNinth: ChordTextParser.TriadSeventhAndNinth | undefined,
+  } {
     let indexOfTriadSeventhAndNinthNotation = chordText.length;
     if (chordText.endsWith('dim9')) {
       indexOfTriadSeventhAndNinthNotation = chordText.lastIndexOf('dim9');
@@ -172,28 +216,52 @@ export default {
     } else if (chordText.endsWith('9')) {
       indexOfTriadSeventhAndNinthNotation = chordText.lastIndexOf('9');
     } else {
-      return [ chordText, undefined ];
+      return { chordText, triadSeventhAndNinth: undefined };
     }
     const remainingChordText = chordText.slice(0, indexOfTriadSeventhAndNinthNotation);
     const triadSeventhAndNinth = ChordTextParser.validTriadSeventhAndNinths.get(chordText.slice(indexOfTriadSeventhAndNinthNotation));
     if (triadSeventhAndNinth === undefined) throw new ChordTextParser.ParseError(chordText);
-    return [ remainingChordText, triadSeventhAndNinth ];
+    if (tensionLikeNotes.has(tnp.sharpEleventh)) {
+      switch (triadSeventhAndNinth.triad) {
+        case 'minor':
+          triadSeventhAndNinth.triad = 'diminished';
+          break;
+        default:
+          throw new ChordTextParser.ParseError(`${chordText}(${Array.from(tensionLikeNotes).join(' ')})`);
+      }
+    }
+    return { chordText: remainingChordText, triadSeventhAndNinth };
   },
 
-  parseTriadAndSeventh(chordText: string): [ string, ChordTextParser.TriadAndSeventhPair | undefined ] {
+  parseTriadAndSeventh(chordText: string, tensionLikeNotes: Set<TensionNotePitch>): {
+    chordText: string,
+    triadAndSeventh: ChordTextParser.TriadAndSeventh | undefined,
+  } {
     let indexOfTriadAndSeventhNotation = chordText.length;
     if (chordText.endsWith('dim7')) {
       indexOfTriadAndSeventhNotation = chordText.lastIndexOf('dim7');
     } else {
-      return [ chordText, undefined ];
+      return { chordText, triadAndSeventh: undefined };
     }
     const remainingChordText = chordText.slice(0, indexOfTriadAndSeventhNotation);
     const triadAndSeventh = ChordTextParser.validTriadAndSevenths.get(chordText.slice(indexOfTriadAndSeventhNotation));
     if (triadAndSeventh === undefined) throw new ChordTextParser.ParseError(chordText);
-    return [ remainingChordText, triadAndSeventh ];
+    if (tensionLikeNotes.has(tnp.sharpEleventh)) {
+      switch (triadAndSeventh.triad) {
+        case 'minor':
+          triadAndSeventh.triad = 'diminished';
+          break;
+        default:
+          throw new ChordTextParser.ParseError(`${chordText}(${Array.from(tensionLikeNotes).join(' ')})`);
+      }
+    }
+    return { chordText: remainingChordText, triadAndSeventh };
   },
 
-  parseSixthOrSeventh(chordText: string): [ string, ChordSixthOrSeventhType | undefined ] {
+  parseSixthOrSeventh(chordText: string): {
+    chordText: string,
+    sixthOrSeventh: ChordSixthOrSeventhType | undefined,
+  } {
     let indexOfSixthOrSeventhNotation = chordText.length;
     if (chordText.endsWith('M7')) {
       indexOfSixthOrSeventhNotation = chordText.lastIndexOf('M7');
@@ -202,30 +270,42 @@ export default {
     } else if (chordText.endsWith('6')) {
       indexOfSixthOrSeventhNotation = chordText.lastIndexOf('6');
     } else {
-      return [ chordText, undefined ];
+      return { chordText, sixthOrSeventh: undefined };
     }
     const remainingChordText = chordText.slice(0, indexOfSixthOrSeventhNotation);
     const sixthOrSeventh = ChordTextParser.validSixthAndSevenths.get(chordText.slice(indexOfSixthOrSeventhNotation));
     if (sixthOrSeventh === undefined) throw new ChordTextParser.ParseError(chordText);
-    return [ remainingChordText, sixthOrSeventh ];
+    return { chordText: remainingChordText, sixthOrSeventh };
   },
 
-  parsePostTriad(chordText: string): [ string, ChordTriadType | undefined ] {
+  parsePostTriad(chordText: string, tensionLikeNotes: Set<TensionNotePitch>): {
+    chordText: string,
+    postTriad: ChordTriadType | undefined,
+    postTriadTensionLikeNote: TensionNotePitch | undefined,
+  } {
     let indexOfPostTriadNotation = chordText.length;
-    if (chordText.endsWith('sus4')) {
+    if (chordText.endsWith('-5')) {
+      indexOfPostTriadNotation = chordText.lastIndexOf('-5');
+    } else if (chordText.endsWith('sus4')) {
       indexOfPostTriadNotation = chordText.lastIndexOf('sus4');
     } else if (chordText.endsWith('sus2')) {
       indexOfPostTriadNotation = chordText.lastIndexOf('sus2');
     } else {
-      return [ chordText, undefined ];
+      return { chordText, postTriad: undefined, postTriadTensionLikeNote: undefined };
     }
+    if (tensionLikeNotes.size > 0) throw new ChordTextParser.ParseError(`${chordText}(${Array.from(tensionLikeNotes).join(' ')})`);
     const remainingChordText = chordText.slice(0, indexOfPostTriadNotation);
     const postTriad = ChordTextParser.validPostTriads.get(chordText.slice(indexOfPostTriadNotation));
-    if (postTriad === undefined) throw new ChordTextParser.ParseError(chordText);
-    return [ remainingChordText, postTriad ];
+    const postTriadTensionLikeNote = ChordTextParser.validTensionLikeNotes.get(chordText.slice(indexOfPostTriadNotation));
+    if ((postTriad === undefined) && (postTriadTensionLikeNote === undefined)) throw new ChordTextParser.ParseError(chordText);
+    return { chordText: remainingChordText, postTriad, postTriadTensionLikeNote };
   },
 
-  parseTriad(chordText: string): [ string, ChordTriadType | undefined ] {
+  parseTriad(chordText: string, tensionLikeNotes: Set<TensionNotePitch>): {
+    chordText: string,
+    triad: ChordTriadType | undefined,
+  } {
+    let triad: ChordTriadType | undefined = undefined;
     let indexOfTriadNotation = chordText.length;
     if (chordText.endsWith('dim')) {
       indexOfTriadNotation = chordText.lastIndexOf('dim');
@@ -240,12 +320,21 @@ export default {
     } else if (chordText.endsWith('-')) {
       indexOfTriadNotation = chordText.lastIndexOf('-');
     } else {
-      return [ chordText, undefined ];
+      triad = 'major';
     }
     const remainingChordText = chordText.slice(0, indexOfTriadNotation);
-    const triad = ChordTextParser.validTriads.get(chordText.slice(indexOfTriadNotation));
+    if (triad === undefined) triad = ChordTextParser.validTriads.get(chordText.slice(indexOfTriadNotation));
     if (triad === undefined) throw new ChordTextParser.ParseError(chordText);
-    return [ remainingChordText, triad ];
+    if (tensionLikeNotes.has(tnp.sharpEleventh)) {
+      switch (triad) {
+        case 'minor':
+          triad = 'diminished';
+          break;
+        default:
+          throw new ChordTextParser.ParseError(`${chordText}(${Array.from(tensionLikeNotes).join(' ')})`);
+      }
+    }
+    return { chordText: remainingChordText, triad };
   },
 
   parseRoot(chordText: string): NotePitch {
@@ -258,6 +347,7 @@ export default {
   parse(chordText: string) {
     let triad: ChordTriadType | undefined = undefined;
     let sixthOrSeventh: ChordSixthOrSeventhType | undefined = undefined;
+    const tensionLikeNotes = new Set<TensionNotePitch>();
     const tensionNotes = new Set<TensionNotePitch>();
     let bass: NotePitch | undefined = undefined;
 
@@ -265,74 +355,74 @@ export default {
 
     {
       const result = this.parseBassNote(chordText);
-      chordText = result[0];
-      bass = result[1];
+      chordText = result.chordText;
+      bass = result.bassNote;
     }
 
     {
       const result = this.parseTensionNotes(chordText);
-      chordText = result[0];
-      const tensionNotesTemp = result[1];
-      if (tensionNotesTemp !== undefined) {
-        tensionNotesTemp.forEach(tensionNote => { tensionNotes.add(tensionNote) })
+      chordText = result.chordText;
+      for (const tensionNote of result.tensionNotes) {
+        tensionNotes.add(tensionNote);
+      }
+      for (const tensionLikeNote of result.tensionLikeNotes) {
+        tensionLikeNotes.add(tensionLikeNote);
       }
     }
 
     {
       const result = this.parseOtherTension(chordText);
-      chordText = result[0];
-      const otherTension = result[1];
-      if (otherTension !== undefined) {
-        tensionNotes.add(otherTension);
+      chordText = result.chordText;
+      if (result.otherTensionNote !== undefined) {
+        tensionNotes.add(result.otherTensionNote);
       }
     }
 
     {
-      const result = this.parsePostTriad(chordText);
-      chordText = result[0];
-      const triadTemp = result[1];
-      if (triadTemp !== undefined) {
-        triad = triadTemp;
+      const result = this.parsePostTriad(chordText, tensionLikeNotes);
+      chordText = result.chordText;
+      if (result.postTriad !== undefined) {
+        triad = result.postTriad;
+      }
+      if (result.postTriadTensionLikeNote !== undefined) {
+        tensionLikeNotes.add(result.postTriadTensionLikeNote);
       }
     }
 
     {
-      const result = this.parseTriadSeventhAndNinth(chordText);
-      chordText = result[0];
-      const triadSeventhAndNinth = result[1];
-      if (triadSeventhAndNinth !== undefined) {
-        if (triad === undefined) triad = triadSeventhAndNinth[0];
-        sixthOrSeventh = triadSeventhAndNinth[1];
-        const ninth = triadSeventhAndNinth[2];
-        tensionNotes.add(ninth);
+      const result = this.parseTriadSeventhAndNinth(chordText, tensionLikeNotes);
+      chordText = result.chordText;
+      if (result.triadSeventhAndNinth !== undefined) {
+        if (triad === undefined) triad = result.triadSeventhAndNinth.triad;
+        sixthOrSeventh = result.triadSeventhAndNinth.sixthOrSeventh;
+        tensionNotes.add(result.triadSeventhAndNinth.ninth);
       }
     }
 
     {
-      const result = this.parseTriadAndSeventh(chordText);
-      chordText = result[0];
-      const triadAndSeventh = result[1];
-      if (triadAndSeventh !== undefined) {
-        if (triad === undefined) triad = triadAndSeventh[0];
-        sixthOrSeventh = triadAndSeventh[1];
+      const result = this.parseTriadAndSeventh(chordText, tensionLikeNotes);
+      chordText = result.chordText;
+      if (result.triadAndSeventh !== undefined) {
+        if (triad === undefined) triad = result.triadAndSeventh.triad;
+        sixthOrSeventh = result.triadAndSeventh.seventh;
       }
     }
 
     {
       const result = this.parseSixthOrSeventh(chordText);
-      chordText = result[0];
-      const sixthOrSeventhTemp = result[1];
-      if (sixthOrSeventhTemp !== undefined) {
-        sixthOrSeventh = sixthOrSeventhTemp;
+      chordText = result.chordText;
+      if (result.sixthOrSeventh !== undefined) {
+        sixthOrSeventh = result.sixthOrSeventh;
       }
     }
 
     {
-      const result = this.parseTriad(chordText);
-      chordText = result[0];
-      const triadTemp = result[1];
-      if (triadTemp !== undefined) {
-        if (triad === undefined) triad = triadTemp;
+      if (triad === undefined) {
+        const result = this.parseTriad(chordText, tensionLikeNotes);
+        chordText = result.chordText;
+        if (result.triad !== undefined) {
+          triad = result.triad;
+        }
       }
     }
 
