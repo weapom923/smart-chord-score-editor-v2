@@ -5,7 +5,8 @@
         <v-btn
           icon="mdi-skip-previous" size="small"
           v-bind="props"
-          v-on:click="$_seekToHead"
+          v-on:click.stop="$_seekToHead"
+          v-on:keydown.enter.stop="$_seekToHead"
         >
         </v-btn>
       </template>
@@ -34,7 +35,8 @@
           size="small"
           v-bind="props"
           v-bind:icon="$_playOrPauseButtonIconName"
-          v-on:click="$_onPlayOrPauseButtonClicked"
+          v-on:click.stop="$_onPlayOrPauseButtonClicked"
+          v-on:keydown.enter.stop="$_onPlayOrPauseButtonClicked"
         >
         </v-btn>
       </template>
@@ -62,7 +64,8 @@
         <v-btn
           icon="mdi-skip-next" size="small"
           v-bind="props"
-          v-on:click="$_seekToTail"
+          v-on:click.stop="$_seekToTail"
+          v-on:keydown.enter.stop="$_seekToTail"
         >
         </v-btn>
       </template>
@@ -90,6 +93,7 @@
             v-bind:prepend-icon="$_volumeButtonIconName"
             v-model="$_volume"
             v-on:click.stop
+            v-on:keydown.stop
           >
           </v-slider>
         </v-card-text>
@@ -103,7 +107,8 @@
           v-bind="props"
           v-bind:class="$_loopButtonClassName"
           v-bind:icon="$_loopButtonIconName"
-          v-on:click="$_onLoopButtonClicked"
+          v-on:click.stop="$_onLoopButtonClicked"
+          v-on:keydown.enter.stop="$_onLoopButtonClicked"
         >
         </v-btn>
       </template>

@@ -2,7 +2,6 @@
   <v-app-bar
     fixed density="compact"
     v-bind:app="!$store.state.appState.isPrintLayoutEnabled"
-    v-on:click.stop
   >
     <v-tooltip
       location="bottom"
@@ -17,7 +16,8 @@
           v-bind="props"
           v-bind:disabled="menuItemDefinition.disabled"
           v-bind:icon="menuItemDefinition.iconName"
-          v-on:click="menuItemDefinition.callback"
+          v-on:click.stop="menuItemDefinition.callback"
+          v-on:keydown.enter.stop="menuItemDefinition.callback"
         >
         </v-btn>
       </template>
@@ -37,7 +37,8 @@
           v-bind="props"
           v-bind:disabled="menuItemDefinition.disabled"
           v-bind:icon="menuItemDefinition.iconName"
-          v-on:click="menuItemDefinition.callback"
+          v-on:click.stop="menuItemDefinition.callback"
+          v-on:keydown.enter.stop="menuItemDefinition.callback"
         >
         </v-btn>
       </template>

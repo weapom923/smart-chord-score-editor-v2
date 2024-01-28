@@ -203,7 +203,8 @@ export default defineComponent({
     async $_seekEnd() {
       this.$_requestAudioBufferSourceNodeToStop();
       this.$_createNewAudioBufferSourceNode();
-      if (this.$data.$_wasPlayingOnSeek) {
+      let isSeekedToTail = (this.audioBuffer.duration === this.$_getPlayTimeSec());
+      if (this.$data.$_wasPlayingOnSeek && !isSeekedToTail) {
         await this.$_resume();
       }
       this.$data.$_wasPlayingOnSeek = undefined;
@@ -219,6 +220,7 @@ export default defineComponent({
       newAudioBufferSourceNode.connect(this.gainNode);
       newAudioBufferSourceNode.onended = () => {
         this.$data.$_audioBufferSourceNodePool.delete(newAudioBufferSourceNode);
+        this.$data.$_originOfCurrentTime = this.audioContext.currentTime;
         this.$_suspend();
       };
       if (this.$data.$_loopDefinition !== undefined) {

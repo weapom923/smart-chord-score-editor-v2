@@ -61,6 +61,10 @@ export default {
       handler() { this.$_setNoteValueSliderValues() },
       deep: true,
     },
+    $_selectedNote: {
+      handler() { this.$_setNoteValueSliderValues() },
+      deep: true,
+    },
   },
 
   props: {

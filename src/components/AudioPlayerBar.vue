@@ -1,15 +1,12 @@
 <template>
-  <v-app-bar
-    id="audio-player-bar" density="compact"
-    v-on:keydown="onKeydown"
-    v-on:click.stop
-  >
+  <v-app-bar id="audio-player-bar" density="compact">
     <v-tooltip location="top" v-bind:text="$t('loadAudioFile')">
       <template v-slot:activator="{ props }">
         <v-btn
           icon="mdi-folder-open" size="small"
           v-bind="props"
-          v-on:click="$_loadAudioSource"
+          v-on:click.stop="$_loadAudioSource"
+          v-on:keydown.enter.stop="$_loadAudioSource"
         >
         </v-btn>
       </template>
