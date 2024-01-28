@@ -1,5 +1,5 @@
 <template>
-  <div class="overflow-x-hidden overflow-y-auto" v-on:keydown="onKeydown">
+  <div class="overflow-x-hidden overflow-y-auto">
     <bar-editor-toolbar
       density="compact"
       v-model:selected-part-idx="$data.$_selectedPartIdx"
@@ -172,6 +172,7 @@ const BarEditor = defineComponent({
     },
 
     async onKeydown(event: KeyboardEvent): Promise<boolean> {
+      if (this.$store.state.appState.isBarEditorDrawerMinimized) return false;
       let keyEventType = getKeyEventType(event);
       if (await this.$_getBarEditorButtonsComponent()?.onKeydown(keyEventType, event) ?? false) return true;
       switch (keyEventType) {
