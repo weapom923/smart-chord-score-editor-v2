@@ -183,7 +183,7 @@ export class Scale {
           case np.e:      return [ np.e,      np.fSharp, np.gSharp, np.a,      np.b,      np.cSharp, np.dSharp ];
           case np.b:      return [ np.b,      np.cSharp, np.dSharp, np.e,      np.fSharp, np.gSharp, np.aSharp ];
           case np.fSharp: return [ np.fSharp, np.gSharp, np.aSharp, np.b,      np.cSharp, np.dSharp, np.eSharp ];
-          case np.gFlat:  return [ np.gFlat,  np.aFlat,  np.bFlat,  np.cFlat,  np.dFlat,  np.eFlat,  np.fSharp ];
+          case np.gFlat:  return [ np.gFlat,  np.aFlat,  np.bFlat,  np.cFlat,  np.dFlat,  np.eFlat,  np.f ];
           case np.cSharp: return [ np.cSharp, np.dSharp, np.eSharp, np.fSharp, np.gSharp, np.aSharp, np.bSharp ];
           case np.dFlat:  return [ np.dFlat,  np.eFlat,  np.f,      np.gFlat,  np.aFlat,  np.bFlat,  np.c ];
           case np.aFlat:  return [ np.aFlat,  np.bFlat,  np.c,      np.dFlat,  np.eFlat,  np.f,      np.g ];
@@ -206,7 +206,7 @@ export class Scale {
           case np.gSharp: return [ np.gSharp, np.aSharp, np.b,      np.cSharp, np.dSharp, np.e,      np.fSharp ];
           case np.cSharp: return [ np.cSharp, np.dSharp, np.e,      np.fSharp, np.gSharp, np.a,      np.b ];
           case np.fSharp: return [ np.fSharp, np.gSharp, np.a,      np.b,      np.cSharp, np.d,      np.e ];
-          case np.b:      return [ np.b,      np.cSharp, np.d,      np.e,      np.fSharp, np.gSharp, np.a ];
+          case np.b:      return [ np.b,      np.cSharp, np.d,      np.e,      np.fSharp, np.g,      np.a ];
           case np.e:      return [ np.e,      np.fSharp, np.g,      np.a,      np.b,      np.c,      np.d ];
           default:        return [];
         }
