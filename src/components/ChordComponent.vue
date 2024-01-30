@@ -7,33 +7,43 @@
       <div class="d-flex align-end">
         <div v-bind:style="$_noteTextStyle">{{ $_rootNoteText }}</div>
         <div v-bind:style="$_chordBasicStyle">
+          <template v-if="$_containsChordText">
+            <div
+              class="no-height left-n3px text-left pos-relative"
+              v-bind:style="$_noteFlatOrSharpTextStyle"
+            >
+              {{ $_rootNoteFlatOrSharpText }}
+            </div>
+            <div class="d-flex">
+              <div
+                class="ml-n2px pos-relative"
+                v-if="$_basicChordText.length > 0"
+                v-bind:style="$_chordTextStyle" 
+              >
+                {{ $_basicChordText }}
+              </div>
+              <div
+                class="ml-n2px pos-relative"
+                v-if="$_additionalChordText.length > 0"
+                v-bind:style="$_chordTextStyle"
+              >
+                {{ $_additionalChordText }}
+              </div>
+            </div>
+          </template>
+
           <div
-            class="no-height left-n3px text-left pos-relative"
+            v-else
+            class="no-width no-height left-n3px text-left pos-relative"
             v-bind:style="$_noteFlatOrSharpTextStyle"
           >
             {{ $_rootNoteFlatOrSharpText }}
-          </div>
-          <div class="d-flex">
-            <div
-              class="ml-n2px pos-relative"
-              v-bind:style="$_chordTextStyle" 
-              v-if="$_basicChordText"
-            >
-              {{ $_basicChordText }}
-            </div>
-            <div
-              class="ml-n2px pos-relative"
-              v-if="$_additionalChordText.length > 0"
-              v-bind:style="$_chordTextStyle"
-            >
-              {{ $_additionalChordText }}
-            </div>
           </div>
         </div>
       </div>
       <div
         class="pos-relative"
-        v-if="($_sortedTensionNotes.length > 0) || ($_additionalChordText.length > 0)"
+        v-if="$_containsChordAdditional"
       >
         <div
           class="d-flex align-center left-n3px"
@@ -241,6 +251,14 @@ export default {
 
     $_chordElement(): HTMLDivElement {
       return this.$el as HTMLDivElement;
+    },
+
+    $_containsChordText(): boolean {
+      return (this.$_basicChordText.length > 0) || this.$_containsChordAdditional;
+    },
+
+    $_containsChordAdditional(): boolean {
+      return (this.$_sortedTensionNotes.length > 0) || (this.$_additionalChordText.length > 0);
     },
   },
 
