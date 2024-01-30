@@ -13,12 +13,21 @@
           >
             {{ $_rootNoteFlatOrSharpText }}
           </div>
-          <div
-            class="ml-n2px pos-relative"
-            v-bind:style="$_chordTextStyle" 
-            v-if="$_basicChordText"
-          >
-            {{ $_basicChordText }}
+          <div class="d-flex">
+            <div
+              class="ml-n2px pos-relative"
+              v-bind:style="$_chordTextStyle" 
+              v-if="$_basicChordText"
+            >
+              {{ $_basicChordText }}
+            </div>
+            <div
+              class="ml-n2px pos-relative"
+              v-if="$_additionalChordText.length > 0"
+              v-bind:style="$_chordTextStyle"
+            >
+              {{ $_additionalChordText }}
+            </div>
           </div>
         </div>
       </div>
@@ -41,13 +50,6 @@
             />
           </div>
           )
-        </div>
-        <div
-          class="ml-n2px pos-relative"
-          v-if="$_additionalChordText.length > 0"
-          v-bind:style="$_chordTextStyle"
-        >
-          {{ $_additionalChordText }}
         </div>
       </div>
     </div>
