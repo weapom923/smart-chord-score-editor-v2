@@ -3,8 +3,8 @@
     id="chord-container"
     class="d-flex flex-column align-center"
   >
-    <div class="d-flex flex-row align-end">
-      <div class="d-flex flex-row align-end">
+    <div class="d-flex align-end">
+      <div class="d-flex align-end">
         <div v-bind:style="$_noteTextStyle">{{ $_rootNoteText }}</div>
         <div v-bind:style="$_chordBasicStyle">
           <div
@@ -27,7 +27,7 @@
         v-if="($_sortedTensionNotes.length > 0) || ($_additionalChordText.length > 0)"
       >
         <div
-          class="d-flex flex-row align-center left-n3px"
+          class="d-flex align-center left-n3px"
           v-if="$_sortedTensionNotes.length > 0"
           v-bind:style="$_tensionNoteContainerStyle"
         >
@@ -57,7 +57,7 @@
         <div v-bind:style="$_noteTextStyle">{{ $_bassNoteText }}</div>
         <div v-bind:style="$_chordBasicStyle">
           <div
-            id="note-sharp-or-flat-text"
+            class="no-height left-n3px text-left pos-relative"
             v-bind:style="$_noteFlatOrSharpTextStyle"
           >
             {{ $_bassNoteFlatOrSharpText }}
