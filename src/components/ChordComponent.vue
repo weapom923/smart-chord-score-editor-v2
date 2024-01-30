@@ -57,7 +57,7 @@
         <div v-bind:style="$_noteTextStyle">{{ $_bassNoteText }}</div>
         <div v-bind:style="$_chordBasicStyle">
           <div
-            class="no-height left-n3px text-left pos-relative"
+            class="no-width no-height left-n3px text-left pos-relative"
             v-bind:style="$_noteFlatOrSharpTextStyle"
           >
             {{ $_bassNoteFlatOrSharpText }}
@@ -89,6 +89,10 @@
 
 .no-height {
   height: 0;
+}
+
+.no-width {
+  width: 0;
 }
 
 .left-n3px {
