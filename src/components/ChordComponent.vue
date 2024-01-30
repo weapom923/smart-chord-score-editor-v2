@@ -1,29 +1,38 @@
 <template>
-  <div id="chord-container">
-    <div id="chord">
-      <note-pitch-component
-        v-bind:note-pitch="$_rootNote"
-        v-bind:base-font-size-px="$_fontSizePx"
-      >
-      </note-pitch-component>
-      <div
-        class="chord-text"
-        v-if="$_basicChordText"
-        v-bind:style="$_chordTextStyle"
-      >
-        {{ $_basicChordText }}
+  <div
+    id="chord-container"
+    class="d-flex flex-column align-center"
+  >
+    <div class="d-flex flex-row align-end">
+      <div class="d-flex flex-row align-end">
+        <div v-bind:style="$_noteTextStyle">{{ $_rootNoteText }}</div>
+        <div v-bind:style="$_chordBasicStyle">
+          <div
+            class="no-height left-n3px text-left pos-relative"
+            v-bind:style="$_noteFlatOrSharpTextStyle"
+          >
+            {{ $_rootNoteFlatOrSharpText }}
+          </div>
+          <div
+            class="ml-n2px pos-relative"
+            v-bind:style="$_chordTextStyle" 
+            v-if="$_basicChordText"
+          >
+            {{ $_basicChordText }}
+          </div>
+        </div>
       </div>
       <div
-        id="additionals"
+        class="pos-relative"
         v-if="($_sortedTensionNotes.length > 0) || ($_additionalChordText.length > 0)"
       >
         <div
-          id="tension-notes-container"
+          class="d-flex flex-row align-center left-n3px"
           v-if="$_sortedTensionNotes.length > 0"
           v-bind:style="$_tensionNoteContainerStyle"
         >
           (
-          <div id="tension-notes">
+          <div class="d-flex flex-column-reverse align-center">
             <tension-note-pitch-component
               v-for="(tensionNote, tensionNoteIdx) in $_sortedTensionNotes"
               v-bind:key="tensionNoteIdx"
@@ -34,7 +43,7 @@
           )
         </div>
         <div
-          class="chord-text"
+          class="ml-n2px pos-relative"
           v-if="$_additionalChordText.length > 0"
           v-bind:style="$_chordTextStyle"
         >
@@ -44,12 +53,16 @@
     </div>
     <template v-if="$_bassNotePitch !== undefined">
       <hr id="bass-separator" />
-      <div id="bass-text-container">
-        <note-pitch-component
-          v-bind:note-pitch="$_bassNotePitch"
-          v-bind:base-font-size-px="$_fontSizePx"
-        >
-        </note-pitch-component>
+      <div class="d-flex align-end">
+        <div v-bind:style="$_noteTextStyle">{{ $_bassNoteText }}</div>
+        <div v-bind:style="$_chordBasicStyle">
+          <div
+            id="note-sharp-or-flat-text"
+            v-bind:style="$_noteFlatOrSharpTextStyle"
+          >
+            {{ $_bassNoteFlatOrSharpText }}
+          </div>
+        </div>
       </div>
     </template>
   </div>
@@ -63,44 +76,26 @@
   color: #2c3e50;
   border-color: #2c3e50;
   overflow-y: visible;
-  display: flex;
   width: fit-content;
-  flex-flow: column;
-  align-items: center;
-  justify-content: flex-end;
 }
 
 #chord-container > * {
   text-transform: none;
 }
 
-#chord {
-  display: flex;
-  flex-flow: row;
-  align-items: flex-end;
-}
-
-#additionals {
+.pos-relative {
   position: relative;
-  display: flex;
-  flex-flow: column;
-  align-items: flex-start;
 }
 
-#tension-notes-container {
-  display: flex;
-  flex-flow: row;
-  align-items: center;
+.no-height {
+  height: 0;
 }
 
-#tension-notes {
-  display: flex;
-  flex-flow: column-reverse;
-  align-items: center;
+.left-n3px {
+  left: -3px;
 }
 
-.chord-text {
-  position: relative;
+.ml-n2px {
   margin-left: 2px;
 }
 
@@ -111,10 +106,6 @@
   width: 100%;
   margin: 2px 0;
 }
-
-#bass-text-container {
-  position: relative;
-}
 </style>
 
 <script lang="ts">
@@ -122,8 +113,28 @@ import { CSSProperties } from 'vue';
 import { TensionNotePitch } from '../modules/TensionNotePitch';
 import { Chord } from '../modules/Chord';
 import { NotePitch } from '../modules/NotePitch';
-import NotePitchComponent from './NotePitchComponent.vue';
+import { nps } from '../modules/NotePitchSymbol'
+import { raw } from '../modules/utils'
 import TensionNotePitchComponent from './TensionNotePitchComponent.vue';
+
+function getNoteSymbolText(notePitch: NotePitch): string {
+  switch (raw(notePitch.symbol)) {
+    case nps.a: return 'A';
+    case nps.b: return 'B';
+    case nps.c: return 'C';
+    case nps.d: return 'D';
+    case nps.e: return 'E';
+    case nps.f: return 'F';
+    case nps.g: return 'G';
+  }
+  throw new RangeError();
+}
+
+function getNoteFlatOrSharpText(notePitch: NotePitch): string {
+  if (notePitch.isSharp) return '♯';
+  if (notePitch.isFlat) return '♭';
+  return '';
+}
 
 export default {
   emits: {
@@ -133,7 +144,6 @@ export default {
   },
 
   components: {
-    NotePitchComponent,
     TensionNotePitchComponent,
   },
 
@@ -162,9 +172,34 @@ export default {
   },
 
   computed: {
-    $_isOnChord(): boolean { return (this.$_bassNotePitch !== undefined) },
+    $_rootNoteText(): string { return getNoteSymbolText(this.chord.root) },
 
-    $_rootNote(): NotePitch { return this.chord.root },
+    $_rootNoteFlatOrSharpText(): string { return getNoteFlatOrSharpText(this.chord.root) },
+
+    $_bassNoteText(): string | undefined {
+      if (this.chord.bass === undefined) return undefined;
+      return getNoteSymbolText(this.chord.bass);
+    },
+
+    $_bassNoteFlatOrSharpText(): string | undefined {
+      if (this.chord.bass === undefined) return undefined;
+      return getNoteFlatOrSharpText(this.chord.bass);
+    },
+
+    $_noteTextStyle(): CSSProperties {
+      return {
+        fontSize: `${this.$_fontSizePx}px`,
+        lineHeight: `${this.$_fontSizePx}px`,
+      };
+    },
+
+    $_noteFlatOrSharpTextStyle(): CSSProperties {
+      return {
+        fontSize: `${Math.floor(this.$_fontSizePx * 0.6)}px`,
+        lineHeight: `${Math.floor(this.$_fontSizePx * 0.6)}px`,
+        bottom: `${Math.floor(this.$_fontSizePx * 0.5)}px`,
+      };
+    },
 
     $_bassNotePitch(): NotePitch | undefined { return this.chord.bass },
 
@@ -176,6 +211,12 @@ export default {
 
     $_fontSizePx(): number {
       return (this.fontSizePx === undefined)? this.$store.state.config.chordFontSizePx : this.fontSizePx;
+    },
+
+    $_chordBasicStyle(): CSSProperties {
+      return {
+        height: `${this.$_fontSizePx * 0.8}px`,
+      };
     },
 
     $_chordTextStyle(): CSSProperties {
