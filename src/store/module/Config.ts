@@ -14,6 +14,7 @@ export type ConfigRawObj = {
   staffLineStepPx: number,
   systemMarginTopPx: number,
   systemMarginBottomPx: number,
+  pagePaddingTopPx: number,
   defaultGridNoteValue: NoteValueRawObj,
   chordFontSizePx: number,
   defaultChord: ChordRawObj,
@@ -30,6 +31,7 @@ export const defaultConfig: Config = {
   staffLineStepPx: 10,
   systemMarginTopPx: 30,
   systemMarginBottomPx: 10,
+  pagePaddingTopPx: 20,
   defaultGridNoteValue: NoteValue.instance.divisible.half,
   chordFontSizePx: 18,
   pageWidthOnPrintPx: 1080,
@@ -46,6 +48,7 @@ export type PublicConfig = {
   staffLineStepPx: number,
   systemMarginTopPx: number,
   systemMarginBottomPx: number,
+  pagePaddingTopPx: number,
   defaultGridNoteValue: NoteValue,
   chordFontSizePx: number,
   pageWidthOnPrintPx: number,
@@ -68,6 +71,7 @@ const ConfigModule: Module<Config, RootState> = {
     staffLineStepPx: defaultConfig.staffLineStepPx,
     systemMarginTopPx: defaultConfig.systemMarginTopPx,
     systemMarginBottomPx: defaultConfig.systemMarginBottomPx,
+    pagePaddingTopPx: defaultConfig.pagePaddingTopPx,
     defaultGridNoteValue: defaultConfig.defaultGridNoteValue.clone(),
     chordFontSizePx: defaultConfig.chordFontSizePx,
     pageWidthOnPrintPx: defaultConfig.pageWidthOnPrintPx,
@@ -101,6 +105,7 @@ const ConfigModule: Module<Config, RootState> = {
         state.staffLineStepPx = rawConfigFromCookie.staffLineStepPx;
         state.systemMarginTopPx = rawConfigFromCookie.systemMarginTopPx;
         state.systemMarginBottomPx = rawConfigFromCookie.systemMarginBottomPx;
+        state.pagePaddingTopPx = rawConfigFromCookie.pagePaddingTopPx;
         state.defaultGridNoteValue = NoteValue.loadFromRawObj(rawConfigFromCookie.defaultGridNoteValue);
         state.chordFontSizePx = rawConfigFromCookie.chordFontSizePx;
         state.pageWidthOnPrintPx = rawConfigFromCookie.pageWidthOnPrintPx;
@@ -118,6 +123,7 @@ const ConfigModule: Module<Config, RootState> = {
       state.staffLineStepPx = publicConfig.staffLineStepPx;
       state.systemMarginTopPx = publicConfig.systemMarginTopPx;
       state.systemMarginBottomPx = publicConfig.systemMarginBottomPx;
+      state.pagePaddingTopPx = publicConfig.pagePaddingTopPx;
       state.defaultGridNoteValue = publicConfig.defaultGridNoteValue;
       state.chordFontSizePx = publicConfig.chordFontSizePx;
       state.pageWidthOnPrintPx = publicConfig.pageWidthOnPrintPx;
@@ -128,6 +134,7 @@ const ConfigModule: Module<Config, RootState> = {
         staffLineStepPx: state.staffLineStepPx,
         systemMarginTopPx: state.systemMarginTopPx,
         systemMarginBottomPx: state.systemMarginBottomPx,
+        pagePaddingTopPx: state.pagePaddingTopPx,
         defaultGridNoteValue: state.defaultGridNoteValue.getRawObj(),
         chordFontSizePx: state.chordFontSizePx,
         defaultChord: state.defaultChord.getRawObj(),
