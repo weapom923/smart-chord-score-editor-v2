@@ -48,6 +48,17 @@
               </v-col>
 
               <v-col sm="4" cols="12">
+                <dialog-text-field
+                  number
+                  type="number" density="compact"
+                  v-model.number="$data.$_pagePaddingTopPx"
+                  v-bind:rules="$_rules.pagePaddingTopPx"
+                  v-bind:min="$_pagePaddingTopPxMin"
+                  v-bind:label="$t('pagePaddingTopPx')"
+                />
+              </v-col>
+
+              <v-col sm="4" cols="12">
                 <grid-note-selector
                   density="compact"
                   v-model:grid-note-value="$data.$_defaultGridNoteValue"
@@ -145,6 +156,7 @@ const staffLineStaffPxMin = 5;
 const staffLineStaffPxMax = 15;
 const systemMarginTopPxMin = 0;
 const systemMerginBottomPxMin = 0;
+const pagePaddingTopPxMin = 0;
 const chordFontSizePxMin = 6;
 const pageWidthOnPrintPxMin = 640;
 
@@ -162,6 +174,7 @@ export default {
     $_staffLineStepPx: number,
     $_systemMarginTopPx: number,
     $_systemMarginBottomPx: number,
+    $_pagePaddingTopPx: number,
     $_defaultGridNoteValue: NoteValue,
     $_chordFontSizePx: number,
     $_pageWidthOnPrintPx: number,
@@ -173,6 +186,7 @@ export default {
       $_staffLineStepPx: defaultConfig.staffLineStepPx,
       $_systemMarginTopPx: defaultConfig.systemMarginTopPx,
       $_systemMarginBottomPx: defaultConfig.systemMarginBottomPx,
+      $_pagePaddingTopPx: defaultConfig.pagePaddingTopPx,
       $_defaultGridNoteValue: defaultConfig.defaultGridNoteValue.clone(),
       $_chordFontSizePx: defaultConfig.chordFontSizePx,
       $_pageWidthOnPrintPx: defaultConfig.pageWidthOnPrintPx,
@@ -191,6 +205,8 @@ export default {
     $_systemMarginTopPxMin() { return systemMarginTopPxMin },
 
     $_systemMerginBottomPxMin() { return systemMerginBottomPxMin },
+
+    $_pagePaddingTopPxMin() { return pagePaddingTopPxMin },
 
     $_chordFontSizePxMin() { return chordFontSizePxMin },
 
@@ -240,6 +256,16 @@ export default {
           (systemMarginBottomPx: number) => {
             if (systemMarginBottomPx < systemMerginBottomPxMin) {
               return `System margin must be more than or equal to ${systemMerginBottomPxMin}.`;
+            }
+            return true;
+          },
+        ],
+
+        pagePaddingTopPx: [
+          (pagePaddingTopPx: any) => (isEmptyLike(pagePaddingTopPx)? 'Page padding top must not be empty.' : true),
+          (pagePaddingTopPx: number) => {
+            if (pagePaddingTopPx < pagePaddingTopPxMin) {
+              return `Page padding must be more than or equal to ${pagePaddingTopPxMin}.`;
             }
             return true;
           },
@@ -301,6 +327,7 @@ export default {
         staffLineStepPx: Number(this.$data.$_staffLineStepPx),
         systemMarginTopPx: Number(this.$data.$_systemMarginTopPx),
         systemMarginBottomPx: Number(this.$data.$_systemMarginBottomPx),
+        pagePaddingTopPx: Number(this.$data.$_pagePaddingTopPx),
         defaultGridNoteValue: this.$data.$_defaultGridNoteValue,
         chordFontSizePx: Number(this.$data.$_chordFontSizePx),
         pageWidthOnPrintPx: Number(this.$data.$_pageWidthOnPrintPx),
@@ -314,6 +341,7 @@ export default {
       this.$data.$_staffLineStepPx      = defaultConfig.staffLineStepPx;
       this.$data.$_systemMarginTopPx    = defaultConfig.systemMarginTopPx;
       this.$data.$_systemMarginBottomPx = defaultConfig.systemMarginBottomPx;
+      this.$data.$_pagePaddingTopPx    = defaultConfig.pagePaddingTopPx;
       this.$data.$_defaultGridNoteValue = defaultConfig.defaultGridNoteValue.clone();
       this.$data.$_chordFontSizePx      = defaultConfig.chordFontSizePx;
       this.$data.$_pageWidthOnPrintPx   = defaultConfig.pageWidthOnPrintPx;

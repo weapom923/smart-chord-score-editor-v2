@@ -138,6 +138,7 @@ const App = defineComponent({
     '$store.state.config.staffLineStepPx'() { this.$_reloadScore() },
     '$store.state.config.systemMarginTopPx'() { this.$_reloadScore() },
     '$store.state.config.systemMarginBottomPx'() { this.$_reloadScore() },
+    '$store.state.config.pagePaddingTopPx'() { this.$_reloadScore() },
     '$store.state.config.chordFontSizePx'() { this.$_reloadScore() },
 
     '$store.state.score.score': {

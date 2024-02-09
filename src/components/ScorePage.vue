@@ -79,6 +79,7 @@ export default {
 
     $_pageStyle(): CSSProperties {
       let pageStyle: CSSProperties = {};
+      pageStyle.paddingTop = `${this.$store.state.config.pagePaddingTopPx}px`;
       pageStyle.width = `${this.$store.state.config.pageWidthOnPrintPx}px`;
       if (!this.$store.state.appState.isMobileLayoutEnabled) {
         pageStyle.aspectRatio = `${this.aspectRatio}`;
