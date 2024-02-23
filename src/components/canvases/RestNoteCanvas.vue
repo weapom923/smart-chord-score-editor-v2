@@ -208,7 +208,7 @@ const RestNoteCanvas = defineComponent({
     function drawWholeRestNote(this: This, canvas: CanvasRenderingContext2D) {
       let anchorHorizontalOffsetPx = this.$_anchorHorizontalOffsetPx;
       let anchorVerticalOffsetPx = this.$_anchorVerticalOffsetPx;
-      canvas.fillStyle = this.color.styleString;
+      canvas.fillStyle = this.color.styleString(false);
       canvas.lineWidth = 1;
       canvas.beginPath();
       canvas.rect(
@@ -223,7 +223,7 @@ const RestNoteCanvas = defineComponent({
     function drawHalfRestNote(this: This, canvas: CanvasRenderingContext2D) {
       let anchorHorizontalOffsetPx = this.$_anchorHorizontalOffsetPx;
       let anchorVerticalOffsetPx = this.$_anchorVerticalOffsetPx;
-      canvas.fillStyle = this.color.styleString;
+      canvas.fillStyle = this.color.styleString(false);
       canvas.lineWidth = 1;
       canvas.beginPath();
       canvas.rect(
@@ -239,7 +239,7 @@ const RestNoteCanvas = defineComponent({
       let anchorHorizontalOffsetPx = this.$_anchorHorizontalOffsetPx;
       let anchorVerticalOffsetPx = this.$_anchorVerticalOffsetPx;
       let staffLineStepPx = this.$_staffLineStepPx;
-      canvas.fillStyle = this.color.styleString;
+      canvas.fillStyle = this.color.styleString(false);
       canvas.lineWidth = 1;
       canvas.beginPath();
       canvas.moveTo(
@@ -289,7 +289,7 @@ const RestNoteCanvas = defineComponent({
       let anchorHorizontalOffsetPx = this.$_anchorHorizontalOffsetPx;
       let anchorVerticalOffsetPx = this.$_anchorVerticalOffsetPx;
       let staffLineStepPx = this.$_staffLineStepPx;
-      canvas.strokeStyle = this.color.styleString;
+      canvas.strokeStyle = this.color.styleString(false);
       canvas.lineWidth = 1;
       canvas.beginPath();
       canvas.moveTo(
@@ -313,7 +313,7 @@ const RestNoteCanvas = defineComponent({
       let anchorHorizontalOffsetPx = this.$_anchorHorizontalOffsetPx;
       let anchorVerticalOffsetPx = this.$_anchorVerticalOffsetPx;
       let staffLineStepPx = this.$_staffLineStepPx;
-      canvas.strokeStyle = this.color.styleString;
+      canvas.strokeStyle = this.color.styleString(false);
       canvas.lineWidth = 1;
       canvas.beginPath();
       canvas.moveTo(
@@ -343,7 +343,7 @@ const RestNoteCanvas = defineComponent({
       let anchorHorizontalOffsetPx = this.$_anchorHorizontalOffsetPx;
       let anchorVerticalOffsetPx = this.$_anchorVerticalOffsetPx;
       let staffLineStepPx = this.$_staffLineStepPx;
-      canvas.strokeStyle = this.color.styleString;
+      canvas.strokeStyle = this.color.styleString(false);
       canvas.lineWidth = 1;
       canvas.beginPath();
       canvas.moveTo(
@@ -379,7 +379,7 @@ const RestNoteCanvas = defineComponent({
       let anchorHorizontalOffsetPx = this.$_anchorHorizontalOffsetPx;
       let anchorVerticalOffsetPx = this.$_anchorVerticalOffsetPx;
       let staffLineStepPx = this.$_staffLineStepPx;
-      canvas.strokeStyle = this.color.styleString;
+      canvas.strokeStyle = this.color.styleString(false);
       canvas.lineWidth = 1;
       canvas.beginPath();
       canvas.moveTo(
@@ -419,7 +419,7 @@ const RestNoteCanvas = defineComponent({
 
     function drawNoteDot(this: This, canvas: CanvasRenderingContext2D, dotHorizontalOffsetPx: number, dotVerticalOffsetPx: number) {
       canvas.beginPath();
-      canvas.fillStyle = this.color.styleString;
+      canvas.fillStyle = this.color.styleString(false);
       canvas.lineWidth = 1;
       canvas.arc(
         dotHorizontalOffsetPx,
@@ -430,8 +430,8 @@ const RestNoteCanvas = defineComponent({
 
     function drawRestNoteCircle(this: This, canvas: CanvasRenderingContext2D, beginHorizontalOffsetPx: number, beginVerticalOffsetPx: number) {
       let staffLineStepPx = this.$_staffLineStepPx;
-      canvas.fillStyle = this.color.styleString;
-      canvas.strokeStyle = this.color.styleString;
+      canvas.fillStyle = this.color.styleString(false);
+      canvas.strokeStyle = this.color.styleString(false);
       canvas.lineWidth = 1;
       canvas.beginPath();
       canvas.moveTo(

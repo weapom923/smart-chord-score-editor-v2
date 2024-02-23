@@ -37,6 +37,7 @@
         v-bind:part="part"
         v-bind:selected-note-idx="$_getSelectedNoteIdxInPart(partIdx)"
         v-bind:grid-note-value="bar.gridNoteValue"
+        v-bind:note-color="noteColor"
         v-on:split-note-element-mounted="$_onSplitNoteElementMounted(partIdx, $event)"
         v-on:split-note-element-before-unmount="$_onSplitNoteElementBeforeUnmount(partIdx, $event)"
         v-on:note-chord-element-mounted="$_onNoteChordElementMounted(partIdx, $event)"
@@ -154,6 +155,7 @@ export default {
     showKeySignature:     { type: Boolean, required: true },
     showBeat:             { type: Boolean, default: false },
     showClef:             { type: Boolean, default: false },
+    noteColor:            { type: Color },
     selectedStaffBackgroundColor: { type: Color, default: () => selectedBarStaffBackgroundColor },
   },
 

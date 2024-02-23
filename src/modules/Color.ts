@@ -61,12 +61,20 @@ export class Color {
   }
 
   #styleString?: string;
-  get styleString() {
+  #styleStringWithAlpha?: string;
+  styleString(withAlpha: boolean = true): string {
     let self = raw(this);
-    if (self.#styleString === undefined) {
-      self.#styleString = `rgba(${self.rgba.map(String).join(', ')})`;
+    if (withAlpha) {
+      if (self.#styleStringWithAlpha === undefined) {
+        self.#styleStringWithAlpha = `rgba(${self.red}, ${self.green}, ${self.blue}, ${self.alpha})`;
+      }
+      return self.#styleStringWithAlpha;
+    } else {
+      if (self.#styleString === undefined) {
+        self.#styleString = `rgb(${self.red}, ${self.green}, ${self.blue})`;
+      }
+      return self.#styleString;
     }
-    return self.#styleString;
   }
 }
 

@@ -7,6 +7,7 @@ import { Clef, ClefRawObj } from '../../modules/Clef';
 import { Scale, ScaleRawObj } from '../../modules/Scale';
 import { PartInBarType } from '../../modules/PartInBar';
 import { VNavigationDrawer } from 'vuetify/lib/components/index.mjs';
+import { Color, ColorRawObj } from '../../modules/Color';
 
 export type BarEditorLocationType = VNavigationDrawer['$props']['location'];
 
@@ -25,6 +26,7 @@ export type ConfigRawObj = {
   pageWidthOnPrintPx: number,
   locale: string,
   barEditorLocation: BarEditorLocationType,
+  noteColor: ColorRawObj,
 };
 
 export const defaultConfig: Config = {
@@ -42,6 +44,7 @@ export const defaultConfig: Config = {
   defaultPartInBarTypes: [ 'chord' ],
   locale: 'ja',
   barEditorLocation: 'bottom',
+  noteColor: Color.instance.black,
 };
 
 export type PublicConfig = {
@@ -54,6 +57,7 @@ export type PublicConfig = {
   pageWidthOnPrintPx: number,
   locale: string,
   barEditorLocation: BarEditorLocationType,
+  noteColor: Color,
 };
 
 export type Config = PublicConfig & {
@@ -82,6 +86,7 @@ const ConfigModule: Module<Config, RootState> = {
     defaultPartInBarTypes: [ ...defaultConfig.defaultPartInBarTypes ],
     locale: defaultConfig.locale,
     barEditorLocation: defaultConfig.barEditorLocation,
+    noteColor: defaultConfig.noteColor,
   },
 
   mutations: {
@@ -116,6 +121,7 @@ const ConfigModule: Module<Config, RootState> = {
         state.defaultPartInBarTypes = rawConfigFromCookie.defaultPartInBarTypes;
         state.locale = rawConfigFromCookie.locale;
         state.barEditorLocation = rawConfigFromCookie.barEditorLocation;
+        state.noteColor = Color.loadFromRawObj(rawConfigFromCookie.noteColor);
       }
     },
 
@@ -129,6 +135,7 @@ const ConfigModule: Module<Config, RootState> = {
       state.pageWidthOnPrintPx = publicConfig.pageWidthOnPrintPx;
       state.locale = publicConfig.locale;
       state.barEditorLocation = publicConfig.barEditorLocation;
+      state.noteColor = publicConfig.noteColor;
 
       const configRawObj: ConfigRawObj = {
         staffLineStepPx: state.staffLineStepPx,
@@ -145,6 +152,7 @@ const ConfigModule: Module<Config, RootState> = {
         pageWidthOnPrintPx: state.pageWidthOnPrintPx,
         locale: state.locale,
         barEditorLocation: state.barEditorLocation,
+        noteColor: state.noteColor.getRawObj(),
       }
       window.localStorage.setItem('config', JSON.stringify(configRawObj));
     },
