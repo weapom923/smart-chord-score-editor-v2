@@ -182,7 +182,7 @@ const ChordNoteCanvas = defineComponent({
 
     type This = InstanceType<typeof ChordNoteCanvas>;
     function drawChordNoteHeadOutline(this: This, canvas: CanvasRenderingContext2D) {
-      canvas.strokeStyle = this.color.styleString;
+      canvas.strokeStyle = this.color.styleString(false);
       canvas.lineWidth = 2;
       canvas.beginPath();
       canvas.moveTo(noteHeadHorizontalOffsetPx + noteHeadWidthPx, this.$_noteHeadVerticalOffsetPx - (this.$_noteHeadHeightPx));
@@ -204,7 +204,7 @@ const ChordNoteCanvas = defineComponent({
 
     function drawChordNoteHead(this: This, canvas: CanvasRenderingContext2D) {
       canvas.beginPath();
-      canvas.fillStyle = this.color.styleString;
+      canvas.fillStyle = this.color.styleString(false);
       canvas.lineWidth = 1;
       canvas.moveTo(noteHeadHorizontalOffsetPx + noteHeadSlideWidthPx, this.$_noteHeadVerticalOffsetPx - this.$_noteHeadHeightPx);
       canvas.lineTo(noteHeadHorizontalOffsetPx + noteHeadWidthPx + noteHeadSlideWidthPx, this.$_noteHeadVerticalOffsetPx - this.$_noteHeadHeightPx);
@@ -215,7 +215,7 @@ const ChordNoteCanvas = defineComponent({
 
     function drawNoteDot(this: This, canvas: CanvasRenderingContext2D) {
       canvas.beginPath();
-      canvas.fillStyle = this.color.styleString;
+      canvas.fillStyle = this.color.styleString(false);
       canvas.lineWidth = 1;
       canvas.arc(
         noteHeadHorizontalOffsetPx + noteHeadWidthPx + noteHeadSlideWidthPx + noteDotMarginPx + this.$_noteDotRadiusPx,
@@ -225,7 +225,7 @@ const ChordNoteCanvas = defineComponent({
     }
 
     function drawNoteStem(this: This, canvas: CanvasRenderingContext2D) {
-      canvas.strokeStyle = this.color.styleString;
+      canvas.strokeStyle = this.color.styleString(false);
       canvas.lineWidth = 1;
       canvas.beginPath();
       canvas.moveTo(this.$_noteStemHorizontalOffsetPx, this.$_noteStemBeginPointVerticalOffsetPx);
@@ -235,7 +235,7 @@ const ChordNoteCanvas = defineComponent({
 
     function drawNoteFlag(this: This, canvas: CanvasRenderingContext2D) {
       let noteFlagDirection = (this.invertStemDirection)? -1: 1;
-      canvas.strokeStyle = this.color.styleString;
+      canvas.strokeStyle = this.color.styleString(false);
       canvas.lineWidth = 2;
       for (let noteFlagIdx = 0; noteFlagIdx < this.$_numNoteFlags; ++noteFlagIdx) {
         let currentNoteFlagBeginVerticalOffsetPx = this.$_noteStemEndPointVerticalOffsetPx + noteFlagIdx * noteFlagDirection * this.$_staffLineStepPx;

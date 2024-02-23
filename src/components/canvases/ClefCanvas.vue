@@ -111,8 +111,8 @@ const ClefCanvas = defineComponent({
       let anchorHorizontalOffsetPx = this.$_anchorHorizontalOffsetPx;
       let anchorVerticalOffsetPx = this.$_anchorVerticalOffsetPx;
       let staffLineStepPx = this.$_staffLineStepPx;
-      canvas.strokeStyle = this.color.styleString;
-      canvas.fillStyle = this.color.styleString;
+      canvas.strokeStyle = this.color.styleString();
+      canvas.fillStyle = this.color.styleString();
       canvas.lineWidth = 1;
       canvas.beginPath();
       canvas.moveTo(
@@ -256,8 +256,8 @@ const ClefCanvas = defineComponent({
       let anchorHorizontalOffsetPx = this.$_anchorHorizontalOffsetPx;
       let anchorVerticalOffsetPx = this.$_anchorVerticalOffsetPx;
       let staffLineStepPx = this.$_staffLineStepPx;
-      canvas.strokeStyle = this.color.styleString;
-      canvas.fillStyle = this.color.styleString;
+      canvas.strokeStyle = this.color.styleString();
+      canvas.fillStyle = this.color.styleString();
       canvas.lineWidth = 1;
       canvas.beginPath();
       canvas.arc(

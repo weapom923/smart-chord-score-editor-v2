@@ -157,7 +157,7 @@ const BarLineCanvas = defineComponent({
     }
 
     function drawNormalBarLine(this: This, canvas: CanvasRenderingContext2D, horizontalOffsetPx: number) {
-      canvas.strokeStyle = this.color.styleString;
+      canvas.strokeStyle = this.color.styleString();
       canvas.lineWidth = normalBarLineWidthPx;
       canvas.beginPath();
       canvas.moveTo(horizontalOffsetPx, 0);
@@ -166,7 +166,7 @@ const BarLineCanvas = defineComponent({
     }
 
     function drawBoldBarLine(this: This, canvas: CanvasRenderingContext2D, horizontalOffsetPx: number) {
-      canvas.strokeStyle = this.color.styleString;
+      canvas.strokeStyle = this.color.styleString();
       canvas.lineWidth = boldBarLineWidthPx;
       canvas.beginPath();
       canvas.moveTo(horizontalOffsetPx, 0);
@@ -175,7 +175,7 @@ const BarLineCanvas = defineComponent({
     }
 
     function drawBarLineDot(this: This, canvas: CanvasRenderingContext2D, horizontalOffsetPx: number, verticalOffsetPx: number) {
-      canvas.strokeStyle = this.color.styleString;
+      canvas.strokeStyle = this.color.styleString();
       canvas.lineWidth = normalBarLineWidthPx;
       canvas.beginPath();
       canvas.arc(

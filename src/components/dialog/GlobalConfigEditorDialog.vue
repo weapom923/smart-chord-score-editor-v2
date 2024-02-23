@@ -111,6 +111,15 @@
                 >
                 </v-select>
               </v-col>
+
+              <v-col sm="4" cols="12">
+                <color-picker-input
+                  density="compact"
+                  v-model="$data.$_noteColor"
+                  v-bind:label="$t('noteColor')"
+                >
+                </color-picker-input>
+              </v-col>
             </v-row>
           </v-container>
         </v-form>
@@ -148,9 +157,11 @@
 import DialogBase from './DialogBase.vue';
 import DialogTextField from '../parts/DialogTextField.vue';
 import GridNoteSelector from '../parts/GridNoteSelector.vue';
+import ColorPickerInput from '../parts/ColorPickerInput.vue';
 import { NoteValue } from '../../modules/NoteValue';
 import { isEmptyLike } from '../../modules/utils';
 import { PublicConfig, defaultConfig, BarEditorLocationType } from '../../store/module/Config'
+import Color from '@/modules/Color';
 
 const staffLineStaffPxMin = 5;
 const staffLineStaffPxMax = 15;
@@ -167,6 +178,7 @@ export default {
     DialogBase,
     DialogTextField,
     GridNoteSelector,
+    ColorPickerInput,
   },
 
   data(): {
@@ -180,6 +192,7 @@ export default {
     $_pageWidthOnPrintPx: number,
     $_locale: string,
     $_barEditorLocation: BarEditorLocationType,
+    $_noteColor: Color,
   } {
     return {
       $_valid: true,
@@ -192,6 +205,7 @@ export default {
       $_pageWidthOnPrintPx: defaultConfig.pageWidthOnPrintPx,
       $_locale: defaultConfig.locale,
       $_barEditorLocation: defaultConfig.barEditorLocation,
+      $_noteColor: defaultConfig.noteColor,
       // $_defaultChord: undefined,
       // $_selectedNoteColor: undefined,
     };
@@ -320,6 +334,7 @@ export default {
       this.$data.$_pageWidthOnPrintPx = this.$store.state.config.pageWidthOnPrintPx;
       this.$data.$_locale = this.$store.state.config.locale;
       this.$data.$_barEditorLocation = this.$store.state.config.barEditorLocation;
+      this.$data.$_noteColor = this.$store.state.config.noteColor;
     },
 
     $_ok() {
@@ -333,6 +348,7 @@ export default {
         pageWidthOnPrintPx: Number(this.$data.$_pageWidthOnPrintPx),
         locale: this.$data.$_locale,
         barEditorLocation: this.$data.$_barEditorLocation,
+        noteColor: this.$data.$_noteColor,
       };
       this.$store.dispatch('config/setConfig', publicConfig);
     },
@@ -347,6 +363,7 @@ export default {
       this.$data.$_pageWidthOnPrintPx   = defaultConfig.pageWidthOnPrintPx;
       this.$data.$_locale               = defaultConfig.locale;
       this.$data.$_barEditorLocation    = defaultConfig.barEditorLocation;
+      this.$data.$_noteColor            = defaultConfig.noteColor;
     },
   },
 }

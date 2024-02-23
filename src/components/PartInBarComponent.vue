@@ -7,6 +7,7 @@
       <note-base-component
         v-if="$_noteBarComponentProps.has(noteIdx)"
         v-bind="assertDefined($_noteBarComponentProps.get(noteIdx))"
+        v-bind:color="noteColor"
         v-on:split-note-element-mounted="$_onSplitNoteElementMounted(noteIdx, $event)"
         v-on:split-note-element-before-unmount="$_onSplitNoteElementBeforeUnmount(noteIdx, $event)"
         v-on:chord-component-mounted="$_onChordComponentMounted(noteIdx, $event)"
@@ -18,6 +19,8 @@
       <tie-canvas
         v-if="$data.$_tieProps.has(noteIdx)"
         v-bind="assertDefined($data.$_tieProps.get(noteIdx))"
+        v-bind:color="noteColor"
+        v-bind:alpha-as-opacity="true"
         v-bind:style="$data.$_tieStyles.get(noteIdx)"
       />
     </template>
@@ -39,6 +42,7 @@ import TieCanvas from './canvases/TieCanvas.vue';
 import { NoteValue, nv } from '../modules/NoteValue';
 import { PartInBar } from '../modules/PartInBar';
 import { assertDefined } from '../modules/utils';
+import Color from '../modules/Color';
 
 type TieCanvasProps = InstanceType<typeof TieCanvas>['$props'];
 type NoteBaseComponentProps = InstanceType<typeof NoteBaseComponent>['$props'];
@@ -71,6 +75,7 @@ export default {
     part:            { type: PartInBar, required: true },
     selectedNoteIdx: { type: Number },
     gridNoteValue:   { type: NoteValue, required: true },
+    noteColor:       { type: Color },
   },
 
   data(): {
@@ -92,6 +97,7 @@ export default {
   },
 
   computed: {
+    $_noteColor(): Color { return this.$store.state.config.noteColor },
     $_noteBarComponentProps(): Map<NoteIdx, NoteBaseComponentProps> {
       let noteBarComponentProps = new Map<NoteIdx, NoteBaseComponentProps>();
       let accumulatedNoteValue = nv.zero;
@@ -106,6 +112,7 @@ export default {
             restNotePitch: this.part.restNotePitch,
             gridNoteValue: this.gridNoteValue,
             isSelected: (this.selectedNoteIdx === undefined)? false : (this.selectedNoteIdx === noteIdx),
+            color: this.$store.state.config.noteColor,
           }
         );
         accumulatedNoteValue.add(note.value);

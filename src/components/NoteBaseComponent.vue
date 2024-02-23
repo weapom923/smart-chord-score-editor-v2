@@ -31,7 +31,8 @@
               v-if="$_isPartTypeChord"
               v-bind:note="splitNote"
               v-bind:invert-stem-direction="true"
-              v-bind:color="$_noteColor"
+              v-bind:color="$_color"
+              v-bind:alpha-as-opacity="true"
               v-on:width-update="$_onNoteWidthUpdate(splitNoteIdx, $event)"
               v-on:tie-point-update="$_onNoteTiePointUpdate(splitNoteIdx, $event)"
               v-on:mounted="$_onSplitNoteElementMounted(splitNoteIdx, $event)"
@@ -41,13 +42,16 @@
               v-if="$data.$_tieProps.has(splitNoteIdx)"
               v-bind="assertDefined($data.$_tieProps.get(splitNoteIdx))"
               v-bind:style="$data.$_tieStyles.get(splitNoteIdx)"
+              v-bind:color="$_color"
+              v-bind:alpha-as-opacity="true"
             />
           </template>
           <rest-note-canvas
             v-if="$_isRestNote(splitNote.type)"
             v-bind:note-value="splitNote.value"
             v-bind:rest-note-pitch="restNotePitch"
-            v-bind:color="$_noteColor"
+            v-bind:color="$_color"
+            v-bind:alpha-as-opacity="true"
             v-on:width-update="$_onNoteWidthUpdate(splitNoteIdx, $event)"
             v-on:mounted="$_onSplitNoteElementMounted(splitNoteIdx, $event)"
             v-on:before-unmount="$_onSplitNoteElementBeforeUnmount(splitNoteIdx)"
@@ -130,6 +134,7 @@ export default {
     restNotePitch:   { type: NotePitch },
     gridNoteValue:   { type: NoteValue, required: true },
     isSelected:      { type: Boolean,   required: true },
+    color:           { type: Color,     default: cl.black },
   },
 
   data(): {
@@ -178,8 +183,8 @@ export default {
       };
     },
 
-    $_noteColor(): Color {
-      return (this.isSelected)? new Color(255, 140, 140, 1) : cl.black;
+    $_color(): Color {
+      return (this.isSelected)? new Color(255, 140, 140, 1) : this.color;
     },
 
     $_noteChord(): Chord | undefined {

@@ -16,6 +16,8 @@
         class="tie-canvas"
         v-if="$data.$_firstTieProps.has(partIdx)"
         v-bind="assertDefined($data.$_firstTieProps.get(partIdx))"
+        v-bind:color="$store.state.config.noteColor"
+        v-bind:alpha-as-opacity="true"
         v-bind:style="assertDefined($data.$_firstTieStyles.get(partIdx))"
       >
       </tie-canvas>
@@ -33,6 +35,8 @@
           class="tie-canvas"
           v-if="assertDefined($data.$_tieProps.get(barProps.barIdx)).has(partIdx)"
           v-bind="assertDefined(assertDefined($data.$_tieProps.get(barProps.barIdx)).get(partIdx))"
+          v-bind:color="$store.state.config.noteColor"
+          v-bind:alpha-as-opacity="true"
           v-bind:style="assertDefined(assertDefined($data.$_tieStyles.get(barProps.barIdx)).get(partIdx))"
         >
         </tie-canvas>
@@ -42,6 +46,7 @@
           v-model:selected-part-idx="$_selectedPartIdx"
           v-model:selected-note-idx="$_selectedNoteIdx"
           v-bind="barProps"
+          v-bind:note-color="$store.state.config.noteColor"
           v-on:tie-point-update="$_onTiePointUpdate(barProps.barIdx, $event)"
           v-on:margin-top-px-update="$_onMarginTopPxUpdate(barProps.barIdx, $event)"
           v-on:margin-bottom-px-update="$_onMarginBottomPxUpdate(barProps.barIdx, $event)"
@@ -255,7 +260,7 @@ export default {
           {
             marginTop: `${-this.$_internalMarginTopPx}px`,
             height: `${this.$store.state.config.staffLineStepPx * 4 + 1}px`,
-            backgroundColor: backgroundColor.styleString,
+            backgroundColor: backgroundColor.styleString(),
           },
         );
       }

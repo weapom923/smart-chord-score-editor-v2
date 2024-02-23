@@ -4,14 +4,17 @@ import { Color, cl } from '../../modules/Color';
 export default {
   watch: {
     color() { this.draw() },
+    $_opacity(opacity: number) { this.$_setOpacity(opacity) }
   },
 
   mounted() {
     this.draw();
+    this.$_setOpacity(this.$_opacity);
   },
 
   props: {
-    color: { type: Color, default: cl.black },
+    color:          { type: Color,   default: cl.black },
+    alphaAsOpacity: { type: Boolean, default: false },
   },
 
   data(): {
@@ -29,6 +32,10 @@ export default {
 
     $_canvasElement(): HTMLCanvasElement {
       return this.$el as HTMLCanvasElement;
+    },
+
+    $_opacity(): number {
+      return this.alphaAsOpacity? this.color.alpha : 1;
     },
   },
 
@@ -51,6 +58,10 @@ export default {
       }
       this.$_canvasElement.height = canvasHeightPx;
       this.draw();
+    },
+
+    $_setOpacity(opacity: number) {
+      this.$_canvasElement.style.opacity = `${opacity}`;
     },
 
     draw() {

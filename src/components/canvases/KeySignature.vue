@@ -92,8 +92,8 @@ const KeySignature = defineComponent({
       let anchorVerticalOffsetPx = this.$_anchorVerticalOffsetPx;
       let staffLineStepPx = this.$_staffLineStepPx;
       let keySignatureWidthPx = this.$_keySignatureWidthPx;
-      canvas.strokeStyle = this.color.styleString;
-      canvas.fillStyle = this.color.styleString;
+      canvas.strokeStyle = this.color.styleString();
+      canvas.fillStyle = this.color.styleString();
       canvas.lineWidth = 1;
       canvas.beginPath();
       canvas.moveTo(
@@ -158,8 +158,8 @@ const KeySignature = defineComponent({
     function drawFlat(this: This, canvas: CanvasRenderingContext2D) {
       let anchorVerticalOffsetPx = this.$_anchorVerticalOffsetPx;
       let staffLineStepPx = this.$_staffLineStepPx;
-      canvas.strokeStyle = this.color.styleString;
-      canvas.fillStyle = this.color.styleString;
+      canvas.strokeStyle = this.color.styleString();
+      canvas.fillStyle = this.color.styleString();
       canvas.lineWidth = 1;
       canvas.beginPath();
       canvas.moveTo(

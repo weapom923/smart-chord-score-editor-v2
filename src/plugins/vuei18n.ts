@@ -103,6 +103,7 @@ const messageJa = {
   cancel: 'キャンセル',
   languageSetting: '言語設定',
   onPrintLayoutEnabledMessage: '印刷レイアウト表示中(クリックかキー入力で終了)',
+  noteColor: 'ノートの色',
 
   barSelected: '小節選択',
   barsSelected: '小節選択',
@@ -251,6 +252,7 @@ let messageEn: Messages = {
   cancel: 'Cancel',
   languageSetting: 'Language setting',
   onPrintLayoutEnabledMessage: 'Print layout(Press any key or click to exit)',
+  noteColor: 'Color of note',
 
   barSelected: 'bar selected',
   barsSelected: 'bars selected',

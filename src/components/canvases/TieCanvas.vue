@@ -56,7 +56,7 @@ export default {
   created() {
     /* public */
     this.$_setCallback((canvas: CanvasRenderingContext2D) => {
-      canvas.strokeStyle = this.color.styleString;
+      canvas.strokeStyle = this.color.styleString(false);
       canvas.lineWidth = 1;
       canvas.beginPath();
       canvas.moveTo(
