@@ -60,7 +60,7 @@
           close-on-content-click
           location="bottom"
           open-delay="0"
-          close-delay="0"
+          close-delay="50"
           v-if="showBarHoverMenu"
           v-bind:disabled="$store.state.appState.isPrintLayoutEnabled"
         >
