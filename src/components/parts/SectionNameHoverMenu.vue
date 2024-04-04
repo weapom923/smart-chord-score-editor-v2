@@ -12,6 +12,7 @@
             size="x-small" class="flex-grow-1"
             v-bind="props"
             v-bind:icon="icon"
+            v-bind:disabled="disabled"
             v-on:click="callback"
           >
           </v-btn>
