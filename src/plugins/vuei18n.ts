@@ -104,6 +104,9 @@ const messageJa = {
   languageSetting: '言語設定',
   onPrintLayoutEnabledMessage: '印刷レイアウト表示中(クリックかキー入力で終了)',
   noteColor: 'ノートの色',
+  editAllBars: '全小節一括編集',
+  editAllBarsInCurrentPage: 'ページ内全小節一括編集',
+  deleteAllBarsInCurrentPage: 'ページ内全小節削除',
 
   barSelected: '小節選択',
   barsSelected: '小節選択',
@@ -253,6 +256,9 @@ let messageEn: Messages = {
   languageSetting: 'Language setting',
   onPrintLayoutEnabledMessage: 'Print layout(Press any key or click to exit)',
   noteColor: 'Color of note',
+  editAllBars: 'Edit all bars',
+  editAllBarsInCurrentPage: 'Edit all bars in current page',
+  deleteAllBarsInCurrentPage: 'Delete all bars in current page',
 
   barSelected: 'bar selected',
   barsSelected: 'bars selected',

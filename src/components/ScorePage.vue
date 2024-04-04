@@ -1,25 +1,35 @@
 <template>
   <v-sheet
     id="score-page"
-    class="d-flex flex-column overflow-y-hidden px-2"
+    class="overflow-y-hidden"
     color="background"
-    v-bind:style="$_pageStyle"
   >
-    <score-title-component v-if="$_isFirstPage">
-    </score-title-component>
-    <template
-      v-for="sectionComponentProp of $_sectionComponentProps"
-      v-bind:key="sectionComponentProp.sectionIdx"
+    <score-page-toolbar
+      v-if="!$store.state.appState.isPrintLayoutEnabled"
+      id="score-page-tool-bar"
+      class="no-print"
+      collapse absolute 
+      v-bind:section-and-bar-range="sectionAndBarRange"
     >
-      <section-component v-bind="sectionComponentProp">
-      </section-component>
-    </template>
-    <score-footer-component
-      class="mt-auto"
-      v-bind:score-page-index="scorePageIndex"
-      v-bind:num-score-pages="numScorePages"
-    >
-    </score-footer-component>
+    </score-page-toolbar>
+
+    <div class="d-flex flex-column px-2" v-bind:style="$_pageStyle">
+      <score-title-component v-if="$_isFirstPage">
+      </score-title-component>
+      <template
+        v-for="sectionComponentProp of $_sectionComponentProps"
+        v-bind:key="sectionComponentProp.sectionIdx"
+      >
+        <section-component v-bind="sectionComponentProp">
+        </section-component>
+      </template>
+      <score-footer-component
+        class="mt-auto"
+        v-bind:score-page-index="scorePageIndex"
+        v-bind:num-score-pages="numScorePages"
+      >
+      </score-footer-component>
+    </div>
   </v-sheet>
 </template>
 
@@ -32,6 +42,10 @@
 #score-page:not(:last-of-type) {
   break-after: page;
   margin-bottom: 5px;
+}
+
+#score-page-tool-bar {
+  z-index: 1;
 }
 
 @media print {
@@ -47,6 +61,7 @@ import { CSSProperties } from 'vue';
 import SectionComponent from '../components/SectionComponent.vue';
 import ScoreTitleComponent from '../components/ScoreTitleComponent.vue';
 import ScoreFooterComponent from '../components/ScoreFooterComponent.vue';
+import ScorePageToolbar from './parts/ScorePageToolbar.vue';
 import { SectionAndBarRange, SectionAndBarIdx, BarRange } from '../modules/SectionAndBarRange';
 import { Score } from '../modules/Score';
 
@@ -57,6 +72,7 @@ export default {
     ScoreTitleComponent,
     SectionComponent,
     ScoreFooterComponent,
+    ScorePageToolbar,
   },
 
   props: {

@@ -1,5 +1,5 @@
 <template>
-  <v-card flat color="background">
+  <v-card flat color="transparent">
     <v-card-title class="d-flex align-center flex-column">
       <h1 v-if="$_title !== undefined">{{ $_title }}</h1>
       <h3 v-if="$_artistName !== undefined" class="ma-2">{{ $_artistName }}</h3>
