@@ -94,7 +94,7 @@
   position: relative;
 }
 
-#system * {
+#system > * {
   flex-grow: 1;
 }
 
