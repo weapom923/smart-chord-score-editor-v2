@@ -58,7 +58,7 @@
   flex-direction: row;
 }
 
-#beat-and-part-container * {
+#beat-and-part-container > * {
   position: relative;
   flex-shrink: 0;
   z-index: 1;
