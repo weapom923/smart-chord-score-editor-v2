@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-text class="pa-0">
+    <v-card-text class="pa-2">
       <v-range-slider
         density="compact" color="primary" hide-details
         v-if="$data.$_noteValueSliderValues !== undefined"
