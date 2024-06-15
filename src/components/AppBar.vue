@@ -1,8 +1,5 @@
 <template>
-  <v-app-bar
-    fixed density="compact"
-    v-bind:app="!$store.state.appState.isPrintLayoutEnabled"
-  >
+  <v-app-bar app density="compact">
     <v-tooltip
       location="bottom"
       v-for="(menuItemDefinition, menuItemDefinitionId) in $_leftMenuItemDefinitions"
