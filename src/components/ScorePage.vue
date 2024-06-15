@@ -25,6 +25,7 @@
       </template>
       <score-footer-component
         class="mt-auto"
+        v-if="numScorePages > 1"
         v-bind:score-page-index="scorePageIndex"
         v-bind:num-score-pages="numScorePages"
       >
