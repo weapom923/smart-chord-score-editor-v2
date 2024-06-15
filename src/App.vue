@@ -6,7 +6,10 @@
     >
     </app-bar>
 
-    <v-main v-on:mousedown.left="$_onClickBackground">
+    <v-main
+      v-bind:scrollable="!$store.state.appState.isPrintLayoutEnabled"
+      v-on:mousedown.left="$_onClickBackground"
+    >
       <v-btn
         variant="outlined"
         v-if="$_score.numSections === 0"
@@ -54,7 +57,6 @@
     <bar-editor-drawer
       ref="barEditorDrawer"
       class="no-print"
-      v-if="($store.state.score.selectedBars !== undefined) && (!$store.state.appState.isPrintLayoutEnabled)"
     >
     </bar-editor-drawer>
   </v-app>
@@ -69,6 +71,11 @@
   }
 }
 </style>
+
+<style scoped>
+:deep(.v-main__scroller) {
+  scrollbar-width: thin;
+}
 
 #app {
   font-family: 'Klee One';

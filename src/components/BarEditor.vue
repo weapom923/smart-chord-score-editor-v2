@@ -1,11 +1,11 @@
 <template>
-  <div class="overflow-x-hidden overflow-y-auto">
+  <div>
     <bar-editor-toolbar
       density="compact"
       v-model:selected-part-idx="$data.$_selectedPartIdx"
     >
     </bar-editor-toolbar>
-    <v-container id="editor-container" class="overflow-auto">
+    <v-container id="editor-container">
       <v-row>
         <v-col cols="3">
           <v-card>

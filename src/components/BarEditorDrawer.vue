@@ -1,15 +1,19 @@
 <template>
   <v-navigation-drawer
-    class="pa-0 ma-0" rail-width="40"
-    permanent
+    class="pa-0 ma-0 overflow-hidden"
+    permanent app
+    v-bind:model-value="$_showBarEditorDrawer"
     v-bind:width="$_barEditorDrawerWidth"
     v-bind:rail="$store.state.appState.isBarEditorDrawerMinimized"
+    v-bind:rail-width="expandButtonWidthPx"
     v-bind:location="$store.state.config.barEditorLocation"
   >
     <v-btn
-      class="w-100 h-100" rounded="0" size="small"
+      rounded="0" size="small"
       v-show="$store.state.appState.isBarEditorDrawerMinimized"
       v-bind:icon="$_barEditorMaximizeIcon"
+      v-bind:width="$_barEditorExpandButtonWidth"
+      v-bind:height="$_barEditorExpandButtonHeight"
       v-on:click="$_maximizeBarEditor"
     >
     </v-btn>
@@ -28,8 +32,17 @@ import { SectionAndBarRange } from '../modules/SectionAndBarRange';
 
 const idealDrawerWidthPx = 800;
 const idealDrawerHeightPx = 700;
+const expandButtonWidthPx = 30;
 
 export default {
+  setup(): {
+    expandButtonWidthPx: typeof expandButtonWidthPx,
+  } {
+    return {
+      expandButtonWidthPx,
+    };
+  },
+
   components: {
     BarEditor,
   },
@@ -43,16 +56,27 @@ export default {
   },
 
   data(): {
-    $_barEditorDrawerWidthPx: number,
-    $_barEditorDrawerHeightPx: number,
+    $_barEditorDrawerWidthPxMax: number,
+    $_barEditorDrawerHeightPxMax: number,
   } {
     return {
-      $_barEditorDrawerWidthPx: idealDrawerWidthPx,
-      $_barEditorDrawerHeightPx: idealDrawerHeightPx,
+      $_barEditorDrawerWidthPxMax: window.innerWidth * 0.8,
+      $_barEditorDrawerHeightPxMax: window.innerHeight * 0.8,
     };
   },
 
   computed: {
+    $_railWidth(): number {
+      if (!this.$_showBarEditorDrawer) return 0;
+      return expandButtonWidthPx;
+    },
+
+    $_showBarEditorDrawer(): boolean {
+      if (this.$store.state.score.selectedBars === undefined) return false;
+      if (this.$store.state.appState.isPrintLayoutEnabled) return false;
+      return true;
+    },
+
     $_barEditorMaximizeIcon(): string | undefined {
       switch (this.$store.state.config.barEditorLocation) {
         case 'left':
@@ -70,11 +94,31 @@ export default {
       switch (this.$store.state.config.barEditorLocation) {
         case 'left':
         case 'right':
-          return this.$data.$_barEditorDrawerWidthPx;
+          return Math.min(idealDrawerWidthPx, this.$data.$_barEditorDrawerWidthPxMax);
         case 'bottom':
-          return this.$data.$_barEditorDrawerHeightPx;
+          return Math.min(idealDrawerHeightPx, this.$data.$_barEditorDrawerHeightPxMax);
         default:
           return 0;
+      }
+    },
+
+    $_barEditorExpandButtonWidth(): number | string {
+      switch (this.$store.state.config.barEditorLocation) {
+        case 'left':
+        case 'right':
+          return expandButtonWidthPx;
+        default:
+          return '100%';
+      }
+    },
+
+    $_barEditorExpandButtonHeight(): number | string {
+      switch (this.$store.state.config.barEditorLocation) {
+        case 'bottom':
+        case 'top':
+          return expandButtonWidthPx;
+        default:
+          return '100%';
       }
     },
   },
@@ -93,10 +137,8 @@ export default {
 
   methods: {
     $_updateBarEditorDrawerSize() {
-      let barEditorDrawerWidthPxMax = window.innerWidth * 0.8;
-      let barEditorDrawerHeightPxMax = window.innerHeight * 0.8;
-      this.$data.$_barEditorDrawerWidthPx = (barEditorDrawerWidthPxMax > idealDrawerWidthPx)? idealDrawerWidthPx : barEditorDrawerWidthPxMax;
-      this.$data.$_barEditorDrawerHeightPx = (barEditorDrawerHeightPxMax > idealDrawerHeightPx)? idealDrawerHeightPx : barEditorDrawerHeightPxMax;
+      this.$data.$_barEditorDrawerWidthPxMax = window.innerWidth * 0.8;
+      this.$data.$_barEditorDrawerHeightPxMax = window.innerHeight * 0.8;
     },
 
     $_getBarEditorComponent(): InstanceType<typeof BarEditor> | undefined | null {
