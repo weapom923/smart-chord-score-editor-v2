@@ -43,7 +43,6 @@
 
 #score-page:not(.last-page) {
   break-after: page;
-  margin-bottom: 5px;
 }
 
 #score-page-tool-bar {
