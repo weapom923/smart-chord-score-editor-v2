@@ -12,6 +12,7 @@
           v-if="$data.$_parsedChord"
           v-bind:chord="$data.$_parsedChord"
           v-bind:font-size-px="12"
+          v-bind:color="$_color"
         />
         <v-form
           v-model="$data.$_valid"
@@ -35,6 +36,7 @@
 import DialogBase from './DialogBase.vue';
 import DialogTextField from '../parts/DialogTextField.vue';
 import { Chord } from '../../modules/Chord';
+import { Color } from '../../modules/Color';
 import ChordComponent from '../ChordComponent.vue';
 import chordTextParser from '../../modules/chordTextParser.js';
 import { SectionAndBarIdx } from '../../modules/SectionAndBarRange';
@@ -87,6 +89,10 @@ export default {
     $_chord(): Chord | undefined {
       if (!(this.$_note.pitchOrChord instanceof Chord)) return undefined;
       return this.$_note.pitchOrChord;
+    },
+
+    $_color(): Color {
+      return this.$store.state.config.chordTextColor;
     },
   },
 

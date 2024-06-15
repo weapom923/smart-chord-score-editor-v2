@@ -15,6 +15,18 @@
             <v-row>
               <v-col sm="4" cols="12">
                 <dialog-text-field
+                  number
+                  type="number" density="compact"
+                  v-model.number="$data.$_numPagesPerRow"
+                  v-bind:rules="$_rules.numPagesPerRow"
+                  v-bind:min="numPagesPerRowMin"
+                  v-bind:max="numPagesPerRowMax"
+                  v-bind:label="$t('numPagesPerRow')"
+                />
+              </v-col>
+
+              <v-col sm="4" cols="12">
+                <dialog-text-field
                   autofocus number
                   type="number" density="compact"
                   v-model.number="$data.$_staffLineStepPx"
@@ -76,6 +88,15 @@
                   v-bind:min="chordFontSizePxMin"
                   v-bind:label="$t('chordFontSizePx')"
                 />
+              </v-col>
+
+              <v-col sm="4" cols="12">
+                <color-picker-input
+                  density="compact"
+                  v-model="$data.$_chordTextColor"
+                  v-bind:label="$t('chordTextColor')"
+                >
+                </color-picker-input>
               </v-col>
 
               <v-col sm="4" cols="12">
@@ -163,6 +184,8 @@ import { isEmptyLike } from '../../modules/utils';
 import { PublicConfig, defaultConfig, BarEditorLocationType } from '../../store/module/Config'
 import Color from '@/modules/Color';
 
+const numPagesPerRowMin = 1;
+const numPagesPerRowMax = 3;
 const staffLineStaffPxMin = 5;
 const staffLineStaffPxMax = 15;
 const systemMarginTopPxMin = 0;
@@ -175,6 +198,8 @@ export default {
   extends: DialogBase,
 
   setup(): {
+    numPagesPerRowMin: typeof numPagesPerRowMin,
+    numPagesPerRowMax: typeof numPagesPerRowMax,
     staffLineStaffPxMin: typeof staffLineStaffPxMin,
     staffLineStaffPxMax: typeof staffLineStaffPxMax,
     systemMarginTopPxMin: typeof systemMarginTopPxMin,
@@ -184,6 +209,8 @@ export default {
     pageWidthOnPrintPxMin: typeof pageWidthOnPrintPxMin,
   } {
     return {
+      numPagesPerRowMin,
+      numPagesPerRowMax,
       staffLineStaffPxMin,
       staffLineStaffPxMax,
       systemMarginTopPxMin,
@@ -203,12 +230,14 @@ export default {
 
   data(): {
     $_valid: boolean,
+    $_numPagesPerRow: number,
     $_staffLineStepPx: number,
     $_systemMarginTopPx: number,
     $_systemMarginBottomPx: number,
     $_pagePaddingTopPx: number,
     $_defaultGridNoteValue: NoteValue,
     $_chordFontSizePx: number,
+    $_chordTextColor: Color,
     $_pageWidthOnPrintPx: number,
     $_locale: string,
     $_barEditorLocation: BarEditorLocationType,
@@ -216,12 +245,14 @@ export default {
   } {
     return {
       $_valid: true,
+      $_numPagesPerRow: defaultConfig.numPagesPerRow,
       $_staffLineStepPx: defaultConfig.staffLineStepPx,
       $_systemMarginTopPx: defaultConfig.systemMarginTopPx,
       $_systemMarginBottomPx: defaultConfig.systemMarginBottomPx,
       $_pagePaddingTopPx: defaultConfig.pagePaddingTopPx,
       $_defaultGridNoteValue: defaultConfig.defaultGridNoteValue.clone(),
       $_chordFontSizePx: defaultConfig.chordFontSizePx,
+      $_chordTextColor: defaultConfig.chordTextColor,
       $_pageWidthOnPrintPx: defaultConfig.pageWidthOnPrintPx,
       $_locale: defaultConfig.locale,
       $_barEditorLocation: defaultConfig.barEditorLocation,
@@ -249,6 +280,18 @@ export default {
 
     $_rules(): { [key: string]: ((value: any) => string | true)[] } {
       return {
+        numPagesPerRow: [
+          (numPagesPerRow: any) => (isEmptyLike(numPagesPerRow)? 'Number of pages per a row must not be empty.' : true),
+          (numPagesPerRow: number) => {
+            if (numPagesPerRow < numPagesPerRowMin) {
+              return `Number of pages per a row must be more than or equal to ${numPagesPerRowMin}.`;
+            } else if (numPagesPerRow > numPagesPerRowMax) {
+              return `Number of pages per a row must be less than or equal to ${numPagesPerRowMax}.`;
+            }
+            return true;
+          },
+        ],
+
         staffLineStepPx: [
           (staffLineStepPx: any) => (isEmptyLike(staffLineStepPx)? 'Staff line step must not be empty.' : true),
           (staffLineStepPx: number) => {
@@ -332,11 +375,13 @@ export default {
 
   methods: {
     $_loadData() {
+      this.$data.$_numPagesPerRow = this.$store.state.config.numPagesPerRow;
       this.$data.$_staffLineStepPx = this.$store.state.config.staffLineStepPx;
       this.$data.$_systemMarginTopPx = this.$store.state.config.systemMarginTopPx;
       this.$data.$_systemMarginBottomPx = this.$store.state.config.systemMarginBottomPx;
       this.$data.$_defaultGridNoteValue = this.$store.state.config.defaultGridNoteValue.clone();
       this.$data.$_chordFontSizePx = this.$store.state.config.chordFontSizePx;
+      this.$data.$_chordTextColor = this.$store.state.config.chordTextColor;
       this.$data.$_pageWidthOnPrintPx = this.$store.state.config.pageWidthOnPrintPx;
       this.$data.$_locale = this.$store.state.config.locale;
       this.$data.$_barEditorLocation = this.$store.state.config.barEditorLocation;
@@ -345,12 +390,14 @@ export default {
 
     $_ok() {
       let publicConfig: PublicConfig = {
+        numPagesPerRow: Number(this.$data.$_numPagesPerRow),
         staffLineStepPx: Number(this.$data.$_staffLineStepPx),
         systemMarginTopPx: Number(this.$data.$_systemMarginTopPx),
         systemMarginBottomPx: Number(this.$data.$_systemMarginBottomPx),
         pagePaddingTopPx: Number(this.$data.$_pagePaddingTopPx),
         defaultGridNoteValue: this.$data.$_defaultGridNoteValue,
         chordFontSizePx: Number(this.$data.$_chordFontSizePx),
+        chordTextColor: this.$data.$_chordTextColor,
         pageWidthOnPrintPx: Number(this.$data.$_pageWidthOnPrintPx),
         locale: this.$data.$_locale,
         barEditorLocation: this.$data.$_barEditorLocation,
@@ -360,12 +407,14 @@ export default {
     },
 
     $_resetToDefault() {
+      this.$data.$_numPagesPerRow       = defaultConfig.numPagesPerRow;
       this.$data.$_staffLineStepPx      = defaultConfig.staffLineStepPx;
       this.$data.$_systemMarginTopPx    = defaultConfig.systemMarginTopPx;
       this.$data.$_systemMarginBottomPx = defaultConfig.systemMarginBottomPx;
-      this.$data.$_pagePaddingTopPx    = defaultConfig.pagePaddingTopPx;
+      this.$data.$_pagePaddingTopPx     = defaultConfig.pagePaddingTopPx;
       this.$data.$_defaultGridNoteValue = defaultConfig.defaultGridNoteValue.clone();
       this.$data.$_chordFontSizePx      = defaultConfig.chordFontSizePx;
+      this.$data.$_chordTextColor       = defaultConfig.chordTextColor;
       this.$data.$_pageWidthOnPrintPx   = defaultConfig.pageWidthOnPrintPx;
       this.$data.$_locale               = defaultConfig.locale;
       this.$data.$_barEditorLocation    = defaultConfig.barEditorLocation;

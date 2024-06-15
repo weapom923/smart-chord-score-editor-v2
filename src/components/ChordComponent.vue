@@ -2,6 +2,7 @@
   <div
     id="chord-container"
     class="d-flex flex-column align-center"
+    v-bind:style="$_chordContainerStyle"
   >
     <div class="d-flex align-end">
       <div class="d-flex align-end">
@@ -64,7 +65,7 @@
       </div>
     </div>
     <template v-if="$_bassNotePitch !== undefined">
-      <hr id="bass-separator" />
+      <hr id="bass-separator" v-bind:color="color.hex" />
       <div class="d-flex align-end">
         <div v-bind:style="$_noteTextStyle">{{ $_bassNoteText }}</div>
         <div v-bind:style="$_chordBasicStyle">
@@ -116,7 +117,6 @@
 }
 
 #bass-separator {
-  border-color: black;
   border-style: solid;
   border-width: 1px 0 0;
   width: 100%;
@@ -128,9 +128,10 @@
 import { CSSProperties } from 'vue';
 import { TensionNotePitch } from '../modules/TensionNotePitch';
 import { Chord } from '../modules/Chord';
+import { Color } from '../modules/Color';
 import { NotePitch } from '../modules/NotePitch';
-import { nps } from '../modules/NotePitchSymbol'
-import { raw } from '../modules/utils'
+import { nps } from '../modules/NotePitchSymbol';
+import { raw } from '../modules/utils';
 import TensionNotePitchComponent from './TensionNotePitchComponent.vue';
 
 function getNoteSymbolText(notePitch: NotePitch): string {
@@ -165,7 +166,8 @@ export default {
 
   props: {
     chord: { type: Chord, required: true },
-    fontSizePx: { type: Number }
+    fontSizePx: { type: Number },
+    color: { type: Color, required: true },
   },
 
   data(): {
@@ -227,6 +229,13 @@ export default {
 
     $_fontSizePx(): number {
       return (this.fontSizePx === undefined)? this.$store.state.config.chordFontSizePx : this.fontSizePx;
+    },
+
+    $_chordContainerStyle(): CSSProperties {
+      return {
+        color: `${this.color.styleString(false)}`,
+        opacity: this.color.alpha,
+      };
     },
 
     $_chordBasicStyle(): CSSProperties {
