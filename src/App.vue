@@ -7,24 +7,28 @@
     </app-bar>
 
     <v-main v-on:mousedown.left="$_onClickBackground">
-      <div
-        v-if="!$data.$_isForcedReloading"
-        id="score-page-container"
-        class="d-flex flex-column align-center"
+      <v-btn
+        variant="outlined"
+        v-if="$_score.numSections === 0"
+        v-on:click="$_generateNewSection"
+        v-bind:text="$t('generateNewSection')"
       >
-        <v-btn
-          variant="outlined"
-          v-if="$_score.numSections === 0"
-          v-on:click="$_generateNewSection"
-          v-bind:text="$t('generateNewSection')"
+      </v-btn>
+      <div v-bind:class="$_scoreRowContainerClass">
+        <div
+          v-for="(scorePageProps, rowIdx) of $_scorePagePropsByRows"
+          v-bind:key="rowIdx"
+          v-bind:class="$_scorePageRawContainerClass"
         >
-        </v-btn>
-        <score-page
-          v-for="(scorePageProp, scorePageDefinitionIdx) of $_scorePageProps"
-          v-bind:key="scorePageDefinitionIdx"
-          v-bind="scorePageProp"
-        >
-        </score-page>
+          <template v-if="!$data.$_isForcedReloading">
+            <score-page
+              v-for="(scorePageProp, scorePageDefinitionIdx) of scorePageProps"
+              v-bind:key="scorePageDefinitionIdx"
+              v-bind="scorePageProp"
+            >
+            </score-page>
+          </template>
+        </div>
       </div>
       
       <component
@@ -67,13 +71,42 @@
   min-width: fit-content;
 }
 
+.score-row-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.score-page-row-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: start;
+  gap: 20px;
+}
+
+.score-page-row-container.print-layout {
+  flex-direction: column;
+}
+
+.print-layout {
+  gap: none !important;
+}
+
 @media print {
   .no-print {
     display: none !important;
   }
 
-  #score-page-container {
+  .score-row-container {
     align-items: baseline !important;
+    gap: none !important;
+  }
+
+  .score-page-row-container {
+    flex-direction: column !important;
+    gap: none !important;
   }
 }
 </style>
@@ -99,6 +132,8 @@ import { SectionAndBarRange, SectionAndBarIdx } from './modules/SectionAndBarRan
 import { getKeyEventType } from './modules/KeyEventType';
 import { downloadFile } from './modules/utils';
 import { ScoreMetadata } from './modules/ScoreMetadata';
+
+type scorePagePropType = InstanceType<typeof ScorePage>['$props'];
 
 const App = defineComponent({
   name: 'App',
@@ -181,7 +216,22 @@ const App = defineComponent({
 
     $_score(): Score { return this.$store.state.score.score },
 
-    $_scorePageProps(): InstanceType<typeof ScorePage>['$props'][] {
+    $_scorePagePropsByRows(): scorePagePropType[][] {
+      return this.$_scorePageProps.reduce(
+        (scorePagePropsPerRow: scorePagePropType[][], scorePageProp: scorePagePropType): scorePagePropType[][] => {
+          let scorePagePropsInLastRow = scorePagePropsPerRow[scorePagePropsPerRow.length - 1];
+          if (scorePagePropsInLastRow.length < this.$store.state.config.numPagesPerRow) {
+            scorePagePropsInLastRow.push(scorePageProp);
+          } else {
+            scorePagePropsPerRow.push([ scorePageProp ]);
+          }
+          return scorePagePropsPerRow;
+        },
+        [[]],
+      );
+    },
+
+    $_scorePageProps(): scorePagePropType[] {
       let sectionAndBarRanges: SectionAndBarRange[] = []
       let sectionAndBarIdx: SectionAndBarIdx | undefined = this.$_score.firstSectionAndBarIdx;
       let pageFirstSectionAndBarIdx: SectionAndBarIdx | undefined = undefined;
@@ -214,6 +264,22 @@ const App = defineComponent({
 
     $_audioPlayerBar(): InstanceType<typeof AudioPlayerBar> {
       return this.$refs.audioPlayerBar as InstanceType<typeof AudioPlayerBar>;
+    },
+
+    $_scorePageRawContainerClass(): string {
+      const classNameList = [ 'score-page-row-container' ];
+      if (this.$store.state.appState.isPrintLayoutEnabled) {
+        classNameList.push('print-layout');
+      }
+      return classNameList.join(' ');
+    },
+
+    $_scoreRowContainerClass(): string {
+      const classNameList = [ 'score-row-container' ];
+      if (this.$store.state.appState.isPrintLayoutEnabled) {
+        classNameList.push('print-layout');
+      }
+      return classNameList.join(' ');
     },
   },
 

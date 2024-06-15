@@ -9,6 +9,7 @@
     >
       <chord-component
         v-bind:chord="$_noteChord"
+        v-bind:color="$_chordTextColor"
         v-bind:style="$_chordStyle"
         v-on:width-update="$_onChordElementWidthUpdate"
         v-on:mounted="$_onChordComponentMounted"
@@ -31,7 +32,7 @@
               v-if="$_isPartTypeChord"
               v-bind:note="splitNote"
               v-bind:invert-stem-direction="true"
-              v-bind:color="$_color"
+              v-bind:color="$_chordNoteColor"
               v-bind:alpha-as-opacity="true"
               v-on:width-update="$_onNoteWidthUpdate(splitNoteIdx, $event)"
               v-on:tie-point-update="$_onNoteTiePointUpdate(splitNoteIdx, $event)"
@@ -42,7 +43,7 @@
               v-if="$data.$_tieProps.has(splitNoteIdx)"
               v-bind="assertDefined($data.$_tieProps.get(splitNoteIdx))"
               v-bind:style="$data.$_tieStyles.get(splitNoteIdx)"
-              v-bind:color="$_color"
+              v-bind:color="$_chordNoteColor"
               v-bind:alpha-as-opacity="true"
             />
           </template>
@@ -50,7 +51,7 @@
             v-if="$_isRestNote(splitNote.type)"
             v-bind:note-value="splitNote.value"
             v-bind:rest-note-pitch="restNotePitch"
-            v-bind:color="$_color"
+            v-bind:color="$_chordNoteColor"
             v-bind:alpha-as-opacity="true"
             v-on:width-update="$_onNoteWidthUpdate(splitNoteIdx, $event)"
             v-on:mounted="$_onSplitNoteElementMounted(splitNoteIdx, $event)"
@@ -183,7 +184,11 @@ export default {
       };
     },
 
-    $_color(): Color {
+    $_chordTextColor(): Color {
+      return this.$store.state.config.chordTextColor;
+    },
+
+    $_chordNoteColor(): Color {
       return (this.isSelected)? new Color(255, 140, 140, 1) : this.color;
     },
 

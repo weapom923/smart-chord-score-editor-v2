@@ -12,12 +12,14 @@ import { Color, ColorRawObj } from '../../modules/Color';
 export type BarEditorLocationType = VNavigationDrawer['$props']['location'];
 
 export type ConfigRawObj = {
+  numPagesPerRow: number,
   staffLineStepPx: number,
   systemMarginTopPx: number,
   systemMarginBottomPx: number,
   pagePaddingTopPx: number,
   defaultGridNoteValue: NoteValueRawObj,
   chordFontSizePx: number,
+  chordTextColor: ColorRawObj,
   defaultChord: ChordRawObj,
   defaultBarValue: NoteValueRawObj,
   defaultClef: ClefRawObj,
@@ -30,12 +32,14 @@ export type ConfigRawObj = {
 };
 
 export const defaultConfig: Config = {
+  numPagesPerRow: 1,
   staffLineStepPx: 10,
   systemMarginTopPx: 30,
   systemMarginBottomPx: 10,
   pagePaddingTopPx: 20,
   defaultGridNoteValue: NoteValue.instance.divisible.half,
   chordFontSizePx: 18,
+  chordTextColor: Color.instance.black,
   pageWidthOnPrintPx: 1080,
   defaultChord: new Chord(NotePitch.instance.a, 'major'),
   defaultBarValue: new NoteValue(4, 4),
@@ -48,12 +52,14 @@ export const defaultConfig: Config = {
 };
 
 export type PublicConfig = {
+  numPagesPerRow: number,
   staffLineStepPx: number,
   systemMarginTopPx: number,
   systemMarginBottomPx: number,
   pagePaddingTopPx: number,
   defaultGridNoteValue: NoteValue,
   chordFontSizePx: number,
+  chordTextColor: Color,
   pageWidthOnPrintPx: number,
   locale: string,
   barEditorLocation: BarEditorLocationType,
@@ -72,12 +78,14 @@ const ConfigModule: Module<Config, RootState> = {
   namespaced: true,
 
   state: {
+    numPagesPerRow: defaultConfig.numPagesPerRow,
     staffLineStepPx: defaultConfig.staffLineStepPx,
     systemMarginTopPx: defaultConfig.systemMarginTopPx,
     systemMarginBottomPx: defaultConfig.systemMarginBottomPx,
     pagePaddingTopPx: defaultConfig.pagePaddingTopPx,
     defaultGridNoteValue: defaultConfig.defaultGridNoteValue.clone(),
     chordFontSizePx: defaultConfig.chordFontSizePx,
+    chordTextColor: defaultConfig.chordTextColor,
     pageWidthOnPrintPx: defaultConfig.pageWidthOnPrintPx,
     defaultChord: defaultConfig.defaultChord.clone(),
     defaultBarValue: defaultConfig.defaultBarValue.clone(),
@@ -107,12 +115,14 @@ const ConfigModule: Module<Config, RootState> = {
           console.warn(`missing required config key: ${missingKeys.join(', ')}`);
           return;
         }
+        state.numPagesPerRow = rawConfigFromCookie.numPagesPerRow;
         state.staffLineStepPx = rawConfigFromCookie.staffLineStepPx;
         state.systemMarginTopPx = rawConfigFromCookie.systemMarginTopPx;
         state.systemMarginBottomPx = rawConfigFromCookie.systemMarginBottomPx;
         state.pagePaddingTopPx = rawConfigFromCookie.pagePaddingTopPx;
         state.defaultGridNoteValue = NoteValue.loadFromRawObj(rawConfigFromCookie.defaultGridNoteValue);
         state.chordFontSizePx = rawConfigFromCookie.chordFontSizePx;
+        state.chordTextColor = Color.loadFromRawObj(rawConfigFromCookie.chordTextColor);
         state.pageWidthOnPrintPx = rawConfigFromCookie.pageWidthOnPrintPx;
         state.defaultChord = Chord.loadFromRawObj(rawConfigFromCookie.defaultChord);
         state.defaultBarValue = NoteValue.loadFromRawObj(rawConfigFromCookie.defaultBarValue);
@@ -126,24 +136,28 @@ const ConfigModule: Module<Config, RootState> = {
     },
 
     setConfig(state: Config, publicConfig: PublicConfig) {
+      state.numPagesPerRow = publicConfig.numPagesPerRow;
       state.staffLineStepPx = publicConfig.staffLineStepPx;
       state.systemMarginTopPx = publicConfig.systemMarginTopPx;
       state.systemMarginBottomPx = publicConfig.systemMarginBottomPx;
       state.pagePaddingTopPx = publicConfig.pagePaddingTopPx;
       state.defaultGridNoteValue = publicConfig.defaultGridNoteValue;
       state.chordFontSizePx = publicConfig.chordFontSizePx;
+      state.chordTextColor = publicConfig.chordTextColor;
       state.pageWidthOnPrintPx = publicConfig.pageWidthOnPrintPx;
       state.locale = publicConfig.locale;
       state.barEditorLocation = publicConfig.barEditorLocation;
       state.noteColor = publicConfig.noteColor;
 
       const configRawObj: ConfigRawObj = {
+        numPagesPerRow: state.numPagesPerRow,
         staffLineStepPx: state.staffLineStepPx,
         systemMarginTopPx: state.systemMarginTopPx,
         systemMarginBottomPx: state.systemMarginBottomPx,
         pagePaddingTopPx: state.pagePaddingTopPx,
         defaultGridNoteValue: state.defaultGridNoteValue.getRawObj(),
         chordFontSizePx: state.chordFontSizePx,
+        chordTextColor: state.chordTextColor,
         defaultChord: state.defaultChord.getRawObj(),
         defaultBarValue: state.defaultBarValue.getRawObj(),
         defaultClef: state.defaultClef.getRawObj(),

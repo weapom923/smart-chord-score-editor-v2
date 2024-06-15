@@ -51,13 +51,31 @@ export class Color {
     return Color.loadFromRawObj(this.getRawObj());
   }
 
+  #rgb?: Array<number>;
+  get rgb() {
+    let self = raw(this);
+    if (self.#rgb === undefined) {
+      self.#rgb = [ self.red, self.green, self.blue ];
+    }
+    return self.#rgb;
+  }
+
   #rgba?: Array<number>;
   get rgba() {
     let self = raw(this);
     if (self.#rgba === undefined) {
-      self.#rgba = [ self.red, self.green, self.blue, self.alpha ];
+      self.#rgba = [ ...self.rgb, self.alpha ];
     }
     return self.#rgba;
+  }
+
+  #hex?: string;
+  get hex(): string {
+    let self = raw(this);
+    if (self.#hex === undefined) {
+      self.#hex = self.rgb.map((value: number) => value.toString(16)).join();
+    }
+    return self.#hex;
   }
 
   #styleString?: string;
