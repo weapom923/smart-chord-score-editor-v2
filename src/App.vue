@@ -316,10 +316,6 @@ const App = defineComponent({
       await this.$store.dispatch('appState/setIsPrintLayoutEnabled', false);
     },
 
-    async $_toggleBarEditorMaximizedAndMinimized() {
-      await this.$store.dispatch('appState/setIsBarEditorMinimized', !this.$store.state.appState.isBarEditorDrawerMinimized);
-    },
-
     async $_generateNewSection() {
       await this.$store.dispatch(
         'dialog/setDialog',
