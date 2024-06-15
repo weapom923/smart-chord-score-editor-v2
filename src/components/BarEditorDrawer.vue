@@ -21,6 +21,8 @@
     <bar-editor
       ref="barEditor"
       v-show="!$store.state.appState.isBarEditorDrawerMinimized"
+      v-bind:width="$_barEditorWidth"
+      v-bind:height="$_barEditorHeight"
     >
     </bar-editor>
   </v-navigation-drawer>
@@ -37,9 +39,13 @@ const expandButtonWidthPx = 30;
 export default {
   setup(): {
     expandButtonWidthPx: typeof expandButtonWidthPx,
+    idealDrawerWidthPx: typeof idealDrawerWidthPx,
+    idealDrawerHeightPx: typeof idealDrawerHeightPx,
   } {
     return {
       expandButtonWidthPx,
+      idealDrawerWidthPx,
+      idealDrawerHeightPx,
     };
   },
 
@@ -119,6 +125,26 @@ export default {
           return expandButtonWidthPx;
         default:
           return '100%';
+      }
+    },
+
+    $_barEditorWidth(): number | undefined {
+      switch (this.$store.state.config.barEditorLocation) {
+        case 'left':
+        case 'right':
+          return idealDrawerWidthPx;
+        default:
+          return undefined;
+      }
+    },
+
+    $_barEditorHeight(): number | undefined {
+      switch (this.$store.state.config.barEditorLocation) {
+        case 'top':
+        case 'bottom':
+          return idealDrawerHeightPx;
+        default:
+          return undefined;
       }
     },
   },
