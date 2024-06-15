@@ -19,8 +19,8 @@
                   type="number" density="compact"
                   v-model.number="$data.$_staffLineStepPx"
                   v-bind:rules="$_rules.staffLineStepPx"
-                  v-bind:max="$_staffLineStaffPxMax"
-                  v-bind:min="$_staffLineStaffPxMin"
+                  v-bind:max="staffLineStaffPxMax"
+                  v-bind:min="staffLineStaffPxMin"
                   v-bind:label="$t('staffLineStepPx')"
                 />
               </v-col>
@@ -31,7 +31,7 @@
                   type="number" density="compact"
                   v-model.number="$data.$_systemMarginTopPx"
                   v-bind:rules="$_rules.systemMarginTopPx"
-                  v-bind:min="$_systemMarginTopPxMin"
+                  v-bind:min="systemMarginTopPxMin"
                   v-bind:label="$t('systemMarginTopPx')"
                 />
               </v-col>
@@ -42,7 +42,7 @@
                   type="number" density="compact"
                   v-model.number="$data.$_systemMarginBottomPx"
                   v-bind:rules="$_rules.systemMarginBottomPx"
-                  v-bind:min="$_systemMerginBottomPxMin"
+                  v-bind:min="systemMerginBottomPxMin"
                   v-bind:label="$t('systemMarginBottomPx')"
                 />
               </v-col>
@@ -53,7 +53,7 @@
                   type="number" density="compact"
                   v-model.number="$data.$_pagePaddingTopPx"
                   v-bind:rules="$_rules.pagePaddingTopPx"
-                  v-bind:min="$_pagePaddingTopPxMin"
+                  v-bind:min="pagePaddingTopPxMin"
                   v-bind:label="$t('pagePaddingTopPx')"
                 />
               </v-col>
@@ -73,7 +73,7 @@
                   type="number" density="compact"
                   v-model.number="$data.$_chordFontSizePx"
                   v-bind:rules="$_rules.chordFontSizePx"
-                  v-bind:min="$_chordFontSizePxMin"
+                  v-bind:min="chordFontSizePxMin"
                   v-bind:label="$t('chordFontSizePx')"
                 />
               </v-col>
@@ -84,7 +84,7 @@
                   type="number" density="compact"
                   v-model.number="$data.$_pageWidthOnPrintPx"
                   v-bind:rules="$_rules.pageWidthOnPrintPx"
-                  v-bind:min="$_pageWidthOnPrintPxMin"
+                  v-bind:min="pageWidthOnPrintPxMin"
                   v-bind:label="$t('pageWidthOnPrintPx')"
                 >
                 </dialog-text-field>
@@ -174,6 +174,26 @@ const pageWidthOnPrintPxMin = 640;
 export default {
   extends: DialogBase,
 
+  setup(): {
+    staffLineStaffPxMin: typeof staffLineStaffPxMin,
+    staffLineStaffPxMax: typeof staffLineStaffPxMax,
+    systemMarginTopPxMin: typeof systemMarginTopPxMin,
+    systemMerginBottomPxMin: typeof systemMerginBottomPxMin,
+    pagePaddingTopPxMin: typeof pagePaddingTopPxMin,
+    chordFontSizePxMin: typeof chordFontSizePxMin,
+    pageWidthOnPrintPxMin: typeof pageWidthOnPrintPxMin,
+  } {
+    return {
+      staffLineStaffPxMin,
+      staffLineStaffPxMax,
+      systemMarginTopPxMin,
+      systemMerginBottomPxMin,
+      pagePaddingTopPxMin,
+      chordFontSizePxMin,
+      pageWidthOnPrintPxMin,
+    };
+  },
+
   components: {
     DialogBase,
     DialogTextField,
@@ -212,20 +232,6 @@ export default {
   },
 
   computed: {
-    $_staffLineStaffPxMin() { return staffLineStaffPxMin },
-
-    $_staffLineStaffPxMax() { return staffLineStaffPxMax },
-
-    $_systemMarginTopPxMin() { return systemMarginTopPxMin },
-
-    $_systemMerginBottomPxMin() { return systemMerginBottomPxMin },
-
-    $_pagePaddingTopPxMin() { return pagePaddingTopPxMin },
-
-    $_chordFontSizePxMin() { return chordFontSizePxMin },
-
-    $_pageWidthOnPrintPxMin() { return pageWidthOnPrintPxMin },
-
     $_localeItems(): { title: string, value: string }[] {
       return [
         { title: '日本語', value: 'ja' },
