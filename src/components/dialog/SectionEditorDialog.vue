@@ -5,7 +5,7 @@
     v-bind:ok-disabled="!$data.$_valid"
   >
     <template v-slot:body>
-      <v-card-title v-text="$t('section')"></v-card-title>
+      <v-card-title>{{ $t('section') }}</v-card-title>
 
       <v-card-text>
         <v-form
