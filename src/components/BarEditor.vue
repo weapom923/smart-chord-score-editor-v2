@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-bind:style="$_barEditorStyle">
     <bar-editor-toolbar
       density="compact"
       v-model:selected-part-idx="$data.$_selectedPartIdx"
@@ -59,7 +59,7 @@
 </style>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, CSSProperties } from 'vue';
 import BarEditorToolbar from './BarEditor/BarEditorToolbar.vue';
 import BarEditorButtonsComponent from './BarEditor/BarEditorButtonsComponent.vue';
 import NoteEditorComponent from './BarEditor/NoteEditorComponent.vue';
@@ -99,6 +99,11 @@ const BarEditor = defineComponent({
     },
   },
 
+  props: {
+    width: { type: Number },
+    height: { type: Number },
+  },
+
   data(): {
     $_selectedPartIdx?: PartIdx,
     $_selectedNoteIdx?: NoteIdx,
@@ -114,6 +119,21 @@ const BarEditor = defineComponent({
   },
 
   computed: {
+    $_barEditorStyle(): CSSProperties {
+      const barEditorStyle: CSSProperties = {};
+      if (this.width) {
+        barEditorStyle.width = `${this.width}px`;
+      } else {
+        barEditorStyle.width = '100%';
+      }
+      if (this.height) {
+        barEditorStyle.height = `${this.height}px`;
+      } else {
+        barEditorStyle.height = '100%';
+      }
+      return barEditorStyle;
+    },
+
     $_score() {
       return this.$store.state.score.score;
     },
