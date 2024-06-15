@@ -275,12 +275,12 @@ const App = defineComponent({
     },
   },
 
-  created() {
-    window.addEventListener('keydown', this.onKeydown);
+  async beforeCreate() {
+    await this.$store.dispatch('config/loadConfigFromLocalStorage');
   },
 
-  async mounted() {
-    await this.$store.dispatch('config/loadConfigFromLocalStorage');
+  created() {
+    window.addEventListener('keydown', this.onKeydown);
   },
 
   beforeUnmount() {
