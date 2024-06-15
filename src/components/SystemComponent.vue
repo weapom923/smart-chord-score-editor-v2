@@ -357,10 +357,12 @@ export default {
     },
 
     $_getShowBeat(barIdx: BarIdx): boolean {
+      if (barIdx > 0) {
+        let currentBarValue = this.section.getBar(barIdx).value;
+        let previousBarValue = this.section.getBar(barIdx - 1).value;
+        if (!currentBarValue.isSameAs(previousBarValue)) return true;
+      }
       if (barIdx === this.barRange.firstBarIdx) return this.showBeatOnFirstBar;
-      let currentBarValue = this.section.getBar(barIdx).value;
-      let previousBarValue = this.section.getBar(barIdx - 1).value;
-      if (!currentBarValue.isSameAs(previousBarValue)) return true;
       return false;
     },
 
