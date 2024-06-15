@@ -63,6 +63,12 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Klee+One:wght@600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Klee+One:wght@400&display=swap');
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+</style>
 
 #app {
   font-family: 'Klee One';
@@ -74,40 +80,26 @@
 .score-row-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: safe center;
   gap: 20px;
 }
 
 .score-page-row-container {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: safe center;
   align-items: start;
   gap: 20px;
 }
 
+.score-row-container.print-layout {
+  align-items: baseline;
+  gap: 0;
+}
+
 .score-page-row-container.print-layout {
   flex-direction: column;
-}
-
-.print-layout {
-  gap: none !important;
-}
-
-@media print {
-  .no-print {
-    display: none !important;
-  }
-
-  .score-row-container {
-    align-items: baseline !important;
-    gap: none !important;
-  }
-
-  .score-page-row-container {
-    flex-direction: column !important;
-    gap: none !important;
-  }
+  gap: 0;
 }
 </style>
 
