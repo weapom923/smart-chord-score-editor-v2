@@ -3,6 +3,7 @@
     id="score-page"
     class="overflow-y-hidden"
     color="background"
+    v-bind:class="$_pageClass"
   >
     <score-page-toolbar
       v-if="!$store.state.appState.isPrintLayoutEnabled"
@@ -40,7 +41,7 @@
   border: 1px #cccccc dotted;
 }
 
-#score-page:not(:last-of-type) {
+#score-page:not(.last-page) {
   break-after: page;
   margin-bottom: 5px;
 }
@@ -88,11 +89,18 @@ export default {
 
     $_isFirstPage(): boolean { return (this.scorePageIndex === 0) },
 
+    $_isLastPage(): boolean { return (this.scorePageIndex === (this.numScorePages - 1)) },
+
     $_hasNoSection(): boolean { return (this.$_numSections === 0) },
 
     $_numSections(): number { return this.$_score.numSections },
 
     $_pageElevation() { return ((this.$store.state.appState.isPrintLayoutEnabled)? 0 : 3) },
+
+    $_pageClass(): string | undefined {
+      if (this.$_isLastPage) return 'last-page';
+      return undefined;
+    },
 
     $_pageStyle(): CSSProperties {
       let pageStyle: CSSProperties = {};
