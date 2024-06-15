@@ -7,14 +7,14 @@
       v-bind:label="$t('beat')"
       v-bind="$attrs"
       v-bind:rules="$_rules"
-      v-bind:min="$_barValueNumeratorMin"
+      v-bind:min="barValueNumeratorMin"
     />
     <div>/</div>
     <v-select
       variant="solo-filled"
       v-model="$_barValueDenominator"
       v-bind="$attrs"
-      v-bind:items="$_barValueDenominators"
+      v-bind:items="barValueDenominators"
     />
   </div>
 </template>
@@ -26,6 +26,16 @@ import { isEmptyLike } from '../../modules/utils';
 const barValueNumeratorMin = 1;
 
 export default {
+  setup(): {
+    barValueNumeratorMin: typeof barValueNumeratorMin,
+    barValueDenominators: number[],
+  } {
+    return {
+      barValueNumeratorMin,
+      barValueDenominators: [ 4, 8, 16, 32 ],
+    };
+  },
+
   inheritAttrs: false,
 
   emits: {
@@ -47,9 +57,6 @@ export default {
   },
 
   computed: {
-    $_barValueNumeratorMin(): number { return barValueNumeratorMin },
-    $_barValueDenominators(): number[] { return [ 4, 8, 16, 32 ] },
-
     $_barValueNumerator: {
       get(): number | undefined { return this.$data.$_tempNumerator },
       set(barValueNumerator: number) {
