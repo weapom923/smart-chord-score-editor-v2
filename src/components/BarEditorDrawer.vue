@@ -10,7 +10,7 @@
       class="w-100 h-100" rounded="0" size="small"
       v-show="$store.state.appState.isBarEditorDrawerMinimized"
       v-bind:icon="$_barEditorMaximizeIcon"
-      v-on:click="$_toggleBarEditorMaximizedAndMinimized"
+      v-on:click="$_maximizeBarEditor"
     >
     </v-btn>
 
@@ -103,8 +103,8 @@ export default {
       return this.$refs.barEditor as any;
     },
 
-    async $_toggleBarEditorMaximizedAndMinimized() {
-      await this.$store.dispatch('appState/setIsBarEditorMinimized', !this.$store.state.appState.isBarEditorDrawerMinimized);
+    async $_maximizeBarEditor() {
+      await this.$store.dispatch('appState/setIsBarEditorMinimized', false);
     },
 
     async onKeydown(event: KeyboardEvent): Promise<boolean> {
