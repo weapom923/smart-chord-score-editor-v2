@@ -51,8 +51,8 @@ export default {
     $_tempDenominator?: number,
   } {
     return {
-      $_tempNumerator: this.barValue?.numerator,
-      $_tempDenominator: this.barValue?.denominator,
+      $_tempNumerator: undefined,
+      $_tempDenominator: undefined,
     };
   },
 
@@ -86,6 +86,22 @@ export default {
         },
       ];
     },
+  },
+
+  watch: {
+    barValue: {
+      handler(barValue?: NoteValue) {
+        if (barValue) {
+          this.$data.$_tempNumerator = barValue.numerator;
+          this.$data.$_tempDenominator = barValue.denominator;
+        } else {
+          this.$data.$_tempNumerator = undefined;
+          this.$data.$_tempDenominator = undefined;
+        }
+      },
+      immediate: true,
+      deep: true,
+    }
   },
 }
 </script>
