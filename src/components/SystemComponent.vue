@@ -61,6 +61,7 @@
           location="bottom"
           open-delay="0"
           close-delay="50"
+          transition="fade-transition"
           v-if="showBarHoverMenu"
           v-bind:disabled="$store.state.appState.isPrintLayoutEnabled"
         >
