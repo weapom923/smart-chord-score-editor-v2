@@ -87,25 +87,28 @@
 .score-row-container {
   display: flex;
   flex-direction: column;
-  align-items: safe center;
+  align-items: start;
+  margin: 0 auto;
   gap: 20px;
 }
 
 .score-page-row-container {
   display: flex;
   flex-direction: row;
-  justify-content: safe center;
+  justify-content: start;
   align-items: start;
+  margin: 0 auto;
   gap: 20px;
 }
 
 .score-row-container.print-layout {
-  align-items: baseline;
+  margin: 0;
   gap: 0;
 }
 
 .score-page-row-container.print-layout {
   flex-direction: column;
+  margin: 0;
   gap: 0;
 }
 </style>
