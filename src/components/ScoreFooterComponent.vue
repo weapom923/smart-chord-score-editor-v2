@@ -1,6 +1,9 @@
 <template>
   <div id="score-footer">
-    {{ $_scoreTitle }} ({{ scorePageIndex + 1 }} / {{ numScorePages }})
+    <span v-if="$_scoreTitle.length > 0">{{ $_scoreTitle }}</span>
+    <span v-if="numScorePages > 1">
+      ({{ scorePageIndex + 1 }} / {{ numScorePages }})
+    </span>
   </div>
 </template>
 
@@ -10,6 +13,7 @@
   height: 40px;
   align-content: center;
   justify-content: center;
+  gap: 5px;
 }
 </style>
 
