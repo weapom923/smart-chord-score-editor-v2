@@ -13,6 +13,12 @@ const router = createRouter({
       component: App,
       async beforeEnter(to, from, next) {
         let pathComponents = to.params.pathMatch as RouteParamValue[];
+        if ('mode' in to.query) {
+          switch (to.query['mode']) {
+            case 'print':
+              to.meta.print = true;
+          }
+        }
         try {
           let response = await fetch(
             `${googleCloudStorageDownloadBaseUrl}/${pathComponents.join('%2F')}.json?alt=media`,
@@ -28,7 +34,10 @@ const router = createRouter({
           next({ path: '' });
         }
       },
-      props: route => ({ score: route.meta.score }),
+      props: route => ({
+        score: route.meta.score,
+        print: route.meta.print,
+      }),
     },
     {
       path: '',
