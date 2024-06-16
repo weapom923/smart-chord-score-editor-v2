@@ -15,7 +15,7 @@
             <v-row>
               <v-col sm="4" cols="12">
                 <dialog-text-field
-                  number
+                  autofocus number
                   type="number" density="compact"
                   v-model.number="$data.$_numPagesPerRow"
                   v-bind:rules="$_rules.numPagesPerRow"
@@ -27,7 +27,7 @@
 
               <v-col sm="4" cols="12">
                 <dialog-text-field
-                  autofocus number
+                  number
                   type="number" density="compact"
                   v-model.number="$data.$_staffLineStepPx"
                   v-bind:rules="$_rules.staffLineStepPx"
