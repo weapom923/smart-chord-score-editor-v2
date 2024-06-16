@@ -1,7 +1,7 @@
 <template>
   <v-navigation-drawer
     class="pa-0 ma-0 overflow-hidden"
-    permanent app
+    permanent app touchless
     v-bind:model-value="$_showBarEditorDrawer"
     v-bind:width="$_barEditorDrawerWidth"
     v-bind:rail="$store.state.appState.isBarEditorDrawerMinimized"

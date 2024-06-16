@@ -1,46 +1,52 @@
 <template>
   <v-app-bar app density="compact">
-    <v-tooltip
-      location="bottom"
-      v-for="(menuItemDefinition, menuItemDefinitionId) in $_leftMenuItemDefinitions"
-      v-bind:key="menuItemDefinitionId"
-      v-bind:text="menuItemDefinition.text"
-      v-bind:disabled="menuItemDefinition.disabled"
-    >
-      <template v-slot:activator="{ props }">
-        <v-btn
-          size="small"
-          v-bind="props"
+    <v-slide-group class="w-100" show-arrows>
+      <div>
+        <v-tooltip
+          location="bottom"
+          v-for="(menuItemDefinition, menuItemDefinitionId) in $_leftMenuItemDefinitions"
+          v-bind:key="menuItemDefinitionId"
+          v-bind:text="menuItemDefinition.text"
           v-bind:disabled="menuItemDefinition.disabled"
-          v-bind:icon="menuItemDefinition.iconName"
-          v-on:click.stop="menuItemDefinition.callback"
-          v-on:keydown.enter.stop="menuItemDefinition.callback"
         >
-        </v-btn>
-      </template>
-    </v-tooltip>
-    
-    <v-spacer></v-spacer>
-
-    <v-tooltip
-      location="bottom"
-      v-for="(menuItemDefinition, menuItemDefinitionId) in $_rightMenuItemDefinitions"
-      v-bind:key="menuItemDefinitionId"
-      v-bind:disabled="menuItemDefinition.disabled"
-    >
-      <template v-slot:activator="{ props }">
-        <v-btn
-          size="small"
-          v-bind="props"
+          <template v-slot:activator="{ props }">
+            <v-btn
+              size="small"
+              v-bind="props"
+              v-bind:disabled="menuItemDefinition.disabled"
+              v-bind:icon="menuItemDefinition.iconName"
+              v-on:click.stop="menuItemDefinition.callback"
+              v-on:keydown.enter.stop="menuItemDefinition.callback"
+            >
+            </v-btn>
+          </template>
+        </v-tooltip>
+      </div>
+      
+      <v-spacer></v-spacer>
+  
+      <div>
+        <v-tooltip
+          location="bottom"
+          v-for="(menuItemDefinition, menuItemDefinitionId) in $_rightMenuItemDefinitions"
+          v-bind:key="menuItemDefinitionId"
           v-bind:disabled="menuItemDefinition.disabled"
-          v-bind:icon="menuItemDefinition.iconName"
-          v-on:click.stop="menuItemDefinition.callback"
-          v-on:keydown.enter.stop="menuItemDefinition.callback"
         >
-        </v-btn>
-      </template>
-      <span>{{ menuItemDefinition.text }}</span>
-    </v-tooltip>
+          <template v-slot:activator="{ props }">
+            <v-btn
+              size="small"
+              v-bind="props"
+              v-bind:disabled="menuItemDefinition.disabled"
+              v-bind:icon="menuItemDefinition.iconName"
+              v-on:click.stop="menuItemDefinition.callback"
+              v-on:keydown.enter.stop="menuItemDefinition.callback"
+            >
+            </v-btn>
+          </template>
+          <span>{{ menuItemDefinition.text }}</span>
+        </v-tooltip>
+      </div>
+    </v-slide-group>
   </v-app-bar>
 </template>
 
