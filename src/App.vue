@@ -203,6 +203,7 @@ const App = defineComponent({
 
   props: {
     score: { type: Score },
+    print: { type: Boolean },
   },
 
   data(): {
@@ -293,6 +294,12 @@ const App = defineComponent({
     window.addEventListener('keydown', this.onKeydown);
   },
 
+  async beforeMount() {
+    if (this.print) {
+      await this.$store.dispatch('appState/setIsPrintLayoutEnabled', true);
+    }
+  },
+
   beforeUnmount() {
     window.removeEventListener('keydown', this.onKeydown);
   },
@@ -315,7 +322,9 @@ const App = defineComponent({
 
     async $_onClickBackground() {
       await this.$store.dispatch('score/unselectBar');
-      await this.$store.dispatch('appState/setIsPrintLayoutEnabled', false);
+      if (!this.print) {
+        await this.$store.dispatch('appState/setIsPrintLayoutEnabled', false);
+      }
     },
 
     async $_generateNewSection() {
