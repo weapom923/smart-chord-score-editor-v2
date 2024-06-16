@@ -13,6 +13,8 @@
             close-on-content-click
             location="bottom"
             open-delay="0"
+            close-delay="50"
+            transition="fade-transition"
             v-bind:disabled="$store.state.appState.isPrintLayoutEnabled"
           >
             <template v-slot:activator="{ props }">
