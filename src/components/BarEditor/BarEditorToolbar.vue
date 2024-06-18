@@ -19,12 +19,18 @@
         <template v-else>({{ $_numSelectedBars }} {{ $t('barsSelected') }})</template>
       </div>
       <v-spacer />
+      <v-btn-toggle class="py-1" variant="outlined" mandatory v-model="$_barEditorLocation">
+        <v-btn size="small" icon="mdi-dock-left" v-bind:value="barEditorLocationLeft"></v-btn>
+        <v-btn size="small" icon="mdi-dock-bottom" v-bind:value="barEditorLocationBottom"></v-btn>
+        <v-btn size="small" icon="mdi-dock-right" v-bind:value="barEditorLocationRight"></v-btn>
+      </v-btn-toggle>
       <bar-part-type-selector
         id="part-type-selector" density="compact"
         v-if="($_sectionAndBarIdx !== undefined) && ($_selectedPartIdx !== undefined)"
         v-bind:section-and-bar-idx="$_sectionAndBarIdx"
         v-model:selected-part-idx="$_selectedPartIdx"
-      />
+      >
+      </bar-part-type-selector>
     </v-container>
   </v-toolbar>
 </template>
@@ -80,8 +86,21 @@
 import BarPartTypeSelector from '../parts/BarPartTypeSelector.vue';
 import { Score } from '../../modules/Score';
 import { SectionAndBarRange, SectionAndBarIdx } from '../../modules/SectionAndBarRange';
+import { BarEditorLocationType } from '../../store/module/Config';
 
 export default {
+  setup(): {
+    barEditorLocationLeft: BarEditorLocationType,
+    barEditorLocationRight: BarEditorLocationType,
+    barEditorLocationBottom: BarEditorLocationType,
+  } {
+    return {
+      barEditorLocationLeft: 'left',
+      barEditorLocationRight: 'right',
+      barEditorLocationBottom: 'bottom',
+    };
+  },
+
   emits: {
     'update:selectedPartIdx': (partIdx: PartIdx) => true,
   },
@@ -117,6 +136,15 @@ export default {
     $_selectedPartIdx: {
       get(): PartIdx | undefined    { return this.selectedPartIdx },
       set(selectedPartIdx: PartIdx) { this.$emit('update:selectedPartIdx', selectedPartIdx) },
+    },
+
+    $_barEditorLocation: {
+      get(): BarEditorLocationType { return this.$store.state.config.barEditorLocation },
+      async set(barEditorLocation: BarEditorLocationType) {
+        const newConfig = { ...this.$store.state.config };
+        newConfig.barEditorLocation = barEditorLocation;
+        await this.$store.dispatch('config/setConfig', newConfig);
+      },
     },
   },
 }
