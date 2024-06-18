@@ -20,7 +20,6 @@
 
         <v-col
           cols="9"
-          id="bar-component-container"
           v-if="($_selectedSectionAndBarIdx !== undefined) && ($data.$_selectedPartIdx !== undefined) && ($_selectedBar !== undefined)"
         >
           <bar-editor-buttons-component
@@ -55,6 +54,11 @@
 <style scoped>
 #bar-component-container {
   position: relative;
+}
+
+#editor-container,
+:deep(#bar-editor-toolbar-item-container) {
+  max-width: 1000px;
 }
 </style>
 
