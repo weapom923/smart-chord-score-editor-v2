@@ -41,7 +41,7 @@ export default class WaveformDecimator {
   readonly numSamples: number;
 
   static async loadData(audioBuffer: AudioBuffer): Promise<Uint8Array> {
-    const module = await Module({ locateFile: (fileName: string) => `wasm/${fileName}` });
+    const module = await Module({ locateFile: (fileName: string) => `/wasm/${fileName}` });
     const numChannels = audioBuffer.numberOfChannels;
     const numSamples = audioBuffer.length;
 
