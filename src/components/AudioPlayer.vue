@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-col flex-grow-1 align-center">
+  <div class="d-flex flex-col flex-grow-1 align-stretch">
     <audio-player-controller
       v-bind:duration-sec="audioBuffer.duration"
       v-bind:play-time-sec="$data.$_playTimeSec"
@@ -16,18 +16,17 @@
       v-on:pause="$_pause"
     >
     </audio-player-controller>
-    <audio-player-seek-bar
-      ref="audioPlayerSeekBar"
-      v-bind:current-time-sec="$data.$_playTimeSec"
-      v-bind:duration-sec="audioBuffer.duration"
-      v-bind:is-seeking="$data.$_isSeeking"
-      v-bind:loop-definition="$data.$_loopDefinition"
-      v-bind:temp-loop-begin-time-sec="$data.$_tempLoopBeginTimeSec"
-      v-on:seek="$_seekInSec"
+    <audio-play-time-controller
+      v-if="$data.$_waveformDecimator"
+      v-bind:waveform-decimator="$data.$_waveformDecimator"
+      v-bind:sampling-rate="audioBuffer.sampleRate"
+      v-bind:play-time-sec="$data.$_playTimeSec"
+      v-model:loop-definition="$data.$_loopDefinition"
       v-on:seek-start="$_seekStart"
+      v-on:seek-in-sec="$_seekInSec"
       v-on:seek-end="$_seekEnd"
     >
-    </audio-player-seek-bar>
+    </audio-play-time-controller>
   </div>
 </template>
 
@@ -35,7 +34,8 @@
 import { defineComponent } from 'vue';
 import AudioPlayerController from './AudioPlayer/AudioPlayerController.vue';
 import AudioPlaybackLoopDefinition from './AudioPlayer/modules/AudioPlaybackLoopDefinition';
-import AudioPlayerSeekBar from './AudioPlayer/AudioPlayerSeekBar.vue';
+import AudioPlayTimeController from './AudioPlayer/AudioPlayTimeController.vue';
+import WaveformDecimator from '../modules/WaveformDecimator';
 
 type AudioBufferSourceNodePool = Set<AudioBufferSourceNode>;
 
@@ -46,7 +46,7 @@ export default defineComponent({
 
   components: {
     AudioPlayerController,
-    AudioPlayerSeekBar,
+    AudioPlayTimeController,
   },
 
   watch: {
@@ -70,25 +70,26 @@ export default defineComponent({
   },
 
   props: {
-    audioBuffer:    { type: AudioBuffer, required: true },
-    audioContext:   { type: AudioContext, required: true },
-    gainNode:       { type: GainNode, required: true },
-    volume:         { type: Number, required: true },
+    audioBuffer:  { type: AudioBuffer, required: true },
+    audioContext: { type: AudioContext, required: true },
+    gainNode:     { type: GainNode, required: true },
+    volume:       { type: Number, required: true },
   },
 
-  data(): {
+  data(vm): {
     $_playTimeSec: number,
     $_isPlaying: boolean,
     $_isSeeking: boolean,
-    $_wasPlayingOnSeek: boolean | undefined,
+    $_wasPlayingOnSeek?: boolean,
     $_loopDefinition?: AudioPlaybackLoopDefinition,
     $_tempLoopBeginTimeSec?: number,
 
     $_audioBufferSourceNodePool: AudioBufferSourceNodePool,
     $_audioBufferSourceNodeStartOffsetSec: number,
-    $_latestAudioBufferSourceNode: AudioBufferSourceNode | undefined,
+    $_latestAudioBufferSourceNode?: AudioBufferSourceNode,
     $_originOfCurrentTime: number,
     $_animtionFrameRequestId: number | undefined,
+    $_waveformDecimator?: WaveformDecimator,
   } {
     return {
       $_playTimeSec: 0,
@@ -103,29 +104,26 @@ export default defineComponent({
       $_latestAudioBufferSourceNode: undefined,
       $_originOfCurrentTime: 0,
       $_animtionFrameRequestId: undefined,
+      $_waveformDecimator: undefined,
     };
   },
 
   computed: {
-    $_audioPlayerSeekBar(): InstanceType<typeof AudioPlayerSeekBar> {
-      return this.$refs.audioPlayerSeekBar as InstanceType<typeof AudioPlayerSeekBar>;
-    },
-
     $_volume: {
       get(): number       { return this.volume }, 
       set(volume: number) { this.$emit('update:volume', volume) },
     },
   },
 
+  async created() {
+    this.$data.$_waveformDecimator = new WaveformDecimator(await WaveformDecimator.loadData(this.audioBuffer));
+  },
+
   mounted() {
     this.$data.$_animtionFrameRequestId = window.requestAnimationFrame(this.$_onRequestAnimationFrame);
-    window.addEventListener('mousemove', this.$_onMousemove);
-    window.addEventListener('mouseup',   this.$_onMouseup);
   },
 
   async beforeUnmount() {
-    window.removeEventListener('mouseup',   this.$_onMouseup);
-    window.removeEventListener('mousemove', this.$_onMousemove);
     if (this.$data.$_animtionFrameRequestId !== undefined) {
       window.cancelAnimationFrame(this.$data.$_animtionFrameRequestId);
     }
@@ -148,14 +146,6 @@ export default defineComponent({
     },
 
     /* private */
-    $_onMousemove(mouseEvent: MouseEvent) {
-      this.$_audioPlayerSeekBar.onMousemove(mouseEvent);
-    },
-
-    $_onMouseup(mouseEvent: MouseEvent) {
-      this.$_audioPlayerSeekBar.onMouseup(mouseEvent);
-    },
-
     $_onRequestAnimationFrame() {
       this.$_update();
       this.$data.$_animtionFrameRequestId = window.requestAnimationFrame(this.$_onRequestAnimationFrame);
@@ -192,6 +182,7 @@ export default defineComponent({
     $_seekInSec(seekTimeSec: number) {
       this.$data.$_audioBufferSourceNodeStartOffsetSec = seekTimeSec;
       this.$data.$_originOfCurrentTime = this.audioContext.currentTime - seekTimeSec;
+      this.$_update();
     },
 
     async $_seekStart() {

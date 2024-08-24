@@ -99,41 +99,17 @@
         </v-card-text>
       </v-card>
     </v-menu>
-
-    <v-tooltip location="top" v-bind:text="$_loopButtonTooltipText">
-      <template v-slot:activator="{ props }">
-        <v-btn
-          size="small"
-          v-bind="props"
-          v-bind:class="$_loopButtonClassName"
-          v-bind:icon="$_loopButtonIconName"
-          v-on:click.stop="$_onLoopButtonClicked"
-          v-on:keydown.enter.stop="$_onLoopButtonClicked"
-        >
-        </v-btn>
-      </template>
-    </v-tooltip>
   </div>
 </template>
 
-<style scoped>
-.loop-enabled {
-  color: #16f43f !important;
-}
-</style>
-
 <script lang="ts">
 import { defineComponent, mergeProps } from 'vue';
-import AudioPlaybackLoopDefinition from './modules/AudioPlaybackLoopDefinition';
 
 const seekIntervalTimeSec = 0.1;
 const seekTimeStepSec = 0.1;
-const loopDurationSecMin = 0.1;
 
 export default defineComponent({
   emits: {
-    'update:loopDefinition': (loopDefinition?: AudioPlaybackLoopDefinition) => true,
-    'update:tempLoopBeginTimeSec': (tempLoopBeginTimeSec?: number) => true,
     'update:volume': (volume: number) => true,
     'update:playbackRate': (playbackRate: number) => true,
     'seekInstantlyInSec': (timeSec: number) => true,
@@ -150,8 +126,6 @@ export default defineComponent({
     isPlaying: { type: Boolean, default: false },
     isSeeking: { type: Boolean, default: false },
     volume: { type: Number, default: 1 },
-    loopDefinition: { type: AudioPlaybackLoopDefinition },
-    tempLoopBeginTimeSec: { type: Number },
   },
 
   data(): {
@@ -170,19 +144,6 @@ export default defineComponent({
       set(volume: number) { this.$emit('update:volume', volume) },
     },
 
-    $_isTempLoopBeginNotSet() {
-      return (this.tempLoopBeginTimeSec === undefined);
-    },
-
-    $_isTempLoopEndNotSet() {
-      return (!this.$_isTempLoopBeginNotSet && (this.loopDefinition === undefined));
-    },
-
-    $_isSetTempLoopEndButtonDisabled() {
-      if (this.tempLoopBeginTimeSec === undefined) return false;
-      return ((this.tempLoopBeginTimeSec + loopDurationSecMin) > this.playTimeSec);
-    },
-
     $_playOrPauseButtonTooltipText(): string {
       return (this.isPlaying)? this.$t('pause') : this.$t('play');
     },
@@ -195,31 +156,11 @@ export default defineComponent({
       return (this.isPlaying)? this.$_pause : this.$_play;
     },
 
-    $_loopButtonTooltipText(): string {
-      if (this.loopDefinition !== undefined) return this.$t('clearLoop');
-      return (this.$_isTempLoopBeginNotSet)? this.$t('setLoopStart') : this.$t('setLoopEnd');
-    },
-
-    $_loopButtonClassName(): string | undefined {
-      if ((this.loopDefinition !== undefined) || !this.$_isTempLoopBeginNotSet) return 'loop-enabled';
-      return undefined;
-    },
-
-    $_loopButtonIconName(): string {
-      if (this.loopDefinition !== undefined) return 'mdi-ray-start-end';
-      return (this.$_isTempLoopBeginNotSet)? 'mdi-ray-start' : 'mdi-ray-end';
-    },
-
     $_volumeButtonIconName(): string {
       if (this.volume > 0.7) return 'mdi-volume-high';
       if (this.volume > 0.3) return 'mdi-volume-medium';
       if (this.volume > 0) return 'mdi-volume-low';
       return 'mdi-volume-mute'
-    },
-
-    $_onLoopButtonClicked(): () => void {
-      if (this.loopDefinition !== undefined) return this.$_clearLoop;
-      return (this.$_isTempLoopBeginNotSet)? this.$_setLoopBegin : this.$_setLoopEnd;
     },
   },
 
@@ -229,16 +170,6 @@ export default defineComponent({
     $_seekToHead() { this.$emit('seekInstantlyInSec', 0) },
 
     $_seekToTail() { this.$emit('seekInstantlyInSec', this.durationSec) },
-
-    $_setLoopBegin() { this.$emit('update:tempLoopBeginTimeSec', this.playTimeSec) },
-
-    $_setLoopEnd() {
-      if (this.tempLoopBeginTimeSec === undefined) return;
-      this.$emit('update:loopDefinition', new AudioPlaybackLoopDefinition(this.tempLoopBeginTimeSec, this.playTimeSec));
-      this.$emit('update:tempLoopBeginTimeSec', undefined);
-    },
-
-    $_clearLoop() { this.$emit('update:loopDefinition', undefined) },
 
     $_play() { this.$emit('play') },
 
