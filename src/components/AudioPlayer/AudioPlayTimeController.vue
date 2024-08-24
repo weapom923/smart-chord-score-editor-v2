@@ -11,6 +11,7 @@
     >
       <waveform-canvas
         class="position-absolute w-100 h-100 left-0"
+        v-bind:color="waveformColor"
         v-bind:waveform-decimator="waveformDecimator"
         v-bind:channel-idx="channelIdx"
         v-bind:sample-value-scale="$data.$_sampleValueScale"
@@ -50,7 +51,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -93,7 +93,8 @@ const getWheelDelta = (wheelEvent: WheelEvent): number => {
 };
 
 const playTimeColor = cl.red;
-const loopTimeRangeColor = new Color(cl.red.red, cl.red.blue, cl.red.green, 0.2);
+const loopTimeRangeColor = new Color(255, 32, 32, 0.2);
+const waveformColor = new Color(196, 0, 0, 0.3);
 
 const viewTimeMinSec = 0;
 const valueScaleMin = 1;
@@ -111,6 +112,14 @@ const AudioPlaytimeController = defineComponent({
 
   components: {
     WaveformCanvas,
+  },
+
+  setup(): {
+    waveformColor: Color,
+  } {
+    return {
+      waveformColor
+    };
   },
 
   props: {
@@ -149,8 +158,14 @@ const AudioPlaytimeController = defineComponent({
   computed: {
     $_element(): HTMLDivElement { return this.$el as HTMLDivElement },
     $_channelIdcs(): number[] { return times(this.waveformDecimator.numChannels) },
-    $_viewTimeBeginSec(): number { return this.$data.$_viewSampleBegin / this.samplingRate },
-    $_viewTimeEndSec(): number { return this.$data.$_viewSampleEnd / this.samplingRate },
+    $_viewTimeBeginSec: {
+      get(): number { return this.$data.$_viewSampleBegin / this.samplingRate },
+      set(viewTimeBeginSec: number) { this.$data.$_viewSampleBegin = viewTimeBeginSec * this.samplingRate },
+    },
+    $_viewTimeEndSec: {
+      get(): number { return this.$data.$_viewSampleEnd / this.samplingRate },
+      set(viewTimeEndSec: number) { this.$data.$_viewSampleEnd = viewTimeEndSec * this.samplingRate },
+    },
     $_viewTimeMaxSec(): number { return this.waveformDecimator.numSamples / this.samplingRate },
     $_viewDurationSec(): number { return this.$_viewTimeEndSec - this.$_viewTimeBeginSec },
     $_viewDurationMinSec(): number { return this.$data.$_viewWidth / this.samplingRate },
@@ -218,11 +233,21 @@ const AudioPlaytimeController = defineComponent({
       const loopTimeRangeBeginOffsetPxFromViewBegin = (this.$_loopTimeRangeSec.begin - this.$_viewTimeBeginSec) * this.$_pxPerSec;
       const loopTimeDurationPx = (this.$_loopTimeRangeSec.end - this.$_loopTimeRangeSec.begin) * this.$_pxPerSec;
       return {
-        borderColor: playTimeColor.styleString(false),
+        borderColor: loopTimeRangeColor.styleString(true),
         backgroundColor: loopTimeRangeColor.styleString(true),
         left: `${loopTimeRangeBeginOffsetPxFromViewBegin}px`,
         width: `${loopTimeDurationPx}px`,
       };
+    },
+  },
+
+  watch: {
+    playTimeSec(playTimeSec: number) {
+      if (playTimeSec < this.$_viewTimeBeginSec) {
+        this.$_updateViewTimeBeginAndEnd(playTimeSec - this.$_viewDurationSec, playTimeSec);
+      } else if (playTimeSec > this.$_viewTimeEndSec) {
+        this.$_updateViewTimeBeginAndEnd(playTimeSec, playTimeSec + this.$_viewDurationSec);
+      }
     },
   },
 
@@ -346,7 +371,7 @@ const AudioPlaytimeController = defineComponent({
       return viewTimeSec;
     },
 
-    updateViewTimeBeginAndEnd(newViewTimeBeginSec: number, newViewTimeEndSec: number) {
+    $_updateViewTimeBeginAndEnd(newViewTimeBeginSec: number, newViewTimeEndSec: number) {
       const newViewDurationSec = newViewTimeEndSec - newViewTimeBeginSec;
       if (this.$_viewTimeEndSec <= newViewTimeEndSec) {
         newViewTimeEndSec = this.$_truncateViewTime(newViewTimeEndSec);
@@ -361,8 +386,8 @@ const AudioPlaytimeController = defineComponent({
       ) {
         return false;
       }
-      this.$data.$_viewSampleBegin = this.samplingRate * newViewTimeBeginSec;
-      this.$data.$_viewSampleEnd = this.samplingRate * newViewTimeEndSec;
+      this.$_viewTimeBeginSec = newViewTimeBeginSec;
+      this.$_viewTimeEndSec = newViewTimeEndSec;
       return true;
     },
 
@@ -374,7 +399,7 @@ const AudioPlaytimeController = defineComponent({
 
     $_offsetTimeSec(delta: number): boolean {
       let viewTimeOffsetSec = 0.001 * this.$_viewDurationSec * delta;
-      return this.updateViewTimeBeginAndEnd(
+      return this.$_updateViewTimeBeginAndEnd(
         this.$_viewTimeBeginSec + viewTimeOffsetSec,
         this.$_viewTimeEndSec + viewTimeOffsetSec,
       );
@@ -389,7 +414,7 @@ const AudioPlaytimeController = defineComponent({
       const viewTimeBeginOffsetFromAnchor = this.$_viewTimeBeginSec - anchorTimeSec;
       const newViewTimeBeginSec = anchorTimeSec + viewTimeBeginOffsetFromAnchor * newDurationSec / this.$_viewDurationSec;
       const newViewTimeEndSec = newViewTimeBeginSec + newDurationSec;
-      this.updateViewTimeBeginAndEnd(newViewTimeBeginSec, newViewTimeEndSec);
+      this.$_updateViewTimeBeginAndEnd(newViewTimeBeginSec, newViewTimeEndSec);
     },
   },
 });
