@@ -80,7 +80,7 @@ const WaveformCanvas = defineComponent({
       }
       if (decimationLevel === 0) {
         canvas.lineWidth = 1;
-        canvas.strokeStyle = this.color.styleString(false);
+        canvas.strokeStyle = this.color.styleString(true);
         canvas.stroke();
       } else {
         for (let offsetIdx = (decimatedViewDurationSamples - 1); offsetIdx >= 0; --offsetIdx) {
@@ -88,9 +88,9 @@ const WaveformCanvas = defineComponent({
         }
         canvas.closePath();
         canvas.lineWidth = 0.5;
-        canvas.strokeStyle = this.color.styleString(false);
+        canvas.strokeStyle = this.color.styleString(true);
         canvas.stroke();
-        canvas.fillStyle = this.color.styleString(false);
+        canvas.fillStyle = this.color.styleString(true);
         canvas.fill();
       }
     });
