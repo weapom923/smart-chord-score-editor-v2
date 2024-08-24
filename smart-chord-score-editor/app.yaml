@@ -1,15 +1,15 @@
 runtime: nodejs18
 service: default
 handlers:
-- url: /(.*\.js)
+- url: /(.*\.(js|mjs))
   secure: always
   static_files: dist/\1
   upload: dist/(.*\.js)
   mime_type: text/javascript
-- url: /(.*\.(ico|json|eot|ttf|woff|woff2|css))$
+- url: /(.*\.(ico|json|eot|ttf|woff|woff2|css|wasm))$
   secure: always
   static_files: dist/\1
-  upload: dist/.*\.(ico|json|eot|ttf|woff|woff2|css)$
+  upload: dist/.*\.(ico|json|eot|ttf|woff|woff2|css|wasm)$
 - url: /.*
   secure: always
   static_files: dist/index.html

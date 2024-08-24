@@ -1,6 +1,18 @@
 import { isProxy, toRaw } from 'vue';
 import Encoding from 'encoding-japanese';
 
+export const times = (count: number): number[] => {
+  return [ ...Array(count) ].map((_: undefined, idx: number) => idx);
+};
+
+export function seq(first: number, last: number): number[] {
+  return [ ...Array(last + 1 - first) ].map((_: undefined, idx: number) => idx + first);
+};
+
+export function generate<T>(count: number, generator: (idx: number) => T): T[] {
+  return [ ...Array(count) ].map((_: undefined, idx: number) => generator(idx));
+};
+
 export function isEmptyLike(value: any) {
   if (value === undefined) return true;
   if (value === null) return true;
