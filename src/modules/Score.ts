@@ -4,6 +4,7 @@ import { Section, SectionRawObj, SectionRawObjV0_2 } from '../modules/Section'
 import { PartInBar } from './PartInBar'
 import { Note } from './Note'
 import { Bar } from '../modules/Bar'
+import { NotePitch } from '../modules/NotePitch'
 import { nv } from '../modules/NoteValue'
 import { SectionAndBarIdx, SectionAndBarRange, BarRange } from './SectionAndBarRange'
 import { raw } from './utils'
@@ -110,6 +111,18 @@ export class Score {
       default:
         return false;
     }
+  }
+
+  transpose(pitchOffset: number): Score {
+    pitchOffset = NotePitch.convertToCyclicNoteNumber(pitchOffset)
+    const score = this.clone();
+    if (score.allSectionAndBarRange && (pitchOffset !== 0)) {
+      for (const sectionIdx of score.allSectionAndBarRange.sectionIndices()) {
+        const section = score.getSection(sectionIdx);
+        section.assign(section.transpose(pitchOffset));
+      }
+    }
+    return score;
   }
 
   getPreviousSectionAndBarIdx(sectionAndBarIdx: SectionAndBarIdx): SectionAndBarIdx | undefined {
