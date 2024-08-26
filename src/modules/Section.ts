@@ -1,5 +1,6 @@
 import { Bar, BarRawObj, BarRawObjV0_2 } from './Bar';
 import { NoteValue } from './NoteValue';
+import { NotePitch } from './NotePitch';
 import { Clef } from './Clef';
 import { Scale } from './Scale';
 import { PartInBarType } from './PartInBar';
@@ -76,6 +77,18 @@ export class Section {
       rawObj.name,
       rawObj.bars.map(barRawObj => Bar.loadFromRawObj(barRawObj)),
     );
+  }
+
+  transpose(pitchOffset: number): Section {
+    pitchOffset = NotePitch.convertToCyclicNoteNumber(pitchOffset)
+    const section = this.clone();
+    if (pitchOffset !== 0) {
+      for (const barIdx of section.barRange.indices()) {
+        const bar = section.bars[barIdx];
+        bar.assign(bar.transpose(pitchOffset))
+      }
+    }
+    return section;
   }
 
   get numBars(): number {
