@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-col flex-grow-1 align-stretch">
+  <div class="d-flex flex-col flex-grow-1 align-stretch gc-1">
     <audio-player-controller
       v-bind:duration-sec="audioBuffer.duration"
       v-bind:play-time-sec="$data.$_playTimeSec"
@@ -7,7 +7,7 @@
       v-bind:is-seeking="$data.$_isSeeking"
       v-model:volume="$_volume"
       v-model:loop-definition="$data.$_loopDefinition"
-      v-model:temp-loop-begin-time-sec="$data.$_tempLoopBeginTimeSec"
+      v-model:temp-loop-begin-time-sec="$data.$_tempLoopbegin"
       v-on:seek-start="$_seekStart"
       v-on:seek-in-sec="$_seekInSec"
       v-on:seek-instantly-in-sec="$_seekInstantlyInSec"
@@ -33,7 +33,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import AudioPlayerController from './AudioPlayer/AudioPlayerController.vue';
-import AudioPlaybackLoopDefinition from './AudioPlayer/modules/AudioPlaybackLoopDefinition';
+import { TimeRangeSec } from './AudioPlayer/modules/TimeRangeSec';
 import AudioPlayTimeController from './AudioPlayer/AudioPlayTimeController.vue';
 import WaveformDecimator from '../modules/WaveformDecimator';
 
@@ -57,13 +57,13 @@ export default defineComponent({
       }
     },
 
-    '$data.$_loopDefinition'(loopDefinition?: AudioPlaybackLoopDefinition) {
+    '$data.$_loopDefinition'(loopDefinition?: TimeRangeSec) {
       if (this.$data.$_latestAudioBufferSourceNode === undefined) return;
       if (loopDefinition === undefined) {
         this.$_seekInSec(this.$_getPlayTimeSec());
         this.$data.$_latestAudioBufferSourceNode.loop = false;
       } else {
-        this.$_seekInstantlyInSec(loopDefinition.beginTimeSec);
+        this.$_seekInstantlyInSec(loopDefinition.begin);
         this.$data.$_latestAudioBufferSourceNode.loop = true;
       }
     },
@@ -76,13 +76,13 @@ export default defineComponent({
     volume:       { type: Number, required: true },
   },
 
-  data(vm): {
+  data(): {
     $_playTimeSec: number,
     $_isPlaying: boolean,
     $_isSeeking: boolean,
     $_wasPlayingOnSeek?: boolean,
-    $_loopDefinition?: AudioPlaybackLoopDefinition,
-    $_tempLoopBeginTimeSec?: number,
+    $_loopDefinition?: TimeRangeSec,
+    $_tempLoopbegin?: number,
 
     $_audioBufferSourceNodePool: AudioBufferSourceNodePool,
     $_audioBufferSourceNodeStartOffsetSec: number,
@@ -97,7 +97,7 @@ export default defineComponent({
       $_isSeeking: false,
       $_wasPlayingOnSeek: undefined,
       $_loopDefinition: undefined,
-      $_tempLoopBeginTimeSec: undefined,
+      $_tempLoopbegin: undefined,
 
       $_audioBufferSourceNodePool: new Set(),
       $_audioBufferSourceNodeStartOffsetSec: 0,
@@ -112,6 +112,9 @@ export default defineComponent({
     $_volume: {
       get(): number       { return this.volume }, 
       set(volume: number) { this.$emit('update:volume', volume) },
+    },
+    $_audioPlayerTimeController(): InstanceType<typeof AudioPlayTimeController> | undefined {
+      return this.$refs.audioPlayerBar as InstanceType<typeof AudioPlayTimeController> | undefined;
     },
   },
 
@@ -216,8 +219,8 @@ export default defineComponent({
       };
       if (this.$data.$_loopDefinition !== undefined) {
         newAudioBufferSourceNode.loop = true;
-        newAudioBufferSourceNode.loopStart = this.$data.$_loopDefinition.beginTimeSec;
-        newAudioBufferSourceNode.loopEnd = this.$data.$_loopDefinition.endTimeSec;
+        newAudioBufferSourceNode.loopStart = this.$data.$_loopDefinition.begin;
+        newAudioBufferSourceNode.loopEnd = this.$data.$_loopDefinition.end;
       } else {
         newAudioBufferSourceNode.loop = false;
       }
