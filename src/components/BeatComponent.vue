@@ -32,11 +32,18 @@
 </style>
 
 <script lang="ts">
-import { CSSProperties } from 'vue';
+import { defineComponent, ref, CSSProperties } from 'vue';
 import { NoteValue } from '../modules/NoteValue'
 import { max } from '../modules/utils'
 
-export default {
+export default defineComponent({
+  setup() {
+    return {
+      numerator: ref<HTMLDivElement>(),
+      denominator: ref<HTMLDivElement>(),
+    };
+  },
+
   props: {
     barValue: { type: NoteValue, required: true },
   },
@@ -53,32 +60,45 @@ export default {
     };
   },
 
-  computed: {
-    $_numerator(): HTMLDivElement { return this.$refs.numerator as HTMLDivElement },
-    $_denominator(): HTMLDivElement { return this.$refs.denominator as HTMLDivElement },
+  watch: {
+    numerator: {
+      handler(newNumerator?: HTMLDivElement, oldNumerator?: HTMLDivElement) {
+        if (oldNumerator) this.$data.$_numeratorResizeObserver.unobserve(oldNumerator);
+        if (newNumerator) this.$data.$_numeratorResizeObserver.observe(newNumerator);
+      },
+      immediate: true,
+    },
+
+    denominator: {
+      handler(newDenominator?: HTMLDivElement, oldDenominator?: HTMLDivElement) {
+        if (oldDenominator) this.$data.$_numeratorResizeObserver.unobserve(oldDenominator);
+        if (newDenominator) this.$data.$_numeratorResizeObserver.observe(newDenominator);
+      },
+      immediate: true,
+    },
   },
 
   mounted() {
-    this.$data.$_numeratorResizeObserver.observe(this.$_numerator);
-    this.$data.$_numeratorResizeObserver.observe(this.$_denominator);
     this.$_updateStyle();
   },
 
   beforeUnmount() {
-    this.$data.$_numeratorResizeObserver.unobserve(this.$_denominator);
-    this.$data.$_numeratorResizeObserver.unobserve(this.$_numerator);
+    this.$data.$_numeratorResizeObserver.disconnect();
+    this.$data.$_numeratorResizeObserver.disconnect();
   },
 
   methods: {
     $_updateStyle() {
-      let numeratorWidthPx = this.$_numerator.getBoundingClientRect().width;
-      let denominatorWidthPx = this.$_denominator.getBoundingClientRect().width;
-      this.$data.$_style = {
-        fontSize:   `${this.$store.state.config.staffLineStepPx * 2}px`,
-        lineHeight: `${this.$store.state.config.staffLineStepPx * 2}px`,
-        width:      `${max(numeratorWidthPx, denominatorWidthPx)}px`,
+      if (this.numerator && this.denominator) {
+        let numeratorWidthPx = this.numerator.getBoundingClientRect().width;
+        let denominatorWidthPx = this.denominator.getBoundingClientRect().width;
+        this.$data.$_style = {
+          fontSize:   `${this.$store.state.config.staffLineStepPx * 2}px`,
+          lineHeight: `${this.$store.state.config.staffLineStepPx * 2}px`,
+          width:      `${max(numeratorWidthPx, denominatorWidthPx)}px`,
+        }
       }
     },
   },
-}
+});
 </script>
