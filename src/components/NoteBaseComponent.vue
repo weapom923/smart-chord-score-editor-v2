@@ -358,7 +358,7 @@ export default defineComponent({
       this.$emit('resize');
     },
 
-    assertDefined: assertDefined,
+    assertDefined,
   }
 })
 </script>

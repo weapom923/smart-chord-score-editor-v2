@@ -263,7 +263,7 @@ export default defineComponent({
       this.$_emitTiePointUpdate();
     },
 
-    assertDefined: assertDefined,
+    assertDefined,
   },
 })
 </script>
