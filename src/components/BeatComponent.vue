@@ -90,8 +90,8 @@ export default defineComponent({
   methods: {
     $_updateStyle() {
       if (this.numerator && this.denominator) {
-        let numeratorWidthPx = this.numerator.getBoundingClientRect().width;
-        let denominatorWidthPx = this.denominator.getBoundingClientRect().width;
+        const numeratorWidthPx = this.numerator.getBoundingClientRect().width;
+        const denominatorWidthPx = this.denominator.getBoundingClientRect().width;
         this.$data.$_style = {
           fontSize:   `${this.$store.state.config.staffLineStepPx * 2}px`,
           lineHeight: `${this.$store.state.config.staffLineStepPx * 2}px`,

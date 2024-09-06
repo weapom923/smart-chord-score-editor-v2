@@ -389,7 +389,7 @@ export default {
     },
 
     $_ok() {
-      let publicConfig: PublicConfig = {
+      const publicConfig: PublicConfig = {
         numPagesPerRow: Number(this.$data.$_numPagesPerRow),
         staffLineStepPx: Number(this.$data.$_staffLineStepPx),
         systemMarginTopPx: Number(this.$data.$_systemMarginTopPx),

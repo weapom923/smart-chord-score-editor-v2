@@ -101,7 +101,7 @@ export default {
     },
 
     $_pageStyle(): CSSProperties {
-      let pageStyle: CSSProperties = {};
+      const pageStyle: CSSProperties = {};
       pageStyle.paddingTop = `${this.$store.state.config.pagePaddingTopPx}px`;
       pageStyle.width = `${this.$store.state.config.pageWidthOnPrintPx}px`;
       if (!this.$store.state.appState.isMobileLayoutEnabled) {
@@ -111,27 +111,27 @@ export default {
     },
 
     $_sectionComponentProps(): SectionComponentPropsType[] {
-      let sectionDefinitions: SectionComponentPropsType[] = [];
+      const sectionDefinitions: SectionComponentPropsType[] = [];
       if (this.$_numSections === 0) return sectionDefinitions;
-      for (let currentSectionIdx of this.sectionAndBarRange.sectionIndices()) {
-        let currentSection = this.$_score.getSection(currentSectionIdx);
+      for (const currentSectionIdx of this.sectionAndBarRange.sectionIndices()) {
+        const currentSection = this.$_score.getSection(currentSectionIdx);
 
-        let firstBarIdxOfCurrentSection =
+        const firstBarIdxOfCurrentSection =
           (currentSectionIdx === this.sectionAndBarRange.first.sectionIdx)?
           this.sectionAndBarRange.first.barIdx : currentSection.firstBarIdx;
 
-        let lastBarIdxOfCurrentSection =
+        const lastBarIdxOfCurrentSection =
           (currentSectionIdx === this.sectionAndBarRange.last.sectionIdx)?
           this.sectionAndBarRange.last.barIdx : currentSection.lastBarIdx;
 
         let showBeatOnFirstBarOfCurrentSection = false;
-        let currentSectionAndFirstBarIdx = new SectionAndBarIdx(currentSectionIdx, firstBarIdxOfCurrentSection);
-        let firstBarValueOfCurrentSection = this.$_score.getBar(currentSectionAndFirstBarIdx).value;
-        let previousSectionAndLastBarIdx = this.$_score.getPreviousSectionAndBarIdx(currentSectionAndFirstBarIdx);
+        const currentSectionAndFirstBarIdx = new SectionAndBarIdx(currentSectionIdx, firstBarIdxOfCurrentSection);
+        const firstBarValueOfCurrentSection = this.$_score.getBar(currentSectionAndFirstBarIdx).value;
+        const previousSectionAndLastBarIdx = this.$_score.getPreviousSectionAndBarIdx(currentSectionAndFirstBarIdx);
         if (previousSectionAndLastBarIdx === undefined) {
           showBeatOnFirstBarOfCurrentSection = true;
         } else {
-          let lastBarValueOfPreviousSection = this.$_score.getBar(previousSectionAndLastBarIdx).value;
+          const lastBarValueOfPreviousSection = this.$_score.getBar(previousSectionAndLastBarIdx).value;
           if (!lastBarValueOfPreviousSection.isEqualTo(firstBarValueOfCurrentSection)) {
             showBeatOnFirstBarOfCurrentSection = true;
           }

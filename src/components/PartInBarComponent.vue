@@ -99,10 +99,10 @@ export default {
   computed: {
     $_noteColor(): Color { return this.$store.state.config.noteColor },
     $_noteBarComponentProps(): Map<NoteIdx, NoteBaseComponentProps> {
-      let noteBarComponentProps = new Map<NoteIdx, NoteBaseComponentProps>();
-      let accumulatedNoteValue = nv.zero;
-      for (let noteIdx of this.part.noteIndices()) {
-        let note = this.part.getNote(noteIdx);
+      const noteBarComponentProps = new Map<NoteIdx, NoteBaseComponentProps>();
+      const accumulatedNoteValue = nv.zero;
+      for (const noteIdx of this.part.noteIndices()) {
+        const note = this.part.getNote(noteIdx);
         noteBarComponentProps.set(
           noteIdx,
           {
@@ -145,7 +145,7 @@ export default {
     },
 
     $_onSplitNoteElementBeforeUnmount(noteIdx: NoteIdx, splitNoteIdx: SplitNoteIdx) {
-      let splitNoteElements = this.$data.$_splitNoteElements.get(noteIdx);
+      const splitNoteElements = this.$data.$_splitNoteElements.get(noteIdx);
       if (splitNoteElements === undefined) return;
       splitNoteElements.delete(splitNoteIdx);
       if (splitNoteElements.size === 0) this.$data.$_splitNoteElements.delete(noteIdx);
@@ -166,7 +166,7 @@ export default {
         this.$data.$_noteTieStartOffsets.delete(noteIdx);
         this.$data.$_noteTieEndOffsets.delete(noteIdx);
       } else {
-        let { tieStartPointOffset, tieEndPointOffset } = noteTieStartAndEndOffset;
+        const { tieStartPointOffset, tieEndPointOffset } = noteTieStartAndEndOffset;
         this.$data.$_noteTieStartOffsets.set(noteIdx, tieStartPointOffset);
         this.$data.$_noteTieEndOffsets.set(noteIdx, tieEndPointOffset);
       }
@@ -178,20 +178,20 @@ export default {
     },
 
     $_emitTiePointUpdate() {
-      let partElementOffsetX = this.$_partInBarElement.getBoundingClientRect().x;
+      const partElementOffsetX = this.$_partInBarElement.getBoundingClientRect().x;
       if (this.part.firstNoteIdx === undefined) return;
-      let firstSplitNoteElements = this.$data.$_splitNoteElements.get(this.part.firstNoteIdx);
+      const firstSplitNoteElements = this.$data.$_splitNoteElements.get(this.part.firstNoteIdx);
       if (firstSplitNoteElements === undefined) return;
-      let firstNoteElement = firstSplitNoteElements.get(0);
+      const firstNoteElement = firstSplitNoteElements.get(0);
       if (firstNoteElement === undefined) return;
       if (this.part.lastNoteIdx === undefined) return;
-      let lastSplitNoteElements = this.$data.$_splitNoteElements.get(this.part.lastNoteIdx);
+      const lastSplitNoteElements = this.$data.$_splitNoteElements.get(this.part.lastNoteIdx);
       if (lastSplitNoteElements === undefined) return;
-      let lastNoteElement = lastSplitNoteElements.get(lastSplitNoteElements.size - 1);
+      const lastNoteElement = lastSplitNoteElements.get(lastSplitNoteElements.size - 1);
       if (lastNoteElement === undefined) return;
-      let firstNoteElementOffsetX = firstNoteElement.getBoundingClientRect().x;
-      let lastNoteElementOffsetX = lastNoteElement.getBoundingClientRect().x;
-      let firstNoteTieEndOffset = this.$data.$_noteTieEndOffsets.get(this.part.firstNoteIdx);
+      const firstNoteElementOffsetX = firstNoteElement.getBoundingClientRect().x;
+      const lastNoteElementOffsetX = lastNoteElement.getBoundingClientRect().x;
+      const firstNoteTieEndOffset = this.$data.$_noteTieEndOffsets.get(this.part.firstNoteIdx);
       let partTieEndPointOffset: DOMPoint | undefined = undefined;
       if (firstNoteTieEndOffset !== undefined) {
         partTieEndPointOffset = new DOMPoint(
@@ -199,7 +199,7 @@ export default {
           firstNoteTieEndOffset.y,
         );
       }
-      let lastNoteTieStartOffset = this.$data.$_noteTieStartOffsets.get(this.part.lastNoteIdx);
+      const lastNoteTieStartOffset = this.$data.$_noteTieStartOffsets.get(this.part.lastNoteIdx);
       let partTieStartPointOffset: DOMPoint | undefined = undefined;
       if (lastNoteTieStartOffset !== undefined) {
         partTieStartPointOffset = new DOMPoint(
@@ -217,31 +217,31 @@ export default {
     },
 
     $_updateTiePropsAndStyles() {
-      let partElementOffsetX = this.$_partInBarElement.getBoundingClientRect().x;
-      let tieProps = new Map<NoteIdx, TieCanvasProps>();
-      let tieStyles = new Map<NoteIdx, CSSProperties>();
-      for (let noteIdx of this.part.noteIndices()) {
-        let nextNoteIdx = noteIdx + 1;
+      const partElementOffsetX = this.$_partInBarElement.getBoundingClientRect().x;
+      const tieProps = new Map<NoteIdx, TieCanvasProps>();
+      const tieStyles = new Map<NoteIdx, CSSProperties>();
+      for (const noteIdx of this.part.noteIndices()) {
+        const nextNoteIdx = noteIdx + 1;
         if (!this.part.includesNote(nextNoteIdx)) continue;
         if (!this.part.getNote(nextNoteIdx).tied) continue;
-        let splitNoteElement = this.$data.$_splitNoteElements.get(noteIdx);
+        const splitNoteElement = this.$data.$_splitNoteElements.get(noteIdx);
         if (splitNoteElement === undefined) continue;
-        let nextSplitNoteElement = this.$data.$_splitNoteElements.get(nextNoteIdx);
+        const nextSplitNoteElement = this.$data.$_splitNoteElements.get(nextNoteIdx);
         if (nextSplitNoteElement === undefined) continue;
-        let noteTieStartOffset = this.$data.$_noteTieStartOffsets.get(noteIdx);
+        const noteTieStartOffset = this.$data.$_noteTieStartOffsets.get(noteIdx);
         if (noteTieStartOffset === undefined) continue;
-        let noteTieEndOffset = this.$data.$_noteTieEndOffsets.get(nextNoteIdx);
+        const noteTieEndOffset = this.$data.$_noteTieEndOffsets.get(nextNoteIdx);
         if (noteTieEndOffset === undefined) continue;
-        let lastSplitNoteElementOfCurrentNote = splitNoteElement.get(splitNoteElement.size - 1);
+        const lastSplitNoteElementOfCurrentNote = splitNoteElement.get(splitNoteElement.size - 1);
         if (lastSplitNoteElementOfCurrentNote === undefined) continue;
-        let firstSplitNoteElementOfNextNote = nextSplitNoteElement.get(0);
+        const firstSplitNoteElementOfNextNote = nextSplitNoteElement.get(0);
         if (firstSplitNoteElementOfNextNote === undefined) continue;
-        let currentNoteElementOffsetX = lastSplitNoteElementOfCurrentNote.getBoundingClientRect().x;
-        let nextNoteElementOffsetX = firstSplitNoteElementOfNextNote.getBoundingClientRect().x;
-        let tieStartHorizontalOffsetPx = (currentNoteElementOffsetX - partElementOffsetX) + noteTieStartOffset.x;
-        let tieStartVerticalOffsetPx = noteTieStartOffset.y;
-        let tieEndHorizontalOffsetPx = (nextNoteElementOffsetX - partElementOffsetX) + noteTieEndOffset.x;
-        let tieEndVerticalOffsetPx = noteTieEndOffset.y;
+        const currentNoteElementOffsetX = lastSplitNoteElementOfCurrentNote.getBoundingClientRect().x;
+        const nextNoteElementOffsetX = firstSplitNoteElementOfNextNote.getBoundingClientRect().x;
+        const tieStartHorizontalOffsetPx = (currentNoteElementOffsetX - partElementOffsetX) + noteTieStartOffset.x;
+        const tieStartVerticalOffsetPx = noteTieStartOffset.y;
+        const tieEndHorizontalOffsetPx = (nextNoteElementOffsetX - partElementOffsetX) + noteTieEndOffset.x;
+        const tieEndVerticalOffsetPx = noteTieEndOffset.y;
         tieProps.set(
           noteIdx,
           {

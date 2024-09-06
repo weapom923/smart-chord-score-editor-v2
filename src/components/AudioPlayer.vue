@@ -194,7 +194,7 @@ export default defineComponent({
     async $_seekEnd() {
       this.$_requestAudioBufferSourceNodeToStop();
       this.$_createNewAudioBufferSourceNode();
-      let isSeekedToTail = (this.audioBuffer.duration === this.$_getPlayTimeSec());
+      const isSeekedToTail = (this.audioBuffer.duration === this.$_getPlayTimeSec());
       if (this.$data.$_wasPlayingOnSeek && !isSeekedToTail) {
         await this.$_resume();
       }
@@ -203,7 +203,7 @@ export default defineComponent({
     },
 
     $_createNewAudioBufferSourceNode() {
-      let newAudioBufferSourceNode = this.audioContext.createBufferSource();
+      const newAudioBufferSourceNode = this.audioContext.createBufferSource();
       this.$data.$_latestAudioBufferSourceNode = newAudioBufferSourceNode;
       this.$data.$_audioBufferSourceNodePool.add(newAudioBufferSourceNode);
       newAudioBufferSourceNode.buffer = this.audioBuffer;
@@ -229,8 +229,8 @@ export default defineComponent({
       if (this.$data.$_latestAudioBufferSourceNode === undefined) return offsetTime;
       if (this.$data.$_latestAudioBufferSourceNode.loop) {
         if (offsetTime > this.$data.$_latestAudioBufferSourceNode.loopStart) {
-          let loopDuration = this.$data.$_latestAudioBufferSourceNode.loopEnd - this.$data.$_latestAudioBufferSourceNode.loopStart;
-          let offsetFromLoopStart = (offsetTime - this.$data.$_latestAudioBufferSourceNode.loopStart) % loopDuration;
+          const loopDuration = this.$data.$_latestAudioBufferSourceNode.loopEnd - this.$data.$_latestAudioBufferSourceNode.loopStart;
+          const offsetFromLoopStart = (offsetTime - this.$data.$_latestAudioBufferSourceNode.loopStart) % loopDuration;
           offsetTime = this.$data.$_latestAudioBufferSourceNode.loopStart + offsetFromLoopStart;
         }
       }
@@ -246,12 +246,12 @@ export default defineComponent({
     },
 
     $_update() {
-      let playTimeSec = this.$_getPlayTimeSec();
+      const playTimeSec = this.$_getPlayTimeSec();
       this.$data.$_playTimeSec = playTimeSec;
     },
 
     $_requestAudioBufferSourceNodeToStop() {
-      for (let audioBufferSourceNode of this.$data.$_audioBufferSourceNodePool) {
+      for (const audioBufferSourceNode of this.$data.$_audioBufferSourceNodePool) {
         this.$data.$_audioBufferSourceNodePool.delete(audioBufferSourceNode);
         audioBufferSourceNode.onended = null;
         audioBufferSourceNode.stop();

@@ -499,7 +499,7 @@ const AudioPlaytimeController = defineComponent({
     },
 
     $_offsetTimeSec(delta: number): boolean {
-      let viewTimeOffsetSec = 0.001 * this.$_viewDurationSec * delta;
+      const viewTimeOffsetSec = 0.001 * this.$_viewDurationSec * delta;
       return this.$_updateViewTimeRange({
         begin: this.$_viewTimeRangeSec.begin + viewTimeOffsetSec,
         end: this.$_viewTimeRangeSec.end + viewTimeOffsetSec,
@@ -512,7 +512,7 @@ const AudioPlaytimeController = defineComponent({
 
     $_changeTimeScale(anchorTimeSec: number, delta: number): boolean {
       const scale = Math.pow(1.003, delta);
-      let newDurationSec = this.$_viewDurationSec * scale;
+      const newDurationSec = this.$_viewDurationSec * scale;
       const viewTimeBeginOffsetFromAnchor = this.$_viewTimeRangeSec.begin - anchorTimeSec;
       const newViewTimeBeginSec = anchorTimeSec + viewTimeBeginOffsetFromAnchor * newDurationSec / this.$_viewDurationSec;
       const newViewTimeEndSec = newViewTimeBeginSec + this.$_truncateViewDuration(newDurationSec);

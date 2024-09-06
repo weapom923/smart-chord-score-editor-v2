@@ -66,7 +66,7 @@ export default {
         return undefined;
       },
       set(unitNoteValueLabel: string) {
-        let unitNoteValue = this.$_divisibleUnitNoteLabelToValue.get(unitNoteValueLabel);
+        const unitNoteValue = this.$_divisibleUnitNoteLabelToValue.get(unitNoteValueLabel);
         if (unitNoteValue === undefined) return;
         this.$emit('update:unitNoteValue', unitNoteValue.clone());
       },

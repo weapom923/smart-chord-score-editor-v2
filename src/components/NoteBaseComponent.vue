@@ -162,8 +162,8 @@ export default {
 
   computed: {
     $_noteBaseComponentStyle(): CSSProperties {
-      let chordElementWidthPx = (this.$data.$_chordElementWidthPx !== undefined)? this.$data.$_chordElementWidthPx : 0;
-      let noteBaseComponentWidthPx = max(chordElementWidthPx, this.$_totalNoteElementWidthPx);
+      const chordElementWidthPx = (this.$data.$_chordElementWidthPx !== undefined)? this.$data.$_chordElementWidthPx : 0;
+      const noteBaseComponentWidthPx = max(chordElementWidthPx, this.$_totalNoteElementWidthPx);
       return {
         flexGrow: `${this.note.value.clone().divide(nv.divisible.sixtyFourth).toNumber()}`,
         width: `${noteBaseComponentWidthPx}px`,
@@ -172,7 +172,7 @@ export default {
 
     $_totalNoteElementWidthPx(): number {
       let totalNoteElementWidthPx = 0;
-      for (let splitNoteElementWidthPx of this.$data.$_splitNoteElementWidthPxs.values()) {
+      for (const splitNoteElementWidthPx of this.$data.$_splitNoteElementWidthPxs.values()) {
         totalNoteElementWidthPx += splitNoteElementWidthPx;
       }
       return totalNoteElementWidthPx;
@@ -219,11 +219,11 @@ export default {
     },
 
     $_splitNoteContainerStyles(): Map<SplitNoteIdx, CSSProperties> {
-      let splitNoteContainerStyles = new Map<SplitNoteIdx, CSSProperties>();
+      const splitNoteContainerStyles = new Map<SplitNoteIdx, CSSProperties>();
       for (let splitNoteIdx = 0; splitNoteIdx < this.$_numSplitNotes; ++splitNoteIdx) {
-        let splitNoteValue = this.$_splitNoteValues[splitNoteIdx];
-        let flexGrow = splitNoteValue.clone().divide(nv.divisible.sixtyFourth).toNumber();
-        let splitNoteElementWidthPx = this.$data.$_splitNoteElementWidthPxs.get(splitNoteIdx);
+        const splitNoteValue = this.$_splitNoteValues[splitNoteIdx];
+        const flexGrow = splitNoteValue.clone().divide(nv.divisible.sixtyFourth).toNumber();
+        const splitNoteElementWidthPx = this.$data.$_splitNoteElementWidthPxs.get(splitNoteIdx);
         if (splitNoteElementWidthPx === undefined) {
           splitNoteContainerStyles.set(
             splitNoteIdx,
@@ -246,9 +246,9 @@ export default {
     },
 
     $_noteTieStartAndEndOffset(): { tieStartPointOffset: DOMPoint, tieEndPointOffset: DOMPoint } | undefined {
-      let tieStartPointOffset = this.$data.$_splitNoteTieStartOffsets.get(0);
+      const tieStartPointOffset = this.$data.$_splitNoteTieStartOffsets.get(0);
       if (tieStartPointOffset === undefined) return undefined;
-      let tieEndPointOffset = this.$data.$_splitNoteTieEndOffsets.get(this.$data.$_splitNoteTieEndOffsets.size - 1);
+      const tieEndPointOffset = this.$data.$_splitNoteTieEndOffsets.get(this.$data.$_splitNoteTieEndOffsets.size - 1);
       if (tieEndPointOffset === undefined) return undefined;
       return { tieStartPointOffset, tieEndPointOffset };
     },
@@ -318,25 +318,25 @@ export default {
     },
 
     $_updateTiePropsAndStyles() {
-      let noteBaseElementOffsetX = this.$_noteBaseElement.getBoundingClientRect().x;
-      let tieProps = new Map<SplitNoteIdx, InstanceType<typeof TieCanvas>['$props']>();
-      let tieStyles = new Map<SplitNoteIdx, CSSProperties>();
+      const noteBaseElementOffsetX = this.$_noteBaseElement.getBoundingClientRect().x;
+      const tieProps = new Map<SplitNoteIdx, InstanceType<typeof TieCanvas>['$props']>();
+      const tieStyles = new Map<SplitNoteIdx, CSSProperties>();
       for (let currentSplitNoteIdx = 0; currentSplitNoteIdx < this.$_lastSplitNoteIdx; ++currentSplitNoteIdx) {
-        let nextSplitNoteIdx = currentSplitNoteIdx + 1;
-        let currentSplitNoteElement = this.$data.$_splitNoteElements.get(currentSplitNoteIdx);
+        const nextSplitNoteIdx = currentSplitNoteIdx + 1;
+        const currentSplitNoteElement = this.$data.$_splitNoteElements.get(currentSplitNoteIdx);
         if (currentSplitNoteElement === undefined) continue;
-        let nextSplitNoteElement = this.$data.$_splitNoteElements.get(nextSplitNoteIdx);
+        const nextSplitNoteElement = this.$data.$_splitNoteElements.get(nextSplitNoteIdx);
         if (nextSplitNoteElement === undefined) continue;
-        let splitNoteTieStartOffset = this.$data.$_splitNoteTieStartOffsets.get(currentSplitNoteIdx);
+        const splitNoteTieStartOffset = this.$data.$_splitNoteTieStartOffsets.get(currentSplitNoteIdx);
         if (splitNoteTieStartOffset === undefined) continue;
-        let splitNoteTieEndOffset = this.$data.$_splitNoteTieEndOffsets.get(nextSplitNoteIdx);
+        const splitNoteTieEndOffset = this.$data.$_splitNoteTieEndOffsets.get(nextSplitNoteIdx);
         if (splitNoteTieEndOffset === undefined) continue;
-        let currentSplitNoteElementOffsetX = currentSplitNoteElement.getBoundingClientRect().x;
-        let nextSplitNoteElementOffsetX = nextSplitNoteElement.getBoundingClientRect().x;
-        let relativeTieStartHorizontalOffsetPx = (currentSplitNoteElementOffsetX - noteBaseElementOffsetX) + splitNoteTieStartOffset.x;
-        let relativeTieStartVerticalOffsetPx = splitNoteTieStartOffset.y;
-        let relativeTieEndHorizontalOffsetPx = (nextSplitNoteElementOffsetX - noteBaseElementOffsetX) + splitNoteTieEndOffset.x;
-        let relativeTieEndVerticalOffsetPx = splitNoteTieEndOffset.y;
+        const currentSplitNoteElementOffsetX = currentSplitNoteElement.getBoundingClientRect().x;
+        const nextSplitNoteElementOffsetX = nextSplitNoteElement.getBoundingClientRect().x;
+        const relativeTieStartHorizontalOffsetPx = (currentSplitNoteElementOffsetX - noteBaseElementOffsetX) + splitNoteTieStartOffset.x;
+        const relativeTieStartVerticalOffsetPx = splitNoteTieStartOffset.y;
+        const relativeTieEndHorizontalOffsetPx = (nextSplitNoteElementOffsetX - noteBaseElementOffsetX) + splitNoteTieEndOffset.x;
+        const relativeTieEndVerticalOffsetPx = splitNoteTieEndOffset.y;
         tieProps.set(
           currentSplitNoteIdx,
           {

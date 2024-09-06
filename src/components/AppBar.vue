@@ -72,7 +72,7 @@ class MenuItemDefinition {
 export default {
   computed: {
     $_leftMenuItemDefinitions(): Record<string, MenuItemDefinition> {
-      let onPrintLayoutEnabledMessage = this.$t('onPrintLayoutEnabledMessage');
+      const onPrintLayoutEnabledMessage = this.$t('onPrintLayoutEnabledMessage');
       return {
         undo: new MenuItemDefinition(
           'mdi-undo', this.$t('undo'),
@@ -91,9 +91,9 @@ export default {
         loadScoreFile: new MenuItemDefinition(
           'mdi-folder-open', this.$t('loadScore'),
           async () => {
-            let fileInterface = await getFileInterface('application/json');
+            const fileInterface = await getFileInterface('application/json');
             if (fileInterface === undefined) return;
-            let scoreJsonString = await loadFileAsUTF8Text(fileInterface);
+            const scoreJsonString = await loadFileAsUTF8Text(fileInterface);
             if (scoreJsonString === undefined) return;
             await this.$store.dispatch('score/setScore', Score.loadJson(scoreJsonString));
           },
@@ -111,11 +111,11 @@ export default {
         loadScoreFromTextFile: new MenuItemDefinition(
           'mdi-import', this.$t('importScoreFromText'),
           async () => {
-            let fileInterface = await getFileInterface();
+            const fileInterface = await getFileInterface();
             if (fileInterface === undefined) return;
-            let scoreText = await loadFileAsUTF8Text(fileInterface);
+            const scoreText = await loadFileAsUTF8Text(fileInterface);
             if (scoreText === undefined) return;
-            let score = scoreTextParser.parse(
+            const score = scoreTextParser.parse(
               scoreText,
               this.$store.state.config.defaultBarValue,
               this.$store.state.config.defaultScale,

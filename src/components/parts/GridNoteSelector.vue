@@ -40,7 +40,7 @@ export default {
         return undefined;
       },
       set(gridNoteValueLabel: string) {
-        let gridNoteValue = this.$_labelToGridNoteValues.get(gridNoteValueLabel);
+        const gridNoteValue = this.$_labelToGridNoteValues.get(gridNoteValueLabel);
         if (gridNoteValue === undefined) return;
         this.$emit('update:gridNoteValue', gridNoteValue.clone());
       },

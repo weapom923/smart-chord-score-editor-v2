@@ -392,7 +392,7 @@ export class Chord {
   }
 
   transpose(scale: Scale, targetScale: Scale): Chord {
-    let newChord = this.clone();
+    const newChord = this.clone();
     newChord.root = newChord.root.transpose(scale, targetScale);
     if (newChord.bass !== undefined) {
       newChord.bass = newChord.bass.transpose(scale, targetScale);

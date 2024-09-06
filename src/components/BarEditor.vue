@@ -179,14 +179,14 @@ const BarEditor = defineComponent({
 
     $_previousBar(): Bar | undefined {
       if (this.$_selectedSectionAndBarIdx === undefined) return undefined;
-      let previousSectionAndBarIdx = this.$_score.getPreviousSectionAndBarIdx(this.$_selectedSectionAndBarIdx);
+      const previousSectionAndBarIdx = this.$_score.getPreviousSectionAndBarIdx(this.$_selectedSectionAndBarIdx);
       if (previousSectionAndBarIdx === undefined) return undefined;
       return this.$_score.getBar(previousSectionAndBarIdx);
     },
 
     $_nextBar(): Bar | undefined {
       if (this.$_selectedSectionAndBarIdx === undefined) return undefined;
-      let nextSectionAndBarIdx = this.$_score.getNextSectionAndBarIdx(this.$_selectedSectionAndBarIdx);
+      const nextSectionAndBarIdx = this.$_score.getNextSectionAndBarIdx(this.$_selectedSectionAndBarIdx);
       if (nextSectionAndBarIdx === undefined) return undefined;
       return this.$_score.getBar(nextSectionAndBarIdx);
     },
@@ -199,7 +199,7 @@ const BarEditor = defineComponent({
   methods: {
     async onKeydown(event: KeyboardEvent): Promise<boolean> {
       if (this.$store.state.appState.isBarEditorDrawerMinimized) return false;
-      let keyEventType = getKeyEventType(event);
+      const keyEventType = getKeyEventType(event);
       if (await this.barEditorButtonsComponent?.onKeydown(keyEventType, event)) return true;
       switch (keyEventType) {
         case 'key':

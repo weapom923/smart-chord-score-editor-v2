@@ -25,8 +25,8 @@ export function drawLine(
   }
   if (endX === undefined) endX = beginX;
   if (endY === undefined) endY = beginY;
-  let offsetX = endX - beginX;
-  let offsetY = endY - beginY;
+  const offsetX = endX - beginX;
+  const offsetY = endY - beginY;
   let lineLength: number;
   if (offsetX === 0) {
     lineLength = Math.abs(offsetY);
@@ -35,10 +35,10 @@ export function drawLine(
   } else {
     lineLength = Math.sqrt(offsetX ** 2 + offsetY ** 2);
   }
-  let offsetRate = 0.5 * lineWidth / lineLength;
-  let anchorOffset = 1 - 2 * anchor;
-  let pathCenteringOffsetX = offsetRate * (-anchorOffset * offsetY);
-  let pathCenteringOffsetY = offsetRate * (anchorOffset * offsetX);
+  const offsetRate = 0.5 * lineWidth / lineLength;
+  const anchorOffset = 1 - 2 * anchor;
+  const pathCenteringOffsetX = offsetRate * (-anchorOffset * offsetY);
+  const pathCenteringOffsetY = offsetRate * (anchorOffset * offsetX);
   beginX += pathCenteringOffsetX;
   beginY += pathCenteringOffsetY;
   endX += pathCenteringOffsetX;
@@ -76,16 +76,16 @@ export function drawRect(
   } = {},
 ) {
   if (round) {
-    let endX = beginX + width;
-    let endY = beginY + height;
+    const endX = beginX + width;
+    const endY = beginY + height;
     beginX = Math.round(beginX);
     beginY = Math.round(beginY);
     width = Math.round(endX) - beginX;
     height = Math.round(endY) - beginY;
   }
-  let anchorOffset = 2 * anchor - 1;
-  let sizeOffset = lineWidth * anchorOffset;
-  let centeringOffset = -lineWidth * anchorOffset / 2;
+  const anchorOffset = 2 * anchor - 1;
+  const sizeOffset = lineWidth * anchorOffset;
+  const centeringOffset = -lineWidth * anchorOffset / 2;
   context.beginPath();
   context.lineWidth = lineWidth;
   context.rect(beginX + centeringOffset, beginY + centeringOffset, width + sizeOffset, height + sizeOffset);

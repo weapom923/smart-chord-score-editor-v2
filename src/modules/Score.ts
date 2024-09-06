@@ -142,7 +142,7 @@ export class Score {
   }
 
   getPreviousBar(sectionAndBarIdx: SectionAndBarIdx): Bar | undefined {
-    let previousSectionAndBarIdx = this.getPreviousSectionAndBarIdx(sectionAndBarIdx);
+    const previousSectionAndBarIdx = this.getPreviousSectionAndBarIdx(sectionAndBarIdx);
     if (previousSectionAndBarIdx === undefined) return undefined;
     return this.getBar(previousSectionAndBarIdx);
   }
@@ -165,7 +165,7 @@ export class Score {
   }
 
   getNextBar(sectionAndBarIdx: SectionAndBarIdx): Bar | undefined {
-    let nextSectionAndBarIdx = this.getNextSectionAndBarIdx(sectionAndBarIdx);
+    const nextSectionAndBarIdx = this.getNextSectionAndBarIdx(sectionAndBarIdx);
     if (nextSectionAndBarIdx === undefined) return undefined;
     return this.getBar(nextSectionAndBarIdx);
   }
@@ -184,7 +184,7 @@ export class Score {
   findSameTypedPartInPreviousBar(
     { sectionAndBarIdx, partIdx }: { sectionAndBarIdx: SectionAndBarIdx, partIdx: PartIdx },
   ): PartInBar | undefined {
-    let foundIdcs = this.findSameTypedPartIndexInPreviousBar({ sectionAndBarIdx, partIdx });
+    const foundIdcs = this.findSameTypedPartIndexInPreviousBar({ sectionAndBarIdx, partIdx });
     if (foundIdcs === undefined) return undefined;
     return this.getPart(foundIdcs);
   }
@@ -203,7 +203,7 @@ export class Score {
   findSameTypedPartInNextBar(
     { sectionAndBarIdx, partIdx }: { sectionAndBarIdx: SectionAndBarIdx, partIdx: PartIdx },
   ): PartInBar | undefined {
-    let foundIdcs = this.findSameTypedPartIndexInNextBar({ sectionAndBarIdx, partIdx });
+    const foundIdcs = this.findSameTypedPartIndexInNextBar({ sectionAndBarIdx, partIdx });
     if (foundIdcs === undefined) return undefined;
     return this.getPart(foundIdcs);
   }
@@ -251,7 +251,7 @@ export class Score {
       next: (): IteratorResult<SectionAndBarIdx, number> => {
         if (sectionAndBarIdx !== undefined) {
           if (sectionAndBarRange.includes(sectionAndBarIdx)) {
-            let value = sectionAndBarIdx;
+            const value = sectionAndBarIdx;
             sectionAndBarIdx = this.getNextSectionAndBarIdx(sectionAndBarIdx);
             ++iterationCount;
             return { value, done: false };
@@ -364,7 +364,7 @@ export class Score {
 
   get firstSectionAndBarIdx(): SectionAndBarIdx | undefined {
     if (this.firstSectionIdx === undefined) return undefined;
-    let firstBarIdxOfFirstSection = this.getFirstBarIdx(this.firstSectionIdx);
+    const firstBarIdxOfFirstSection = this.getFirstBarIdx(this.firstSectionIdx);
     if (firstBarIdxOfFirstSection === undefined) return undefined;
     return new SectionAndBarIdx(this.firstSectionIdx, firstBarIdxOfFirstSection);
   }

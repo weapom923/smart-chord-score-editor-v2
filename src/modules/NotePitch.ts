@@ -224,13 +224,13 @@ export class NotePitch {
   }
 
   transpose(scale: Scale, targetScale: Scale): NotePitch {
-    let pitchOffset = targetScale.tonicNotePitch.cyclicNoteNumber - scale.tonicNotePitch.cyclicNoteNumber;
-    for (let scaleNotePitch of scale.notePitches) {
+    const pitchOffset = targetScale.tonicNotePitch.cyclicNoteNumber - scale.tonicNotePitch.cyclicNoteNumber;
+    for (const scaleNotePitch of scale.notePitches) {
       if (scaleNotePitch.symbol.isEqualTo(this.symbol)) {
-        let offsetFromScaleNotePitch = this.shift - scaleNotePitch.shift;
-        let transposedNoteNumber = this.noteNumber + pitchOffset;
-        let transposedCyclicNoteNumber = NotePitch.convertToCyclicNoteNumber(transposedNoteNumber);
-        for (let targetScaleNotePitch of targetScale.notePitches) {
+        const offsetFromScaleNotePitch = this.shift - scaleNotePitch.shift;
+        const transposedNoteNumber = this.noteNumber + pitchOffset;
+        const transposedCyclicNoteNumber = NotePitch.convertToCyclicNoteNumber(transposedNoteNumber);
+        for (const targetScaleNotePitch of targetScale.notePitches) {
           let offsetTargetScaleNotePitch: NotePitch;
           try {
             offsetTargetScaleNotePitch = NotePitch.findPredefinedNotePitch(
@@ -245,8 +245,8 @@ export class NotePitch {
             }
           }
           if (offsetTargetScaleNotePitch.cyclicNoteNumber === transposedCyclicNoteNumber) {
-            let transposedNotePitchCandidates = NotePitch.findAllPredefinedPitchesFromCyclicNoteNumber(transposedCyclicNoteNumber);
-            for (let transposedNotePitchCandidate of transposedNotePitchCandidates) {
+            const transposedNotePitchCandidates = NotePitch.findAllPredefinedPitchesFromCyclicNoteNumber(transposedCyclicNoteNumber);
+            for (const transposedNotePitchCandidate of transposedNotePitchCandidates) {
               if (transposedNotePitchCandidate.isEqualTo(offsetTargetScaleNotePitch)) return transposedNotePitchCandidate;
             }
           }

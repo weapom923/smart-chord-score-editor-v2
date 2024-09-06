@@ -220,8 +220,8 @@ export default {
     },
 
     $_partIdcs(): Map<BarIdx, PartIdx[]> {
-      let partIdcs = new Map<BarIdx, PartIdx[]>();
-      for (let barIdx of this.barRange.indices()) {
+      const partIdcs = new Map<BarIdx, PartIdx[]>();
+      for (const barIdx of this.barRange.indices()) {
         if (barIdx >= this.section.numBars) continue;
         partIdcs.set(barIdx, [ ...this.section.getBar(barIdx).partIndices() ]);
       }
@@ -246,11 +246,11 @@ export default {
     },
 
     $_clickableAreaStyle(): Map<BarIdx, CSSProperties> {
-      let clickableAreaStyle = new Map<BarIdx, CSSProperties>();
-      for (let barIdx of this.barRange.indices()) {
+      const clickableAreaStyle = new Map<BarIdx, CSSProperties>();
+      for (const barIdx of this.barRange.indices()) {
         let backgroundColor: Color;
-        let sectionAndBarIdx = new SectionAndBarIdx(this.sectionIdx, barIdx);
-        let isSelected = this.$store.state.score.selectedBars?.includes(sectionAndBarIdx) ?? false;
+        const sectionAndBarIdx = new SectionAndBarIdx(this.sectionIdx, barIdx);
+        const isSelected = this.$store.state.score.selectedBars?.includes(sectionAndBarIdx) ?? false;
         if (!this.$store.state.appState.isPrintLayoutEnabled && isSelected) {
           backgroundColor = this.selectedStaffBackgroundColor;
         } else {
@@ -296,12 +296,12 @@ export default {
     },
 
     $_sameTypedPartIdxInNextBar(): Map<BarIdx, Map<PartIdx, { sectionAndBarIdx: SectionAndBarIdx, partIdx: PartIdx }>> {
-      let sameTypedPartIdxInNextBar = new Map<BarIdx, Map<PartIdx, { sectionAndBarIdx: SectionAndBarIdx, partIdx: PartIdx }>>();
-      for (let barIdx of this.barRange.indices()) {
-        let sameTypedPartIdx = new Map<PartIdx, { sectionAndBarIdx: SectionAndBarIdx, partIdx: PartIdx }>();
+      const sameTypedPartIdxInNextBar = new Map<BarIdx, Map<PartIdx, { sectionAndBarIdx: SectionAndBarIdx, partIdx: PartIdx }>>();
+      for (const barIdx of this.barRange.indices()) {
+        const sameTypedPartIdx = new Map<PartIdx, { sectionAndBarIdx: SectionAndBarIdx, partIdx: PartIdx }>();
         if (!this.section.barRange.includes(barIdx)) continue;
-        for (let partIdx of this.section.getBar(barIdx).partIndices()) {
-          let found = this.score.findSameTypedPartIndexInNextBar({
+        for (const partIdx of this.section.getBar(barIdx).partIndices()) {
+          const found = this.score.findSameTypedPartIndexInNextBar({
             sectionAndBarIdx: new SectionAndBarIdx(this.sectionIdx, barIdx),
             partIdx,
           });
@@ -314,18 +314,18 @@ export default {
     },
 
     $_isTiedToNextSystem(): Map<PartIdx, boolean> | undefined {
-      let isTiedToNextSystem = new Map<PartIdx, boolean>();
-      let currentPartIdcs = this.$_partIdcs.get(this.barRange.lastBarIdx) as PartIdx[];
+      const isTiedToNextSystem = new Map<PartIdx, boolean>();
+      const currentPartIdcs = this.$_partIdcs.get(this.barRange.lastBarIdx) as PartIdx[];
       if (!this.section.barRange.includes(this.barRange.lastBarIdx)) return undefined;
-      let currentBar = this.section.getBar(this.barRange.lastBarIdx);
-      for (let currentPartIdx of currentPartIdcs) {
-        let currentPart = currentBar.getPart(currentPartIdx);
-        let lastNoteOfCurrentPart = currentPart.lastNote;
+      const currentBar = this.section.getBar(this.barRange.lastBarIdx);
+      for (const currentPartIdx of currentPartIdcs) {
+        const currentPart = currentBar.getPart(currentPartIdx);
+        const lastNoteOfCurrentPart = currentPart.lastNote;
         if (lastNoteOfCurrentPart === undefined) continue;
         if (lastNoteOfCurrentPart.type === 'rest') continue;
-        let found = this.$_sameTypedPartIdxInNextBar.get(this.barRange.lastBarIdx)?.get(currentPartIdx);
+        const found = this.$_sameTypedPartIdxInNextBar.get(this.barRange.lastBarIdx)?.get(currentPartIdx);
         if (found === undefined) continue;
-        let firstNoteOfNextPart = this.score.getPart(found).firstNote;
+        const firstNoteOfNextPart = this.score.getPart(found).firstNote;
         if (firstNoteOfNextPart === undefined) continue;
         isTiedToNextSystem.set(currentPartIdx, firstNoteOfNextPart.tied);
       }
@@ -348,19 +348,19 @@ export default {
   methods: {
     $_getShowClef(barIdx: BarIdx): boolean {
       if (barIdx === 0) return true;
-      let currentBar = this.section.getBar(barIdx);
-      let previousBar = this.section.getBar(barIdx - 1);
+      const currentBar = this.section.getBar(barIdx);
+      const previousBar = this.section.getBar(barIdx - 1);
       if (!previousBar.break.isEqualTo(bb.empty)) return true;
-      let currentClef = currentBar.clef;
-      let previousClef = previousBar.clef;
+      const currentClef = currentBar.clef;
+      const previousClef = previousBar.clef;
       if (!currentClef.isEqualTo(previousClef)) return true;
       return false;
     },
 
     $_getShowBeat(barIdx: BarIdx): boolean {
       if (barIdx > 0) {
-        let currentBarValue = this.section.getBar(barIdx).value;
-        let previousBarValue = this.section.getBar(barIdx - 1).value;
+        const currentBarValue = this.section.getBar(barIdx).value;
+        const previousBarValue = this.section.getBar(barIdx - 1).value;
         if (!currentBarValue.isSameAs(previousBarValue)) return true;
       }
       if (barIdx === this.barRange.firstBarIdx) return this.showBeatOnFirstBar;
@@ -371,8 +371,8 @@ export default {
       if (barIdx === this.barRange.firstBarIdx) {
         return true;
       } else {
-        let previousBar = this.section.getBar(barIdx - 1)
-        let currentBar = this.section.getBar(barIdx);
+        const previousBar = this.section.getBar(barIdx - 1)
+        const currentBar = this.section.getBar(barIdx);
         if (currentBar.scale.isEqualTo(previousBar.scale)) return false;
         if (currentBar.scale.isRelativeTo(previousBar.scale)) return false;
         return true;
@@ -421,40 +421,40 @@ export default {
     },
 
     $_updateTiePropsAndStyles() {
-      let firstTieProps = new Map<PartIdx, TieCanvasProps>();
-      let firstTieStyles = new Map<PartIdx, CSSProperties>();
-      let tieProps = new Map<BarIdx, Map<PartIdx, TieCanvasProps>>();
-      let tieStyles = new Map<BarIdx, Map<PartIdx, CSSProperties>>();
-      let firstBar = this.section.getBar(this.barRange.firstBarIdx);
+      const firstTieProps = new Map<PartIdx, TieCanvasProps>();
+      const firstTieStyles = new Map<PartIdx, CSSProperties>();
+      const tieProps = new Map<BarIdx, Map<PartIdx, TieCanvasProps>>();
+      const tieStyles = new Map<BarIdx, Map<PartIdx, CSSProperties>>();
+      const firstBar = this.section.getBar(this.barRange.firstBarIdx);
       if (this.$_systemElement.nodeType === Node.COMMENT_NODE) return;
-      let systemElementBoundingClientRect = this.$_systemElement.getBoundingClientRect();
-      let partIdcs = this.$_partIdcs.get(this.barRange.firstBarIdx) as PartIdx[];
-      for (let partIdxInFirstBar of partIdcs) {
-        let partInFirstBar = firstBar.getPart(partIdxInFirstBar);
-        let firstNoteOfPart = partInFirstBar.firstNote;
+      const systemElementBoundingClientRect = this.$_systemElement.getBoundingClientRect();
+      const partIdcs = this.$_partIdcs.get(this.barRange.firstBarIdx) as PartIdx[];
+      for (const partIdxInFirstBar of partIdcs) {
+        const partInFirstBar = firstBar.getPart(partIdxInFirstBar);
+        const firstNoteOfPart = partInFirstBar.firstNote;
         if (firstNoteOfPart === undefined) continue;
         if (firstNoteOfPart.tied) {
-          let found = this.score.findSameTypedPartIndexInPreviousBar({
+          const found = this.score.findSameTypedPartIndexInPreviousBar({
             sectionAndBarIdx: new SectionAndBarIdx(this.sectionIdx, this.barRange.firstBarIdx),
             partIdx: partIdxInFirstBar,
           });
           if (found === undefined) continue;
-          let previousPart = this.score.getPart(found);
+          const previousPart = this.score.getPart(found);
           if (previousPart.lastNote === undefined) continue;
           if (previousPart.lastNote.type === 'rest') continue;
-          let firstBarNoteTieEndOffsets = this.$data.$_barNoteTieEndPointOffsets.get(this.barRange.firstBarIdx);
+          const firstBarNoteTieEndOffsets = this.$data.$_barNoteTieEndPointOffsets.get(this.barRange.firstBarIdx);
           if (firstBarNoteTieEndOffsets === undefined) continue;
-          let firstBarNoteTieEndOffset = firstBarNoteTieEndOffsets.get(partIdxInFirstBar);
+          const firstBarNoteTieEndOffset = firstBarNoteTieEndOffsets.get(partIdxInFirstBar);
           if (firstBarNoteTieEndOffset === undefined) continue;
 
-          let firstBarElement = this.$data.$_barElements.get(this.barRange.firstBarIdx);
+          const firstBarElement = this.$data.$_barElements.get(this.barRange.firstBarIdx);
           if (firstBarElement === undefined) continue;
-          let firstBarElementBoundingClientRect = firstBarElement.getBoundingClientRect();
+          const firstBarElementBoundingClientRect = firstBarElement.getBoundingClientRect();
 
-          let firstTieEndHorizontalOffsetPx = firstBarElementBoundingClientRect.x + firstBarNoteTieEndOffset.x - systemElementBoundingClientRect.x;
-          let firstTieEndVerticalOffsetPx = firstBarNoteTieEndOffset.y;
-          let firstTieStartHorizontalOffsetPx = firstTieEndHorizontalOffsetPx - 20;
-          let firstTieStartVerticalOffsetPx = firstBarNoteTieEndOffset.y;
+          const firstTieEndHorizontalOffsetPx = firstBarElementBoundingClientRect.x + firstBarNoteTieEndOffset.x - systemElementBoundingClientRect.x;
+          const firstTieEndVerticalOffsetPx = firstBarNoteTieEndOffset.y;
+          const firstTieStartHorizontalOffsetPx = firstTieEndHorizontalOffsetPx - 20;
+          const firstTieStartVerticalOffsetPx = firstBarNoteTieEndOffset.y;
           firstTieProps.set(
             partIdxInFirstBar,
             {
@@ -472,43 +472,43 @@ export default {
         }
       }
 
-      for (let currentBarIdx of this.barRange.indices()) {
+      for (const currentBarIdx of this.barRange.indices()) {
         tieProps.set(currentBarIdx, new Map<PartIdx, TieCanvasProps>());
         tieStyles.set(currentBarIdx, new Map<PartIdx, CSSProperties>());
         if (!this.section.barRange.includes(currentBarIdx)) continue;
-        let currentPartIdcs = this.$_partIdcs.get(currentBarIdx) as PartIdx[];
-        for (let currentPartIdx of currentPartIdcs) {
-          let currentPart = this.section.getBar(currentBarIdx).getPart(currentPartIdx);
+        const currentPartIdcs = this.$_partIdcs.get(currentBarIdx) as PartIdx[];
+        for (const currentPartIdx of currentPartIdcs) {
+          const currentPart = this.section.getBar(currentBarIdx).getPart(currentPartIdx);
           if (currentPart.lastNote === undefined) continue;
           if (currentPart.lastNote.type === 'rest') continue;
-          let found = this.$_sameTypedPartIdxInNextBar.get(currentBarIdx)?.get(currentPartIdx);
+          const found = this.$_sameTypedPartIdxInNextBar.get(currentBarIdx)?.get(currentPartIdx);
           if (found === undefined) continue;
-          let { sectionAndBarIdx: nextSectionAndBarIdx, partIdx: nextPartIdx } = found;
-          let nextPart = this.score.getPart({ sectionAndBarIdx: nextSectionAndBarIdx, partIdx: nextPartIdx });
-          let firstNoteOfNextPart = nextPart.firstNote;
+          const { sectionAndBarIdx: nextSectionAndBarIdx, partIdx: nextPartIdx } = found;
+          const nextPart = this.score.getPart({ sectionAndBarIdx: nextSectionAndBarIdx, partIdx: nextPartIdx });
+          const firstNoteOfNextPart = nextPart.firstNote;
           if (firstNoteOfNextPart === undefined) continue;
           if (firstNoteOfNextPart.tied) {
-            let currentBarNoteTieStartOffsets = this.$data.$_barNoteTieStartPointOffsets.get(currentBarIdx);
+            const currentBarNoteTieStartOffsets = this.$data.$_barNoteTieStartPointOffsets.get(currentBarIdx);
             if (currentBarNoteTieStartOffsets === undefined) continue;
-            let currentBarNoteTieStartOffset = currentBarNoteTieStartOffsets.get(currentPartIdx);
+            const currentBarNoteTieStartOffset = currentBarNoteTieStartOffsets.get(currentPartIdx);
             if (currentBarNoteTieStartOffset === undefined) continue;
-            let currentBarElement = this.$data.$_barElements.get(currentBarIdx);
+            const currentBarElement = this.$data.$_barElements.get(currentBarIdx);
             if (currentBarElement === undefined) continue;
-            let currentBarElementBoundingClientRect = currentBarElement.getBoundingClientRect();
+            const currentBarElementBoundingClientRect = currentBarElement.getBoundingClientRect();
 
-            let tieStartHorizontalOffsetPx = currentBarElementBoundingClientRect.x + currentBarNoteTieStartOffset.x - systemElementBoundingClientRect.x;
-            let tieStartVerticalOffsetPx = currentBarNoteTieStartOffset.y;
+            const tieStartHorizontalOffsetPx = currentBarElementBoundingClientRect.x + currentBarNoteTieStartOffset.x - systemElementBoundingClientRect.x;
+            const tieStartVerticalOffsetPx = currentBarNoteTieStartOffset.y;
 
             let tieEndHorizontalOffsetPx;
             let tieEndVerticalOffsetPx;
             if (this.barRange.includes(nextSectionAndBarIdx.barIdx)) {
-              let nextBarNoteTieEndOffsets = this.$data.$_barNoteTieEndPointOffsets.get(nextSectionAndBarIdx.barIdx);
+              const nextBarNoteTieEndOffsets = this.$data.$_barNoteTieEndPointOffsets.get(nextSectionAndBarIdx.barIdx);
               if (nextBarNoteTieEndOffsets === undefined) continue;
-              let barNoteTieEndOffset = nextBarNoteTieEndOffsets.get(nextPartIdx);
+              const barNoteTieEndOffset = nextBarNoteTieEndOffsets.get(nextPartIdx);
               if (barNoteTieEndOffset === undefined) continue;
-              let nextBarElement = this.$data.$_barElements.get(nextSectionAndBarIdx.barIdx);
+              const nextBarElement = this.$data.$_barElements.get(nextSectionAndBarIdx.barIdx);
               if (nextBarElement === undefined) continue;
-              let nextBarElementBoundingClientRect = nextBarElement.getBoundingClientRect();
+              const nextBarElementBoundingClientRect = nextBarElement.getBoundingClientRect();
               tieEndHorizontalOffsetPx = nextBarElementBoundingClientRect.x + barNoteTieEndOffset.x - systemElementBoundingClientRect.x;
               tieEndVerticalOffsetPx = barNoteTieEndOffset.y;
             } else {

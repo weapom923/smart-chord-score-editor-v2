@@ -89,9 +89,9 @@ const KeySignature = defineComponent({
 
     type This = InstanceType<typeof KeySignature>;
     function drawSharp(this: This, canvas: CanvasRenderingContext2D) {
-      let anchorVerticalOffsetPx = this.$_anchorVerticalOffsetPx;
-      let staffLineStepPx = this.$_staffLineStepPx;
-      let keySignatureWidthPx = this.$_keySignatureWidthPx;
+      const anchorVerticalOffsetPx = this.$_anchorVerticalOffsetPx;
+      const staffLineStepPx = this.$_staffLineStepPx;
+      const keySignatureWidthPx = this.$_keySignatureWidthPx;
       canvas.strokeStyle = this.color.styleString();
       canvas.fillStyle = this.color.styleString();
       canvas.lineWidth = 1;
@@ -156,8 +156,8 @@ const KeySignature = defineComponent({
     }
 
     function drawFlat(this: This, canvas: CanvasRenderingContext2D) {
-      let anchorVerticalOffsetPx = this.$_anchorVerticalOffsetPx;
-      let staffLineStepPx = this.$_staffLineStepPx;
+      const anchorVerticalOffsetPx = this.$_anchorVerticalOffsetPx;
+      const staffLineStepPx = this.$_staffLineStepPx;
       canvas.strokeStyle = this.color.styleString();
       canvas.fillStyle = this.color.styleString();
       canvas.lineWidth = 1;

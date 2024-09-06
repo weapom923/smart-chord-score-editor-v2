@@ -17,7 +17,7 @@ import { TensionNotePitch } from '../../src/modules/TensionNotePitch'
 import { SectionAndBarIdx, SectionAndBarRange } from '../../src/modules/SectionAndBarRange'
 
 test('equality 1', () => {
-  let score = new Score(
+  const score = new Score(
     new ScoreMetadata('Title', 'Composer', 'Arranger'),
     [
       new Section(
@@ -62,7 +62,7 @@ test('equality 1', () => {
 });
 
 test('range and indices', () => {
-  let tempBar = new Bar(
+  const tempBar = new Bar(
     new NoteValue(4, 4),
     [],
     Clef.instance.treble,
@@ -75,7 +75,7 @@ test('range and indices', () => {
   );
 
   {
-    let score = new Score(
+    const score = new Score(
       new ScoreMetadata(),
       [
         new Section('A', [ ...Array(4) ].map(() => tempBar.clone())),
@@ -85,9 +85,9 @@ test('range and indices', () => {
     );
 
     {
-      let sectionAndBarRange = new SectionAndBarRange(new SectionAndBarIdx(0, 0));
+      const sectionAndBarRange = new SectionAndBarRange(new SectionAndBarIdx(0, 0));
       score.expandSectionAndBarRange(sectionAndBarRange, new SectionAndBarIdx(2, 5));
-      let { sectionIdcs, barRanges } = score.decomposeSectionAndBarRange(sectionAndBarRange);
+      const { sectionIdcs, barRanges } = score.decomposeSectionAndBarRange(sectionAndBarRange);
       expect(sectionIdcs.length).toBe(3);
       expect(barRanges.size).toBe(0);
       expect(score.getPreviousSectionAndBarIdx(new SectionAndBarIdx(0, 0))).toBeUndefined();
@@ -97,13 +97,13 @@ test('range and indices', () => {
     }
 
     {
-      let sectionAndBarRange = score.generateSectionAndBarRange(new SectionAndBarIdx(0, 1), 4)
+      const sectionAndBarRange = score.generateSectionAndBarRange(new SectionAndBarIdx(0, 1), 4)
       expect(sectionAndBarRange.last.sectionIdx).toBe(1);
       expect(sectionAndBarRange.last.barIdx).toBe(0);
     }
 
     {
-      let sectionAndBarRange = score.generateSectionAndBarRange(new SectionAndBarIdx(0, 1), 10)
+      const sectionAndBarRange = score.generateSectionAndBarRange(new SectionAndBarIdx(0, 1), 10)
       expect(sectionAndBarRange.last.sectionIdx).toBe(2);
       expect(sectionAndBarRange.last.barIdx).toBe(1);
     }

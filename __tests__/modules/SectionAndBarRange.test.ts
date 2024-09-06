@@ -15,7 +15,7 @@ test('basic', () => {
   expect(new BarRange(0, 0).numBars).toBe(1);
   expect(new BarRange(0, 3).numBars).toBe(4);
   {
-    let sectionAndBarRange = new SectionAndBarRange(new SectionAndBarIdx(0, 3), new SectionAndBarIdx(2, 4));
+    const sectionAndBarRange = new SectionAndBarRange(new SectionAndBarIdx(0, 3), new SectionAndBarIdx(2, 4));
     expect(sectionAndBarRange.includes(new SectionAndBarIdx(0, 2))).toBe(false);
     expect(sectionAndBarRange.includes(new SectionAndBarIdx(0, 3))).toBe(true);
     expect(sectionAndBarRange.includes(new SectionAndBarIdx(1, 100))).toBe(true);

@@ -101,13 +101,13 @@ export default {
     },
 
     $_systemComponentProps(): SystemComponentPropsType[] {
-      let systemDefinitions: SystemComponentPropsType[] = [];
+      const systemDefinitions: SystemComponentPropsType[] = [];
       let firstBarIdxOfCurrentSystem = this.barRange.firstBarIdx;
       let previousBar: Bar | undefined = undefined;
-      for (let barIdx of this.barRange.indices()) {
-        let currentBar = this.$_section.getBar(barIdx);
-        let isSectionLastBar = (barIdx === this.barRange.lastBarIdx);
-        let isSectionBroken = !currentBar.break.isEqualTo(bb.empty);
+      for (const barIdx of this.barRange.indices()) {
+        const currentBar = this.$_section.getBar(barIdx);
+        const isSectionLastBar = (barIdx === this.barRange.lastBarIdx);
+        const isSectionBroken = !currentBar.break.isEqualTo(bb.empty);
         if (isSectionBroken || isSectionLastBar) {
           let showBeatOnFirstBar = this.showBeatOnFirstBar;
           if (firstBarIdxOfCurrentSystem !== this.barRange.firstBarIdx) {

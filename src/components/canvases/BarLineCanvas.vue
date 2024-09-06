@@ -93,26 +93,26 @@ const BarLineCanvas = defineComponent({
 
     type This = InstanceType<typeof BarLineCanvas>;
     function drawSingleBarLine(this: This, canvas: CanvasRenderingContext2D) {
-      let barLineCenterOffsetPx = normalBarLineWidthPx / 2;
+      const barLineCenterOffsetPx = normalBarLineWidthPx / 2;
       drawNormalBarLine.call(this, canvas, barLineCenterOffsetPx);
     }
 
     function drawDoubledBarLine(this: This, canvas: CanvasRenderingContext2D) {
       drawSingleBarLine.call(this, canvas);
-      let rightBarLineCenterHorizontalOffsetPx = normalBarLineWidthPx / 2;
+      const rightBarLineCenterHorizontalOffsetPx = normalBarLineWidthPx / 2;
       drawNormalBarLine.call(this, canvas, rightBarLineCenterHorizontalOffsetPx);
-      let leftBarLineCenterHorizontalOffsetPx = normalBarLineWidthPx + barLineIntervalPx + normalBarLineWidthPx / 2;
+      const leftBarLineCenterHorizontalOffsetPx = normalBarLineWidthPx + barLineIntervalPx + normalBarLineWidthPx / 2;
       drawNormalBarLine.call(this, canvas, leftBarLineCenterHorizontalOffsetPx);
     }
 
     function drawRepeatStartBarLine(this: This, canvas: CanvasRenderingContext2D) {
-      let rightBarLineCenterHorizontalOffsetPx = boldBarLineWidthPx / 2;
+      const rightBarLineCenterHorizontalOffsetPx = boldBarLineWidthPx / 2;
       drawBoldBarLine.call(this, canvas, rightBarLineCenterHorizontalOffsetPx);
-      let leftBarLineCenterHorizontalOffsetPx = boldBarLineWidthPx + barLineIntervalPx + normalBarLineWidthPx / 2;
+      const leftBarLineCenterHorizontalOffsetPx = boldBarLineWidthPx + barLineIntervalPx + normalBarLineWidthPx / 2;
       drawNormalBarLine.call(this, canvas, leftBarLineCenterHorizontalOffsetPx);
-      let barLineDotCenterHorizontalOffsetPx = boldBarLineWidthPx + barLineIntervalPx + normalBarLineWidthPx + barLineDotMarginPx + this.$_barLineDotRadiusPx;
-      let upperBarLineDotCenterVerticalOffsetPx = this.$_staffLineStepPx * 3 / 2;
-      let lowerBarLineDotCenterVerticalOffsetPx = this.$_staffLineStepPx * 5 / 2;
+      const barLineDotCenterHorizontalOffsetPx = boldBarLineWidthPx + barLineIntervalPx + normalBarLineWidthPx + barLineDotMarginPx + this.$_barLineDotRadiusPx;
+      const upperBarLineDotCenterVerticalOffsetPx = this.$_staffLineStepPx * 3 / 2;
+      const lowerBarLineDotCenterVerticalOffsetPx = this.$_staffLineStepPx * 5 / 2;
       drawBarLineDot.call(
         this,
         canvas,
@@ -128,13 +128,13 @@ const BarLineCanvas = defineComponent({
     }
 
     function drawRepeatEndBarLine(this: This, canvas: CanvasRenderingContext2D) {
-      let rightBarLineCenterHorizontalOffsetPx = this.$_barLineTotalWidthPx - (boldBarLineWidthPx / 2);
+      const rightBarLineCenterHorizontalOffsetPx = this.$_barLineTotalWidthPx - (boldBarLineWidthPx / 2);
       drawBoldBarLine.call(this, canvas, rightBarLineCenterHorizontalOffsetPx);
-      let leftBarLineCenterHorizontalOffsetPx = this.$_canvasRightEndOffsetPx - (boldBarLineWidthPx + barLineIntervalPx + normalBarLineWidthPx / 2);
+      const leftBarLineCenterHorizontalOffsetPx = this.$_canvasRightEndOffsetPx - (boldBarLineWidthPx + barLineIntervalPx + normalBarLineWidthPx / 2);
       drawNormalBarLine.call(this, canvas, leftBarLineCenterHorizontalOffsetPx);
-      let barLineDotCenterHorizontalOffsetPx = this.$_barLineDotRadiusPx;
-      let upperBarLineDotCenterVerticalOffsetPx = this.$_staffLineStepPx * 3 / 2;
-      let lowerBarLineDotCenterVerticalOffsetPx = this.$_staffLineStepPx * 5 / 2;
+      const barLineDotCenterHorizontalOffsetPx = this.$_barLineDotRadiusPx;
+      const upperBarLineDotCenterVerticalOffsetPx = this.$_staffLineStepPx * 3 / 2;
+      const lowerBarLineDotCenterVerticalOffsetPx = this.$_staffLineStepPx * 5 / 2;
       drawBarLineDot.call(
         this,
         canvas,
@@ -150,9 +150,9 @@ const BarLineCanvas = defineComponent({
     }
 
     function drawGreatDoubleBarLine(this: This, canvas: CanvasRenderingContext2D) {
-      let rightBarLineCenterHorizontalOffsetPx = this.$_barLineTotalWidthPx - (boldBarLineWidthPx / 2);
+      const rightBarLineCenterHorizontalOffsetPx = this.$_barLineTotalWidthPx - (boldBarLineWidthPx / 2);
       drawBoldBarLine.call(this, canvas, rightBarLineCenterHorizontalOffsetPx);
-      let leftBarLineCenterHorizontalOffsetPx = this.$_canvasRightEndOffsetPx - (boldBarLineWidthPx + barLineIntervalPx + normalBarLineWidthPx / 2);
+      const leftBarLineCenterHorizontalOffsetPx = this.$_canvasRightEndOffsetPx - (boldBarLineWidthPx + barLineIntervalPx + normalBarLineWidthPx / 2);
       drawNormalBarLine.call(this, canvas, leftBarLineCenterHorizontalOffsetPx);
     }
 

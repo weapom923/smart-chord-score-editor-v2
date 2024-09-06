@@ -66,7 +66,7 @@ export default {
 
     draw() {
       if (this.$data.$_drawCallback === undefined) return;
-      let canvas = this.$_canvasElement.getContext('2d');
+      const canvas = this.$_canvasElement.getContext('2d');
       if (canvas === null) return;
       canvas.beginPath();
       canvas.clearRect(0, 0, this.$_canvasElement.width, this.$_canvasElement.height);

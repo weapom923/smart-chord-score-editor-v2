@@ -130,7 +130,7 @@ const ScoreModule: Module<ScoreState, RootState> = {
                 return;
               }
               if (insertedSectionAndBarRange.includes(state.selectedBars.last)) {
-                let selectedBarsIdxLast = state.score.getPreviousSectionAndBarIdx(insertedSectionAndBarRange.first);
+                const selectedBarsIdxLast = state.score.getPreviousSectionAndBarIdx(insertedSectionAndBarRange.first);
                 if (selectedBarsIdxLast === undefined) {
                   state.selectedBars = undefined;
                   return
@@ -216,9 +216,9 @@ const ScoreModule: Module<ScoreState, RootState> = {
       const numRemovedBars = [ ...state.score.getSectionAndBarIdxIterator(targetSectionAndBarRange) ].length;
       const { barRanges, sectionIdcs } = state.score.decomposeSectionAndBarRange(targetSectionAndBarRange);
       const removedBarsBySection = new Map<SectionIdx, Bar[]>();
-      for (const [ sectionIdx, barRange ] of barRanges) {
-        let section = state.score.getSection(sectionIdx);
-        let bars = [ ...barRange.indices() ].map(barIdx => section.getBar(barIdx).clone());
+      for (let [ sectionIdx, barRange ] of barRanges) {
+        const section = state.score.getSection(sectionIdx);
+        const bars = [ ...barRange.indices() ].map(barIdx => section.getBar(barIdx).clone());
         removedBarsBySection.set(sectionIdx, bars);
       }
       const removedSections = sectionIdcs.map(sectionIdx => state.score.getSection(sectionIdx).clone());
@@ -231,7 +231,7 @@ const ScoreModule: Module<ScoreState, RootState> = {
             if (state.selectedBars !== undefined) {
               if (state.selectedBars.first.isPosteriorOrEqualTo(targetSectionAndBarRange.first)) {
                 if (state.selectedBars.first.isPosteriorTo(targetSectionAndBarRange.last)) {
-                  let offsetSectionAndBarRange = new SectionAndBarRange(targetSectionAndBarRange.first.clone(), state.selectedBars.first.clone());
+                  const offsetSectionAndBarRange = new SectionAndBarRange(targetSectionAndBarRange.first.clone(), state.selectedBars.first.clone());
                   numOffsetSelectedBarsFirst = [ ...state.score.getSectionAndBarIdxIterator(offsetSectionAndBarRange) ].length - numRemovedBars - 1;
                 } else {
                   numOffsetSelectedBarsFirst = 0;
@@ -239,7 +239,7 @@ const ScoreModule: Module<ScoreState, RootState> = {
               }
               if (state.selectedBars.last.isPosteriorOrEqualTo(targetSectionAndBarRange.first)) {
                 if (state.selectedBars.last.isPosteriorTo(targetSectionAndBarRange.last)) {
-                  let offsetSectionAndBarRange = new SectionAndBarRange(targetSectionAndBarRange.first.clone(), state.selectedBars.last.clone());
+                  const offsetSectionAndBarRange = new SectionAndBarRange(targetSectionAndBarRange.first.clone(), state.selectedBars.last.clone());
                   numOffsetSelectedBarsLast = [ ...state.score.getSectionAndBarIdxIterator(offsetSectionAndBarRange) ].length - numRemovedBars - 1;
                 } else {
                   numOffsetSelectedBarsLast = 0;
@@ -247,7 +247,7 @@ const ScoreModule: Module<ScoreState, RootState> = {
               }
             }
 
-            for (const [ sectionIdx, removedBarRange ] of barRanges) {
+            for (let [ sectionIdx, removedBarRange ] of barRanges) {
               state.score.getSection(sectionIdx).bars.splice(removedBarRange.firstBarIdx, removedBarRange.numBars);
             }
             state.score.sections.splice(sectionIdcs[0], sectionIdcs.length);
@@ -265,7 +265,7 @@ const ScoreModule: Module<ScoreState, RootState> = {
                 if (numOffsetSelectedBarsLast !== undefined) {
                   state.selectedBars.last = selectedBarsOffsetBasis.clone();
                   for (let counter = 0; counter < numOffsetSelectedBarsLast; ++counter) {
-                    let tempSelectedBarsLast = state.score.getNextSectionAndBarIdx(state.selectedBars.last);
+                    const tempSelectedBarsLast = state.score.getNextSectionAndBarIdx(state.selectedBars.last);
                     if (tempSelectedBarsLast === undefined) {
                       state.selectedBars = undefined;
                       break;
@@ -278,7 +278,7 @@ const ScoreModule: Module<ScoreState, RootState> = {
                 if (numOffsetSelectedBarsFirst !== undefined) {
                   state.selectedBars.first = selectedBarsOffsetBasis.clone();
                   for (let counter = 0; counter < numOffsetSelectedBarsFirst; ++counter) {
-                    let tempSelectedBarsFirst = state.score.getNextSectionAndBarIdx(state.selectedBars.first);
+                    const tempSelectedBarsFirst = state.score.getNextSectionAndBarIdx(state.selectedBars.first);
                     if (tempSelectedBarsFirst === undefined) {
                       state.selectedBars = undefined;
                       break;
@@ -301,18 +301,18 @@ const ScoreModule: Module<ScoreState, RootState> = {
               }
               if (firstPosteriorSectionAndBarIdx !== undefined) {
                 if (state.selectedBars.first.isPosteriorOrEqualTo(firstPosteriorSectionAndBarIdx)) {
-                  let offsetSectionAndBarRange = new SectionAndBarRange(firstPosteriorSectionAndBarIdx, state.selectedBars.first);
+                  const offsetSectionAndBarRange = new SectionAndBarRange(firstPosteriorSectionAndBarIdx, state.selectedBars.first);
                   numOffsetBarsFirst = [ ...state.score.getSectionAndBarIdxIterator(offsetSectionAndBarRange) ].length - 1;
                 }
                 if (state.selectedBars.last.isPosteriorOrEqualTo(firstPosteriorSectionAndBarIdx)) {
-                  let offsetSectionAndBarRange = new SectionAndBarRange(firstPosteriorSectionAndBarIdx, state.selectedBars.last);
+                  const offsetSectionAndBarRange = new SectionAndBarRange(firstPosteriorSectionAndBarIdx, state.selectedBars.last);
                   numOffsetBarsLast = [ ...state.score.getSectionAndBarIdxIterator(offsetSectionAndBarRange) ].length - 1;
                 }
               }
             }
 
             state.score.sections.splice(sectionIdcs[0], 0, ...removedSections.map(section => section.clone()));
-            for (const [ sectionIdx, barRange ] of barRanges) {
+            for (let [ sectionIdx, barRange ] of barRanges) {
               const removedBars = removedBarsBySection.get(sectionIdx);
               if (removedBars === undefined) throw new RangeError();
               state.score.getSection(sectionIdx).bars.splice(barRange.firstBarIdx, 0, ...removedBars.map(bar => bar.clone()));
@@ -322,7 +322,7 @@ const ScoreModule: Module<ScoreState, RootState> = {
               if (numOffsetBarsLast !== undefined) {
                 let newSelectedBarsLast = targetSectionAndBarRange.first.clone();
                 for (let counter = 0; counter < (numRemovedBars + numOffsetBarsLast); ++counter) {
-                  let selectedBarsLast = state.score.getNextSectionAndBarIdx(newSelectedBarsLast);
+                  const selectedBarsLast = state.score.getNextSectionAndBarIdx(newSelectedBarsLast);
                   if (selectedBarsLast === undefined) break;
                   newSelectedBarsLast = selectedBarsLast;
                 }
@@ -331,7 +331,7 @@ const ScoreModule: Module<ScoreState, RootState> = {
               if (numOffsetBarsFirst !== undefined) {
                 let newSelectedBarsFirst = targetSectionAndBarRange.first.clone();
                 for (let counter = 0; counter < (numRemovedBars + numOffsetBarsFirst); ++counter) {
-                  let selectedBarsFirst = state.score.getNextSectionAndBarIdx(newSelectedBarsFirst);
+                  const selectedBarsFirst = state.score.getNextSectionAndBarIdx(newSelectedBarsFirst);
                   if (selectedBarsFirst === undefined) break;
                   newSelectedBarsFirst = selectedBarsFirst;
                 }
@@ -348,12 +348,12 @@ const ScoreModule: Module<ScoreState, RootState> = {
     },
 
     pasteCopiedBars(state: ScoreState, sectionAndBarRange: SectionAndBarRange) {
-      let numCopiedBars = state.copiedBars.length;
-      let numTargetBars = state.score.getBars(sectionAndBarRange).length;
+      const numCopiedBars = state.copiedBars.length;
+      const numTargetBars = state.score.getBars(sectionAndBarRange).length;
       const modifiedSectionAndBarRange = sectionAndBarRange.clone();
       if (numTargetBars < numCopiedBars) {
         for (let barCount = 0; barCount < (numCopiedBars - numTargetBars); barCount++) {
-          let nextSectionAndBarIdx = state.score.getNextSectionAndBarIdx(modifiedSectionAndBarRange.last);
+          const nextSectionAndBarIdx = state.score.getNextSectionAndBarIdx(modifiedSectionAndBarRange.last);
           if (nextSectionAndBarIdx === undefined) break;
           modifiedSectionAndBarRange.last = nextSectionAndBarIdx;
         }
@@ -365,7 +365,7 @@ const ScoreModule: Module<ScoreState, RootState> = {
           redo() {
             let barIdx = 0;
             for (const sectionAndBarIdx of state.score.getSectionAndBarIdxIterator(modifiedSectionAndBarRange)) {
-              let cyclicBarIdx = barIdx % copiedBars.length;
+              const cyclicBarIdx = barIdx % copiedBars.length;
               state.score.getSection(sectionAndBarIdx.sectionIdx).bars[sectionAndBarIdx.barIdx] = copiedBars[cyclicBarIdx].clone();
               ++barIdx;
             }
@@ -386,12 +386,12 @@ const ScoreModule: Module<ScoreState, RootState> = {
     },
 
     pasteCopiedBarsPartOnly(state: ScoreState, sectionAndBarRange: SectionAndBarRange) {
-      let numCopiedBars = state.copiedBars.length;
-      let numTargetBars = state.score.getBars(sectionAndBarRange).length;
+      const numCopiedBars = state.copiedBars.length;
+      const numTargetBars = state.score.getBars(sectionAndBarRange).length;
       const modifiedSectionAndBarRange = sectionAndBarRange.clone();
       if (numTargetBars < numCopiedBars) {
         for (let barCount = 0; barCount < (numCopiedBars - numTargetBars); barCount++) {
-          let nextSectionAndBarIdx = state.score.getNextSectionAndBarIdx(modifiedSectionAndBarRange.last);
+          const nextSectionAndBarIdx = state.score.getNextSectionAndBarIdx(modifiedSectionAndBarRange.last);
           if (nextSectionAndBarIdx === undefined) break;
           modifiedSectionAndBarRange.last = nextSectionAndBarIdx;
         }
@@ -403,8 +403,8 @@ const ScoreModule: Module<ScoreState, RootState> = {
           redo() {
             let barIdx = 0;
             for (const sectionAndBarIdx of state.score.getSectionAndBarIdxIterator(modifiedSectionAndBarRange)) {
-              let cyclicBarIdx = barIdx % copiedPartInBars.length;
-              let bar = state.score.getBar(sectionAndBarIdx);
+              const cyclicBarIdx = barIdx % copiedPartInBars.length;
+              const bar = state.score.getBar(sectionAndBarIdx);
               bar.parts.splice(0, bar.numParts, ...copiedPartInBars[cyclicBarIdx].map(partInBar => partInBar.clone()));
               ++barIdx;
             }
@@ -412,7 +412,7 @@ const ScoreModule: Module<ScoreState, RootState> = {
           undo() {
             let barIdx = 0;
             for (const sectionAndBarIdx of state.score.getSectionAndBarIdxIterator(modifiedSectionAndBarRange)) {
-              let bar = state.score.getBar(sectionAndBarIdx);
+              const bar = state.score.getBar(sectionAndBarIdx);
               bar.parts.splice(0, bar.numParts, ...currentPartInBars[barIdx].map(partInBar => partInBar.clone()));
               ++barIdx;
             }
@@ -521,21 +521,21 @@ const ScoreModule: Module<ScoreState, RootState> = {
     incrementSelectedBarsFirstIdx(state: ScoreState) {
       if (state.selectedBars === undefined) return;
       if (state.selectedBars.includeSingleBarOnly) return;
-      let nextSectionAndBarIdx = state.score.getNextSectionAndBarIdx(state.selectedBars.first);
+      const nextSectionAndBarIdx = state.score.getNextSectionAndBarIdx(state.selectedBars.first);
       if (nextSectionAndBarIdx === undefined) return;
       state.selectedBars.first = nextSectionAndBarIdx;
     },
 
     incrementSelectedBarsLastIdx(state: ScoreState) {
       if (state.selectedBars === undefined) return;
-      let nextSectionAndBarIdx = state.score.getNextSectionAndBarIdx(state.selectedBars.last);
+      const nextSectionAndBarIdx = state.score.getNextSectionAndBarIdx(state.selectedBars.last);
       if (nextSectionAndBarIdx === undefined) return;
       state.selectedBars.last = nextSectionAndBarIdx.clone();
     },
 
     decrementSelectedBarsFirstIdx(state: ScoreState) {
       if (state.selectedBars === undefined) return;
-      let previousSectionAndBarIdx = state.score.getPreviousSectionAndBarIdx(state.selectedBars.first);
+      const previousSectionAndBarIdx = state.score.getPreviousSectionAndBarIdx(state.selectedBars.first);
       if (previousSectionAndBarIdx === undefined) return;
       state.selectedBars.first = previousSectionAndBarIdx.clone();
     },
@@ -543,7 +543,7 @@ const ScoreModule: Module<ScoreState, RootState> = {
     decrementSelectedBarsLastIdx(state: ScoreState) {
       if (state.selectedBars === undefined) return;
       if (state.selectedBars.includeSingleBarOnly) return;
-      let previousSectionAndBarIdx = state.score.getPreviousSectionAndBarIdx(state.selectedBars.last);
+      const previousSectionAndBarIdx = state.score.getPreviousSectionAndBarIdx(state.selectedBars.last);
       if (previousSectionAndBarIdx === undefined) return;
       state.selectedBars.last = previousSectionAndBarIdx.clone();
     },

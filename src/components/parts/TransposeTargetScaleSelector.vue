@@ -25,7 +25,7 @@ export default {
     $_uniqueScale(): Scale | undefined {
       if (this.bars === undefined) return undefined;
       let uniqueScale: Scale | undefined = undefined;
-      for (let bar of this.bars) {
+      for (const bar of this.bars) {
         if (uniqueScale === undefined) {
           uniqueScale = bar.scale;
         } else if (!uniqueScale.isEqualTo(bar.scale)) {
@@ -36,7 +36,7 @@ export default {
     },
 
     $_targetPitchOffsets(): { title: string, value: number }[] {
-      let pitchOffsets = [ -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5 ];
+      const pitchOffsets = [ -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5 ];
       return pitchOffsets.map((pitchOffset): { title: string, value: number } => {
         if (pitchOffset === 0) {
           return {
@@ -44,14 +44,14 @@ export default {
             value: pitchOffset,
           };
         } else {
-          let pitchOffsetString = ((pitchOffset > 0)? '+' : '-') + Math.abs(pitchOffset);
+          const pitchOffsetString = ((pitchOffset > 0)? '+' : '-') + Math.abs(pitchOffset);
           if (this.$_uniqueScale === undefined) {
             return {
               title: pitchOffsetString,
               value: pitchOffset,
             };
           } else {
-            let targetScale = this.$_uniqueScale.transposeByPitchOffset(pitchOffset);
+            const targetScale = this.$_uniqueScale.transposeByPitchOffset(pitchOffset);
             return {
               title: `${targetScale.tonicNotePitch} ${this.$t(this.$_uniqueScale.type)} (${pitchOffsetString})`,
               value: pitchOffset,

@@ -21,7 +21,7 @@ const AppStateModule: Module<CanvasState, RootState> = {
     },
 
     drawTieCanvas(state: CanvasState) {
-      for (let tieCanvas of state.tieCanvas) {
+      for (const tieCanvas of state.tieCanvas) {
         tieCanvas.draw();
         state.tieCanvas.delete(tieCanvas);
       }
