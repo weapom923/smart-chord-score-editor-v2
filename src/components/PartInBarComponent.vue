@@ -36,7 +36,7 @@
 </style>
 
 <script lang="ts">
-import { CSSProperties } from 'vue';
+import { defineComponent, CSSProperties } from 'vue';
 import NoteBaseComponent from './NoteBaseComponent.vue';
 import TieCanvas from './canvases/TieCanvas.vue';
 import { NoteValue, nv } from '../modules/NoteValue';
@@ -47,7 +47,7 @@ import Color from '../modules/Color';
 type TieCanvasProps = InstanceType<typeof TieCanvas>['$props'];
 type NoteBaseComponentProps = InstanceType<typeof NoteBaseComponent>['$props'];
 
-export default {
+export default defineComponent({
   emits: {
     tiePointUpdate: (event: { tieEndPointOffset?: DOMPoint, tieStartPointOffset?: DOMPoint }) => true,
     splitNoteElementMounted: (event: { noteIdx: NoteIdx, splitNoteIdx: SplitNoteIdx, splitNoteElement: HTMLElement }) => true,
@@ -265,5 +265,5 @@ export default {
 
     assertDefined: assertDefined,
   },
-}
+})
 </script>

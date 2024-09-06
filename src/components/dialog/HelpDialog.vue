@@ -79,13 +79,14 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import DialogBase from './DialogBase.vue';
 
-export default {
+export default defineComponent({
   extends: DialogBase,
 
   components: {
     DialogBase,
   },
-}
+})
 </script>

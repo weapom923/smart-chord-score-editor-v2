@@ -14,10 +14,10 @@
 </style>
 
 <script lang="ts">
-import { CSSProperties } from 'vue';
+import { defineComponent, CSSProperties } from 'vue';
 import { TensionNotePitch } from '../modules/TensionNotePitch';
 
-export default {
+export default defineComponent({
   props: {
     tensionNotePitch: { type: TensionNotePitch, required: true },
     baseFontSizePx: { type: Number, required: true },
@@ -45,6 +45,6 @@ export default {
       };
     },
   },
-};
+})
 </script>
 

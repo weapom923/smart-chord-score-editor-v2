@@ -31,6 +31,7 @@
 </style>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import { SectionAndBarRange } from '../../modules/SectionAndBarRange';
 
 class ToolBarItemDefinition {
@@ -42,7 +43,7 @@ class ToolBarItemDefinition {
   ) {}
 };
 
-export default {
+export default defineComponent({
   props: {
     sectionAndBarRange: { type: SectionAndBarRange, required: true },
   },
@@ -73,5 +74,5 @@ export default {
       };
     },
   },
-}
+})
 </script>

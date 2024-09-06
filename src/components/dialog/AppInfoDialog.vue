@@ -10,10 +10,11 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import DialogBase from './DialogBase.vue';
 import { AppVersion, AppVersionType } from '../../modules/AppVersion';
 
-export default {
+export default defineComponent({
   extends: DialogBase,
 
   components: { DialogBase },
@@ -23,5 +24,5 @@ export default {
       return AppVersion;
     },
   },
-}
+})
 </script>

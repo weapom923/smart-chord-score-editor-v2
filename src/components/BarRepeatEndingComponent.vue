@@ -20,10 +20,10 @@
 </style>
 
 <script lang="ts">
-import { CSSProperties } from 'vue';
+import { defineComponent, CSSProperties } from 'vue';
 import { BarRepeatEnding } from '../modules/BarRepeatEnding';
 
-export default {
+export default defineComponent({
   props: {
     barRepeatEnding: { type: BarRepeatEnding, required: true },
   },
@@ -40,5 +40,5 @@ export default {
       };
     },
   },
-}
+})
 </script>

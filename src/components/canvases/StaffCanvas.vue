@@ -3,10 +3,11 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import CanvasBase from './CanvasBase.vue';
 import { drawLine } from './modules/canvasUtils'
 
-export default {
+export default defineComponent({
   extends: CanvasBase,
 
   watch: {
@@ -51,5 +52,5 @@ export default {
       }
     });
   },
-}
+})
 </script>

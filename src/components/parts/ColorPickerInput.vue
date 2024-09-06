@@ -30,6 +30,7 @@
 </style>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import Color from '../../modules/Color'
 
 type RGBA = {
@@ -39,7 +40,7 @@ type RGBA = {
   a: number,
 };
 
-export default {
+export default defineComponent({
   emits: {
     'update:modelValue': (modelValue: Color) => true,
   },
@@ -81,5 +82,5 @@ export default {
       },
     },
   },
-}
+})
 </script>

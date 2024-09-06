@@ -3,12 +3,13 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import CanvasBase from './CanvasBase.vue';
 import { max } from '../../modules/utils';
 
 const tieTopMarginPx = 5;
 
-export default {
+export default defineComponent({
   extends: CanvasBase,
 
   watch: {
@@ -80,5 +81,5 @@ export default {
       this.$_canvasElement.style.marginTop = `${marginTopPx}px`;
     },
   },
-}
+})
 </script>

@@ -57,7 +57,7 @@
 </style>
 
 <script lang="ts">
-import { CSSProperties } from 'vue';
+import { defineComponent, CSSProperties } from 'vue';
 import SectionComponent from '../components/SectionComponent.vue';
 import ScoreTitleComponent from '../components/ScoreTitleComponent.vue';
 import ScoreFooterComponent from '../components/ScoreFooterComponent.vue';
@@ -67,7 +67,7 @@ import { Score } from '../modules/Score';
 
 type SectionComponentPropsType = InstanceType<typeof SectionComponent>['$props'];
 
-export default {
+export default defineComponent({
   components: {
     ScoreTitleComponent,
     SectionComponent,
@@ -162,5 +162,5 @@ export default {
       );
     },
   },
-}
+});
 </script>

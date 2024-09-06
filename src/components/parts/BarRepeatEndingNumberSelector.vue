@@ -9,11 +9,12 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import { BarRepeatEnding } from '../../modules/BarRepeatEnding';
 
 const barRepeatEndingNumberMax = 5;
 
-export default {
+export default defineComponent({
   emits: {
     'update:barRepeatEnding': (barRepeatEnding: BarRepeatEnding) => true,
   },
@@ -37,5 +38,5 @@ export default {
       },
     }
   },
-}
+})
 </script>

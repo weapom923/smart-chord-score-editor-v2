@@ -83,12 +83,13 @@
 </style>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import BarPartTypeSelector from '../parts/BarPartTypeSelector.vue';
 import { Score } from '../../modules/Score';
 import { SectionAndBarRange, SectionAndBarIdx } from '../../modules/SectionAndBarRange';
 import { BarEditorLocationType } from '../../store/module/Config';
 
-export default {
+export default defineComponent({
   setup(): {
     barEditorLocationLeft: BarEditorLocationType,
     barEditorLocationRight: BarEditorLocationType,
@@ -147,5 +148,5 @@ export default {
       },
     },
   },
-}
+})
 </script>

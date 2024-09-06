@@ -20,12 +20,13 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import { NoteValue } from '../../modules/NoteValue';
 import { isEmptyLike } from '../../modules/utils';
 
 const barValueNumeratorMin = 1;
 
-export default {
+export default defineComponent({
   setup(): {
     barValueNumeratorMin: typeof barValueNumeratorMin,
     barValueDenominators: number[],
@@ -103,5 +104,5 @@ export default {
       deep: true,
     }
   },
-}
+})
 </script>

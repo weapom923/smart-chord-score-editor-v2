@@ -10,9 +10,10 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import { BarLine, bl } from '../../modules/BarLine';
 
-export default {
+export default defineComponent({
   emits: {
     'update:barLineEnd': (barLineEnd: BarLine) => true,
   },
@@ -36,5 +37,5 @@ export default {
       set(barLineEnd: BarLine)   { this.$emit('update:barLineEnd', barLineEnd) },
     },
   },
-}
+})
 </script>

@@ -1,7 +1,8 @@
 <script lang="ts">
+import { defineComponent } from 'vue';
 import { Color, cl } from '../../modules/Color';
 
-export default {
+export default defineComponent({
   watch: {
     color() { this.draw() },
     $_opacity(opacity: number) { this.$_setOpacity(opacity) }
@@ -73,5 +74,5 @@ export default {
       this.$data.$_drawCallback(canvas);
     },
   }
-}
+})
 </script>

@@ -10,9 +10,10 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import { BarBreak, bb } from '../../modules/BarBreak';
 
-export default {
+export default defineComponent({
   emits: {
     'update:barBreak': (barBreak: BarBreak) => true,
   },
@@ -35,5 +36,5 @@ export default {
       set(barBreak: BarBreak)     { this.$emit('update:barBreak', barBreak) },
     },
   },
-}
+})
 </script>

@@ -32,6 +32,7 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import { Bar } from '../../modules/Bar';
 import { PartInBar } from '../../modules/PartInBar';
 import { Note } from '../../modules/Note';
@@ -42,7 +43,7 @@ import NoteValueSelectorButtons from '../parts/NoteValueSelectorButtons.vue';
 import ChordEditorComponent from './ChordEditorComponent.vue';
 import { SectionAndBarIdx } from '../../modules/SectionAndBarRange';
 
-export default {
+export default defineComponent({
   emits: {
     'update:temporalSelectedPart': (part?: PartInBar) => true,
     'update:selectedNoteIdx': (noteIdx: NoteIdx) => true,
@@ -320,5 +321,5 @@ export default {
       }
     },
   },
-}
+})
 </script>

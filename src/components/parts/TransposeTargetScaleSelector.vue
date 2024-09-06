@@ -9,10 +9,11 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import { Bar } from '../../modules/Bar';
 import { Scale } from '../../modules/Scale';
 
-export default {
+export default defineComponent({
   emits: {
     'update:bars': (bars: Bar[]) => true,
   },
@@ -70,5 +71,5 @@ export default {
       },
     }
   },
-}
+})
 </script>

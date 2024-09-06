@@ -66,6 +66,7 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import DialogBase from './DialogBase.vue';
 import DialogTextField from '../parts/DialogTextField.vue';
 import ScaleSelector from '../parts/ScaleSelector.vue';
@@ -79,7 +80,7 @@ import { NoteValue } from '../../modules/NoteValue';
 import { PartInBarType } from '../../modules/PartInBar';
 import { isEmptyLike } from '../../modules/utils';
 
-export default {
+export default defineComponent({
   extends: DialogBase,
 
   components: {
@@ -157,5 +158,5 @@ export default {
       );
     },
   },
-}
+})
 </script>

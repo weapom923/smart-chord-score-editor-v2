@@ -18,7 +18,9 @@
 </style>
 
 <script lang="ts">
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   props: {
     scorePageIndex: { type: Number, required: true },
     numScorePages:  { type: Number, required: true },
@@ -29,5 +31,5 @@ export default {
       return this.$store.state.score.score.metadata.title;
     },
   },
-}
+})
 </script>

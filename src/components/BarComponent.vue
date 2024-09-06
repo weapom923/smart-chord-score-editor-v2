@@ -85,7 +85,7 @@
 </style>
 
 <script lang="ts">
-import { CSSProperties, ref } from 'vue';
+import { defineComponent, CSSProperties, ref } from 'vue';
 import PartInBarComponent from '../components/PartInBarComponent.vue';
 import ClefCanvas from './canvases/ClefCanvas.vue';
 import BarLineCanvas from './canvases/BarLineCanvas.vue';
@@ -100,7 +100,7 @@ import { SectionAndBarIdx } from '../modules/SectionAndBarRange';
 
 const selectedBarStaffBackgroundColor = new Color(0, 0, 0, 0.2);
 
-export default {
+export default defineComponent({
   inheritAttrs: false,
 
   setup() {
@@ -401,5 +401,5 @@ export default {
       this.$emit('update:selectedNoteIdx', noteIdx);
     },
   },
-}
+})
 </script>

@@ -7,9 +7,10 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import { NoteValue, nv } from '../../modules/NoteValue';
 
-export default {
+export default defineComponent({
   emits: {
     'update:gridNoteValue': (gridNoteValue: NoteValue) => true,
   },
@@ -46,5 +47,5 @@ export default {
       },
     },
   },
-}
+})
 </script>

@@ -9,9 +9,10 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import { Clef, cl } from '../../modules/Clef';
 
-export default {
+export default defineComponent({
   emits: {
     'update:clef': (clef: Clef) => true,
   },
@@ -33,5 +34,5 @@ export default {
       set(clef: Clef)         { this.$emit('update:clef', clef) },
     },
   },
-}
+})
 </script>

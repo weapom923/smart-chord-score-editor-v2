@@ -11,10 +11,11 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import { SectionAndBarIdx } from '../../modules/SectionAndBarRange';
 import { PartInBar } from '../../modules/PartInBar';
 
-export default {
+export default defineComponent({
   emits: {
     'update:selectedPartIdx': (partIdx: PartIdx) => true,
   },
@@ -48,5 +49,5 @@ export default {
       set(partIdx: number)      { this.$emit('update:selectedPartIdx', partIdx) },
     },
   },
-}
+})
 </script>
