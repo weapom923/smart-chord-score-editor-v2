@@ -26,20 +26,21 @@
       v-for="barProps of $_barProps"
       v-bind:key="barProps.barIdx"
     >
-      <template
-        v-if="$data.$_tieProps.has(barProps.barIdx)"
-        v-for="partIdx of $_partIdcs.get(barProps.barIdx)"
-        v-bind:key="partIdx"
-      >
-        <tie-canvas
-          class="tie-canvas"
-          v-if="assertDefined($data.$_tieProps.get(barProps.barIdx)).has(partIdx)"
-          v-bind="assertDefined(assertDefined($data.$_tieProps.get(barProps.barIdx)).get(partIdx))"
-          v-bind:color="$store.state.config.noteColor"
-          v-bind:alpha-as-opacity="true"
-          v-bind:style="assertDefined(assertDefined($data.$_tieStyles.get(barProps.barIdx)).get(partIdx))"
+      <template v-if="$data.$_tieProps.has(barProps.barIdx)">
+        <template
+          v-for="partIdx of $_partIdcs.get(barProps.barIdx)"
+          v-bind:key="partIdx"
         >
-        </tie-canvas>
+          <tie-canvas
+            class="tie-canvas"
+            v-if="assertDefined($data.$_tieProps.get(barProps.barIdx)).has(partIdx)"
+            v-bind="assertDefined($data.$_tieProps.get(barProps.barIdx)?.get(partIdx))"
+            v-bind:color="$store.state.config.noteColor"
+            v-bind:alpha-as-opacity="true"
+            v-bind:style="assertDefined($data.$_tieStyles.get(barProps.barIdx)?.get(partIdx))"
+          >
+          </tie-canvas>
+        </template>
       </template>
       <div class="bar-container">
         <bar-component
@@ -547,7 +548,7 @@ export default defineComponent({
       // this.$vuetify.goTo(this.$_systemElement);
     },
 
-    assertDefined: assertDefined,
+    assertDefined,
   },
 })
 </script>
