@@ -29,6 +29,7 @@
 </template>
 
 <script lang="ts">
+import { defineComponent, ref } from 'vue';
 import BarEditor from './BarEditor.vue';
 import { SectionAndBarRange } from '../modules/SectionAndBarRange';
 
@@ -36,16 +37,13 @@ const idealDrawerWidthPx = 800;
 const idealDrawerHeightPx = 700;
 const expandButtonWidthPx = 30;
 
-export default {
-  setup(): {
-    expandButtonWidthPx: typeof expandButtonWidthPx,
-    idealDrawerWidthPx: typeof idealDrawerWidthPx,
-    idealDrawerHeightPx: typeof idealDrawerHeightPx,
-  } {
+export default defineComponent({
+  setup() {
     return {
       expandButtonWidthPx,
       idealDrawerWidthPx,
       idealDrawerHeightPx,
+      barEditor: ref<InstanceType<typeof BarEditor>>(),
     };
   },
 
@@ -167,18 +165,14 @@ export default {
       this.$data.$_barEditorDrawerHeightPxMax = window.innerHeight * 0.8;
     },
 
-    $_getBarEditorComponent(): InstanceType<typeof BarEditor> | undefined | null {
-      return this.$refs.barEditor as any;
-    },
-
     async $_maximizeBarEditor() {
       await this.$store.dispatch('appState/setIsBarEditorMinimized', false);
     },
 
     async onKeydown(event: KeyboardEvent): Promise<boolean> {
-      if (await this.$_getBarEditorComponent()?.onKeydown(event) ?? false) return true;
+      if (await this.barEditor?.onKeydown(event)) return true;
       return false;
     },
   },
-};
+});
 </script>

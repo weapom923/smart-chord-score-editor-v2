@@ -1,5 +1,5 @@
 <template>
-  <div id="beat-and-part-container">
+  <div id="beat-and-part-container" ref="barElement">
     <clef-canvas
       v-if="showClef"
       v-bind:clef="bar.clef"
@@ -85,7 +85,7 @@
 </style>
 
 <script lang="ts">
-import { CSSProperties } from 'vue';
+import { CSSProperties, ref } from 'vue';
 import PartInBarComponent from '../components/PartInBarComponent.vue';
 import ClefCanvas from './canvases/ClefCanvas.vue';
 import BarLineCanvas from './canvases/BarLineCanvas.vue';
@@ -102,6 +102,14 @@ const selectedBarStaffBackgroundColor = new Color(0, 0, 0, 0.2);
 
 export default {
   inheritAttrs: false,
+
+  setup() {
+    return {
+      partContainer: ref<HTMLDivElement>(),
+      barElement: ref<HTMLDivElement>(),
+      barRepeatEndingComponent: ref<InstanceType<typeof BarRepeatEndingComponent>>(),
+    };
+  },
 
   emits: {
     'update:selectedPartIdx': (partIdx: PartIdx) => true,
@@ -130,11 +138,25 @@ export default {
       deep: true,
       flush: 'post',
     },
+
+    barElement: {
+      handler(newBarElement?: HTMLDivElement, oldBarElement?: HTMLDivElement) {
+        if (oldBarElement) this.$data.$_barElementResizeObserver.unobserve(oldBarElement);
+        if (newBarElement) this.$data.$_barElementResizeObserver.observe(newBarElement);
+      },
+      immediate: true,
+    },
+
+    partContainer: {
+      handler(newPartContainer?: HTMLDivElement, oldPartContainer?: HTMLDivElement) {
+        if (oldPartContainer) this.$data.$_partContainerResizeObserver.unobserve(oldPartContainer);
+        if (newPartContainer) this.$data.$_partContainerResizeObserver.observe(newPartContainer);
+      },
+      immediate: true,
+    },
   },
 
   mounted() {
-    this.$data.$_barElementResizeObserver.observe(this.$_barElement);
-    this.$data.$_partContainerResizeObserver.observe(this.$_partContainer);
     this.$_updatePositionAndSize();
     this.$emit('mounted', this.$el);
   },
@@ -203,21 +225,9 @@ export default {
     $_isBarRepeatEndingEmpty(): boolean {
       return this.bar.repeatEnding.isEqualTo(bre.empty);
     },
-
-    $_barElement(): HTMLDivElement {
-      return this.$el as HTMLDivElement;
-    },
-
-    $_partContainer(): HTMLDivElement {
-      return this.$refs.partContainer as HTMLDivElement;
-    },
   },
 
   methods: {
-    $_getBarRepeatEndingComponent(): InstanceType<typeof BarRepeatEndingComponent> | undefined | null {
-      return this.$refs.barRepeatEndingComponent as any;
-    },
-
     $_getSelectedNoteIdxInPart(partIdx: PartIdx) {
       if (this.selectedPartIdx === undefined) return undefined;
       if (partIdx === this.selectedPartIdx) return this.selectedNoteIdx;
@@ -283,8 +293,12 @@ export default {
     },
 
     $_updatePositionAndSize() {
-      this.$data.$_barElementBoundingClientRect = this.$_barElement.getBoundingClientRect();
-      this.$data.$_partContainerBoundingClientRect = this.$_partContainer.getBoundingClientRect();
+      if (this.barElement) {
+        this.$data.$_barElementBoundingClientRect = this.barElement.getBoundingClientRect();
+      }
+      if (this.partContainer) {
+        this.$data.$_partContainerBoundingClientRect = this.partContainer.getBoundingClientRect();
+      }
       this.$_emitTiePointUpdate();
       this.$_updateMarginTopAndBottom();
       this.$_updateBarRepeatEndingStyle();
@@ -370,7 +384,7 @@ export default {
     },
 
     $_updateBarRepeatEndingStyle() {
-      let barRepeatEndingElementBoundingClientRect = this.$_getBarRepeatEndingComponent()?.$el.getBoundingClientRect();
+      let barRepeatEndingElementBoundingClientRect = this.barRepeatEndingComponent?.$el.getBoundingClientRect();
       if (barRepeatEndingElementBoundingClientRect === undefined) return;
       let barRepeatEndingWidthPx = this.$data.$_barElementBoundingClientRect.x + this.$data.$_barElementBoundingClientRect.width - barRepeatEndingElementBoundingClientRect.x;
       let barRepeatEndingRightOffsetPx = barRepeatEndingElementBoundingClientRect.x + barRepeatEndingElementBoundingClientRect.width - this.$data.$_barElementBoundingClientRect.x;

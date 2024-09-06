@@ -63,7 +63,7 @@
 </style>
 
 <script lang="ts">
-import { defineComponent, CSSProperties } from 'vue';
+import { defineComponent, ref, CSSProperties } from 'vue';
 import BarEditorToolbar from './BarEditor/BarEditorToolbar.vue';
 import BarEditorButtonsComponent from './BarEditor/BarEditorButtonsComponent.vue';
 import NoteEditorComponent from './BarEditor/NoteEditorComponent.vue';
@@ -74,6 +74,12 @@ import { PartInBar, PartInBarType } from '../modules/PartInBar';
 import { SectionAndBarIdx, SectionAndBarRange } from '../modules/SectionAndBarRange';
 
 const BarEditor = defineComponent({
+  setup() {
+    return {
+      barEditorButtonsComponent: ref<InstanceType<typeof BarEditorButtonsComponent>>(),
+    };
+  },
+
   components: {
     BarEditorToolbar,
     BarEditorButtonsComponent,
@@ -191,14 +197,10 @@ const BarEditor = defineComponent({
   },
 
   methods: {
-    $_getBarEditorButtonsComponent(): InstanceType<typeof BarEditorButtonsComponent> | undefined | null {
-      return this.$refs.barEditorComponent as any;
-    },
-
     async onKeydown(event: KeyboardEvent): Promise<boolean> {
       if (this.$store.state.appState.isBarEditorDrawerMinimized) return false;
       let keyEventType = getKeyEventType(event);
-      if (await this.$_getBarEditorButtonsComponent()?.onKeydown(keyEventType, event) ?? false) return true;
+      if (await this.barEditorButtonsComponent?.onKeydown(keyEventType, event)) return true;
       switch (keyEventType) {
         case 'key':
           switch (event.code) {

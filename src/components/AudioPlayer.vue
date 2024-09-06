@@ -113,9 +113,6 @@ export default defineComponent({
       get(): number       { return this.volume }, 
       set(volume: number) { this.$emit('update:volume', volume) },
     },
-    $_audioPlayerTimeController(): InstanceType<typeof AudioPlayTimeController> | undefined {
-      return this.$refs.audioPlayerBar as InstanceType<typeof AudioPlayTimeController> | undefined;
-    },
   },
 
   async created() {

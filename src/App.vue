@@ -114,7 +114,7 @@
 </style>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import GlobalConfigEditorDialog from './components/dialog/GlobalConfigEditorDialog.vue';
 import ScoreMetadataEditorDialog from './components/dialog/ScoreMetadataEditorDialog.vue';
 import SectionEditorDialog from './components/dialog/SectionEditorDialog.vue';
@@ -139,6 +139,14 @@ type scorePagePropType = InstanceType<typeof ScorePage>['$props'];
 
 const App = defineComponent({
   name: 'App',
+
+  setup() {
+    return {
+      audioPlayerBar: ref<InstanceType<typeof AudioPlayerBar>>(),
+      barEditorDrawer: ref<InstanceType<typeof BarEditorDrawer>>(),
+      dialog: ref<InstanceType<typeof DialogBase>>(),
+    };
+  },
 
   components: {
     AppBar,
@@ -265,10 +273,6 @@ const App = defineComponent({
       }));
     },
 
-    $_audioPlayerBar(): InstanceType<typeof AudioPlayerBar> {
-      return this.$refs.audioPlayerBar as InstanceType<typeof AudioPlayerBar>;
-    },
-
     $_scorePageRawContainerClass(): string {
       const classNameList = [ 'score-page-row-container' ];
       if (this.$store.state.appState.isPrintLayoutEnabled) {
@@ -311,15 +315,6 @@ const App = defineComponent({
       this.$nextTick(() => { this.$data.$_isForcedReloading = false });
     },
 
-    $_getBarEditorDrawerComponent(): InstanceType<typeof BarEditorDrawer> | undefined | null {
-      return this.$refs.barEditorDrawer as any;
-    },
-
-    $_getDialogComponent(): InstanceType<typeof DialogBase> | undefined | null {
-      if (!this.$store.state.dialog.shows) return undefined;
-      return this.$refs.dialog as any;
-    },
-
     async $_onClickBackground() {
       await this.$store.dispatch('score/unselectBar');
       if (!this.print) {
@@ -354,9 +349,9 @@ const App = defineComponent({
             break;
         }
       }
-      if (this.$_getDialogComponent()?.onKeydown(event) ?? false) return true;
-      if (await this.$_getBarEditorDrawerComponent()?.onKeydown(event) ?? false) return true;
-      if (this.$_audioPlayerBar.onKeydown(event)) return true;
+      if (this.dialog?.onKeydown(event)) return true;
+      if (await this.barEditorDrawer?.onKeydown(event)) return true;
+      if (this.audioPlayerBar?.onKeydown(event)) return true;
       if (this.$store.state.appState.isPrintLayoutEnabled) {
         await this.$store.dispatch('appState/setIsPrintLayoutEnabled', false);
         return true;

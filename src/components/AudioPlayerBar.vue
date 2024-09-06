@@ -30,11 +30,17 @@
 </style>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import AudioPlayer from './AudioPlayer.vue';
 import { loadFileAsUint8Array, getFileInterface } from '../modules/utils';
 
 const AudioPlayerBar = defineComponent({
+  setup() {
+    return {
+      audioPlayer: ref<InstanceType<typeof AudioPlayer>>(),
+    };
+  },
+
   emits: {
     'update:isLoopEnabled': (isLoopEnabled: boolean) => true,
     'updatePlayTime': (playTimeSec: number) => true,
@@ -70,12 +76,8 @@ const AudioPlayerBar = defineComponent({
   },
 
   methods: {
-    $_getAudioPlayer(): InstanceType<typeof AudioPlayer> | undefined | null {
-      return this.$refs.audioPlayer as any;
-    },
-
     onKeydown(event: KeyboardEvent): boolean {
-      if (this.$_getAudioPlayer()?.onKeydown(event) ?? false) return true;
+      if (this.audioPlayer?.onKeydown(event)) return true;
       return false;
     },
 

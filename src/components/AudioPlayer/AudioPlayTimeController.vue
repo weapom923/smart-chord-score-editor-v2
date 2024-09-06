@@ -116,7 +116,7 @@
 </style>
 
 <script lang="ts">
-import { CSSProperties, defineComponent } from 'vue';
+import { CSSProperties, defineComponent, ref } from 'vue';
 import WaveformCanvas from '../canvases/WaveformCanvas.vue';
 import WaveformDecimator from '../../modules/WaveformDecimator';
 import { TimeRangeSec, TimeRangeSecInterface } from './modules/TimeRangeSec';
@@ -155,13 +155,11 @@ const AudioPlaytimeController = defineComponent({
     WaveformCanvas,
   },
 
-  setup(): {
-    playTimeColor: Color,
-    waveformColor: Color,
-  } {
+  setup() {
     return {
       playTimeColor,
       waveformColor,
+      audioPlayTimeController: ref<HTMLDivElement>(),
     };
   },
 
@@ -201,7 +199,6 @@ const AudioPlaytimeController = defineComponent({
   },
 
   computed: {
-    $_element(): HTMLDivElement { return this.$refs.audioPlayTimeController as HTMLDivElement },
     $_channelIdcs(): number[] { return times(this.waveformDecimator.numChannels) },
     $_viewTimeRangeSec: {
       get(): TimeRangeSec {
@@ -337,15 +334,22 @@ const AudioPlaytimeController = defineComponent({
         this.$_updateViewTimeRange({ begin: playTimeSec, end: playTimeSec + this.$_viewDurationSec });
       }
     },
+
+    audioPlayTimeController: {
+      handler(newAudioPlayTimeController?: HTMLDivElement, oldAudioPlayTimeController?: HTMLDivElement) {
+        if (oldAudioPlayTimeController) this.$data.$_resizeObserver.unobserve(oldAudioPlayTimeController);
+        if (newAudioPlayTimeController) this.$data.$_resizeObserver.observe(newAudioPlayTimeController);
+      },
+      immediate: true,
+    },
   },
 
   mounted() {
-    this.$_onResize(this.$_element);
-    this.$data.$_resizeObserver.observe(this.$_element);
+    if (this.audioPlayTimeController) this.$_onResize(this.audioPlayTimeController);
   },
 
   beforeUnmount() {
-    this.$data.$_resizeObserver.unobserve(this.$_element);
+    this.$data.$_resizeObserver.disconnect();
   },
 
   methods: {
