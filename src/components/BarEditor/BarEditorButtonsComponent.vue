@@ -233,6 +233,7 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import SystemComponent from '../SystemComponent.vue';
 import { Score } from '../../modules/Score';
 import { Section } from '../../modules/Section';
@@ -245,7 +246,7 @@ import { BarRange, SectionAndBarIdx, SectionAndBarRange } from '../../modules/Se
 import { Bar } from '../../modules/Bar';
 import { bb } from '../../modules/BarBreak';
 
-export default {
+export default defineComponent({
   emits: {
     'update:selectedPartIdx': (partIdx: PartIdx) => true,
     'update:selectedNoteIdx': (noteIdx: NoteIdx) => true,
@@ -608,5 +609,5 @@ export default {
       await this.$store.dispatch('score/selectNextBar');
     },
   },
-}
+})
 </script>

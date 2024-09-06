@@ -67,11 +67,12 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import DialogBase from './DialogBase.vue';
 import DialogTextField from '../parts/DialogTextField.vue';
 import { ScoreMetadata } from '../../modules/ScoreMetadata';
 
-export default {
+export default defineComponent({
   extends: DialogBase,
 
   components: {
@@ -110,5 +111,5 @@ export default {
       await this.$store.dispatch('score/setScoreMetadata', this.$data.$_metadata);
     },
   },
-}
+})
 </script>

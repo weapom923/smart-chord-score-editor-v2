@@ -51,6 +51,7 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import { Score } from '../modules/Score';
 import { ScoreMetadata } from '../modules/ScoreMetadata';
 import scoreTextParser from '../modules/scoreTextParser';
@@ -69,7 +70,7 @@ class MenuItemDefinition {
   }
 }
 
-export default {
+export default defineComponent({
   computed: {
     $_leftMenuItemDefinitions(): Record<string, MenuItemDefinition> {
       const onPrintLayoutEnabledMessage = this.$t('onPrintLayoutEnabledMessage');
@@ -172,5 +173,5 @@ export default {
       };
     },
   },
-}
+})
 </script>

@@ -11,7 +11,9 @@
 </template>
 
 <script lang="ts">
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   computed: {
     $_snackBarMessage(): string | undefined {
       return this.$store.state.appState.snackBarMessage;
@@ -28,5 +30,5 @@ export default {
       await this.$store.dispatch('appState/setSnackBarMessage', undefined)
     },
   }
-}
+})
 </script>

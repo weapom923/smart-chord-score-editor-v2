@@ -175,6 +175,7 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import DialogBase from './DialogBase.vue';
 import DialogTextField from '../parts/DialogTextField.vue';
 import GridNoteSelector from '../parts/GridNoteSelector.vue';
@@ -194,7 +195,7 @@ const pagePaddingTopPxMin = 0;
 const chordFontSizePxMin = 6;
 const pageWidthOnPrintPxMin = 640;
 
-export default {
+export default defineComponent({
   extends: DialogBase,
 
   setup(): {
@@ -421,5 +422,5 @@ export default {
       this.$data.$_noteColor            = defaultConfig.noteColor;
     },
   },
-}
+})
 </script>

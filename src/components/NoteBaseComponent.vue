@@ -92,7 +92,7 @@
 </style>
 
 <script lang="ts">
-import { CSSProperties } from 'vue';
+import { defineComponent, CSSProperties } from 'vue';
 import ChordComponent from './ChordComponent.vue';
 import ChordNoteCanvas from './canvases/ChordNoteCanvas.vue';
 import RestNoteCanvas from './canvases/RestNoteCanvas.vue';
@@ -104,7 +104,7 @@ import { Chord } from '../modules/Chord';
 import { Color, cl } from '../modules/Color';
 import { max, assertDefined } from '../modules/utils';
 
-export default {
+export default defineComponent({
   emits: {
     chordComponentMounted: (event: HTMLElement) => true,
     chordComponentBeforeUnmount: () => true,
@@ -360,5 +360,5 @@ export default {
 
     assertDefined: assertDefined,
   }
-}
+})
 </script>

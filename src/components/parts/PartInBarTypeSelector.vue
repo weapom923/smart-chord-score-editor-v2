@@ -11,9 +11,10 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import { PartInBarType } from '../../modules/PartInBar';
 
-export default {
+export default defineComponent({
   emits: {
     'update:partInBarTypes': (partInBarType: PartInBarType[]) => true,
   },
@@ -40,5 +41,5 @@ export default {
       ];
     },
   },
-}
+})
 </script>

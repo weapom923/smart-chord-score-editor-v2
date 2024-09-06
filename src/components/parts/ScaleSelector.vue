@@ -9,9 +9,10 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import { Scale, sc } from '../../modules/Scale';
 
-export default {
+export default defineComponent({
   emits: {
     'update:scale': (scale: Scale) => true,
   },
@@ -57,5 +58,5 @@ export default {
       set(scale: Scale)        { this.$emit('update:scale', scale) },
     }
   },
-}
+})
 </script>

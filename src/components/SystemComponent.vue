@@ -123,7 +123,7 @@
 </style>
 
 <script lang="ts">
-import { CSSProperties } from 'vue';
+import { defineComponent, CSSProperties } from 'vue';
 import BarComponent from '../components/BarComponent.vue';
 import StaffCanvas from './canvases/StaffCanvas.vue';
 import BarHoverMenu from './parts/BarHoverMenu.vue';
@@ -140,7 +140,7 @@ const selectedBarStaffBackgroundColor = new Color(170, 210, 160, 0.3);
 type TieCanvasProps = InstanceType<typeof TieCanvas>['$props'];
 type BarComponentPropsType = InstanceType<typeof BarComponent>['$props'];
 
-export default {
+export default defineComponent({
   emits: {
     mousedownStaff: ({ barIdx, event }: { barIdx: BarIdx, event: MouseEvent }) => true,
     'update:selectedNoteIdx': (noteIdx: NoteIdx) => true,
@@ -549,5 +549,5 @@ export default {
 
     assertDefined: assertDefined,
   },
-}
+})
 </script>

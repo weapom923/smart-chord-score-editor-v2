@@ -150,13 +150,14 @@
 </style>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import { PropType } from 'vue';
 import { Chord, ChordTriadType, ChordSixthOrSeventhType } from '../../modules/Chord';
 import { NotePitch } from '../../modules/NotePitch';
 import { NotePitchSymbol, nps } from '../../modules/NotePitchSymbol';
 import { TensionNotePitch, tnp } from '../../modules/TensionNotePitch';
 
-export default {
+export default defineComponent({
   emits: {
     'update:chord': (chord: Chord | null) => true,
   },
@@ -483,5 +484,5 @@ export default {
       return isTensionNoteDisabled;
     },
   },
-}
+})
 </script>

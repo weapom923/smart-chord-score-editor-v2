@@ -68,6 +68,7 @@
 </style>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import SystemComponent from './SystemComponent.vue';
 import SectionNameHoverMenu from './parts/SectionNameHoverMenu.vue';
 import { Score } from '../modules/Score';
@@ -78,7 +79,7 @@ import { SectionAndBarIdx, BarRange } from '../modules/SectionAndBarRange';
 
 type SystemComponentPropsType = InstanceType<typeof SystemComponent>['$props'];
 
-export default {
+export default defineComponent({
   components: {
     SystemComponent,
     SectionNameHoverMenu,
@@ -141,5 +142,5 @@ export default {
       );
     },
   }
-}
+})
 </script>

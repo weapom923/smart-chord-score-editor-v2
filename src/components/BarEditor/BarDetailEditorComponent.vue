@@ -62,6 +62,7 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import ScaleSelector from '../parts/ScaleSelector.vue';
 import TransposeTargetScaleSelector from '../parts/TransposeTargetScaleSelector.vue';
 import ClefSelector from '../parts/ClefSelector.vue';
@@ -80,7 +81,7 @@ import { Clef } from '../../modules/Clef';
 import { Scale } from '../../modules/Scale';
 import { SectionAndBarRange, SectionAndBarIdx } from '../../modules/SectionAndBarRange';
 
-export default {
+export default defineComponent({
   components: {
     ScaleSelector,
     TransposeTargetScaleSelector,
@@ -289,5 +290,5 @@ export default {
       },
     },
   },
-}
+})
 </script>

@@ -14,12 +14,13 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import { NoteValue, nv } from '../../modules/NoteValue';
 import { VBtn } from 'vuetify/lib/components/index.mjs';
 
 type VBtnPropsType = InstanceType<typeof VBtn>['$props'];
 
-export default {
+export default defineComponent({
   emits: {
     'update:unitNoteValue': (noteValue: NoteValue) => true,
   },
@@ -72,5 +73,5 @@ export default {
       },
     },
   },
-}
+})
 </script>

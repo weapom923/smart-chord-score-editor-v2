@@ -31,9 +31,10 @@
 </style>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import { ScoreMetadata } from '../modules/ScoreMetadata';
 
-export default {
+export default defineComponent({
   computed: {
     $_scoreMetadata(): ScoreMetadata {
       return this.$store.state.score.score.metadata;
@@ -61,5 +62,5 @@ export default {
       return credits;
     },
   },
-}
+})
 </script>

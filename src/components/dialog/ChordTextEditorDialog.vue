@@ -33,6 +33,7 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import DialogBase from './DialogBase.vue';
 import DialogTextField from '../parts/DialogTextField.vue';
 import { Chord } from '../../modules/Chord';
@@ -42,7 +43,7 @@ import chordTextParser from '../../modules/chordTextParser.js';
 import { SectionAndBarIdx } from '../../modules/SectionAndBarRange';
 import { Note } from '../../modules/Note';
 
-export default {
+export default defineComponent({
   extends: DialogBase,
 
   components: {
@@ -133,5 +134,5 @@ export default {
       }
     }
   },
-}
+})
 </script>

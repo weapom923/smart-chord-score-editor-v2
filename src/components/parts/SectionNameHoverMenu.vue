@@ -23,6 +23,7 @@
 </template>
 
 <script lang="ts">
+import { defineComponent } from 'vue';
 import { Bar } from '../../modules/Bar';
 import { Section } from '../../modules/Section';
 import { SectionAndBarRange, SectionAndBarIdx } from '../../modules/SectionAndBarRange';
@@ -34,7 +35,7 @@ type SectionNameHoverMenuItemType = {
   disabled: boolean,
 };
 
-export default {
+export default defineComponent({
   props: {
     section: { type: Section, required: true },
     sectionIdx: { type: Number, required: true },
@@ -150,5 +151,5 @@ export default {
       }
     },
   },
-}
+})
 </script>

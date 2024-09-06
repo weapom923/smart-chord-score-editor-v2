@@ -31,7 +31,7 @@
 </style>
 
 <script lang="ts">
-import { CSSProperties } from 'vue';
+import { defineComponent, CSSProperties } from 'vue';
 import { NotePitch, np } from '../modules/NotePitch';
 import { nps } from '../modules/NotePitchSymbol';
 import { Scale } from '../modules/Scale';
@@ -41,7 +41,7 @@ import KeySignature from '../components/canvases/KeySignature.vue';
 
 const keySignatureWidthPx = 6;
 
-export default {
+export default defineComponent({
   components: {
     KeySignature,
   },
@@ -138,5 +138,5 @@ export default {
       return 0;
     },
   },
-}
+})
 </script>

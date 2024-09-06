@@ -125,7 +125,7 @@
 </style>
 
 <script lang="ts">
-import { CSSProperties } from 'vue';
+import { defineComponent, CSSProperties } from 'vue';
 import { TensionNotePitch } from '../modules/TensionNotePitch';
 import { Chord } from '../modules/Chord';
 import { Color } from '../modules/Color';
@@ -153,7 +153,7 @@ function getNoteFlatOrSharpText(notePitch: NotePitch): string {
   return '';
 }
 
-export default {
+export default defineComponent({
   emits: {
     widthUpdate: (widthPx: number) => true,
     mounted: (element: HTMLDivElement) => true,
@@ -276,5 +276,5 @@ export default {
       this.$emit('widthUpdate', this.$_chordElement.getBoundingClientRect().width);
     },
   },
-};
+})
 </script>
