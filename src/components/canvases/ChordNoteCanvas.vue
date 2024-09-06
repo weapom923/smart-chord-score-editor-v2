@@ -125,12 +125,12 @@ const ChordNoteCanvas = defineComponent({
     },
     $_noteWidthPx(): number {
       if (this.$_isDotted) {
-        let noteBaseWidthPx = noteHeadHorizontalOffsetPx + noteHeadWidthPx + noteHeadSlideWidthPx;
-        let noteExpandedWidthPx = max(this.$_noteDotRadiusPx * 2 + noteDotMarginPx, this.$_noteFlagWidthPx);
+        const noteBaseWidthPx = noteHeadHorizontalOffsetPx + noteHeadWidthPx + noteHeadSlideWidthPx;
+        const noteExpandedWidthPx = max(this.$_noteDotRadiusPx * 2 + noteDotMarginPx, this.$_noteFlagWidthPx);
         return noteBaseWidthPx + noteExpandedWidthPx;
       } else {
-        let noteBaseWidthPx = noteHeadHorizontalOffsetPx;
-        let noteExpandedWidthPx = max(noteHeadWidthPx + noteHeadSlideWidthPx, this.$_noteFlagWidthPx);
+        const noteBaseWidthPx = noteHeadHorizontalOffsetPx;
+        const noteExpandedWidthPx = max(noteHeadWidthPx + noteHeadSlideWidthPx, this.$_noteFlagWidthPx);
         return noteBaseWidthPx + noteExpandedWidthPx;
       }
     },
@@ -234,11 +234,11 @@ const ChordNoteCanvas = defineComponent({
     }
 
     function drawNoteFlag(this: This, canvas: CanvasRenderingContext2D) {
-      let noteFlagDirection = (this.invertStemDirection)? -1: 1;
+      const noteFlagDirection = (this.invertStemDirection)? -1: 1;
       canvas.strokeStyle = this.color.styleString(false);
       canvas.lineWidth = 2;
       for (let noteFlagIdx = 0; noteFlagIdx < this.$_numNoteFlags; ++noteFlagIdx) {
-        let currentNoteFlagBeginVerticalOffsetPx = this.$_noteStemEndPointVerticalOffsetPx + noteFlagIdx * noteFlagDirection * this.$_staffLineStepPx;
+        const currentNoteFlagBeginVerticalOffsetPx = this.$_noteStemEndPointVerticalOffsetPx + noteFlagIdx * noteFlagDirection * this.$_staffLineStepPx;
         canvas.beginPath();
         canvas.moveTo(
           this.$_noteStemHorizontalOffsetPx,

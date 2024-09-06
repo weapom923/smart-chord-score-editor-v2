@@ -196,20 +196,20 @@ export default {
     $_rootNoteSymbolText: {
       get(): string | undefined {
         if (this.chord === null) return undefined;
-        let chord = this.chord;
+        const chord = this.chord;
         return this.$_rootNoteSymbolTexts.find(rootNoteSymbolText => {
-          let rootNotePitchSymbol = this.$_rootNoteSymbolTextToInstance.get(rootNoteSymbolText);
+          const rootNotePitchSymbol = this.$_rootNoteSymbolTextToInstance.get(rootNoteSymbolText);
           if (rootNotePitchSymbol === undefined) return false;
           return chord.root.symbol.isEqualTo(rootNotePitchSymbol);
         });
       },
       set(rootNoteSymbolText: string) {
-        let rootNoteSymbol = this.$_rootNoteSymbolTextToInstance.get(rootNoteSymbolText);
+        const rootNoteSymbol = this.$_rootNoteSymbolTextToInstance.get(rootNoteSymbolText);
         if (rootNoteSymbol === undefined) {
           this.$emit('update:chord', null);
         } else {
           if (this.chord !== null) {
-            let newChord = new Chord(
+            const newChord = new Chord(
               NotePitch.findPredefinedNotePitch(rootNoteSymbol, this.chord.root.shift),
               this.chord.triad,
               this.chord.sixthOrSeventh,
@@ -219,7 +219,7 @@ export default {
             );
             this.$emit('update:chord', newChord);
           } else {
-            let newChord = Chord.default;
+            const newChord = Chord.default;
             newChord.root = NotePitch.findPredefinedNotePitch(rootNoteSymbol, 0);
             this.$emit('update:chord', newChord);
           }
@@ -242,9 +242,9 @@ export default {
     $_bassNoteSymbolText: {
       get(): string | undefined {
         if (this.chord === null) return undefined;
-        let chord = this.chord;
+        const chord = this.chord;
         return this.$_allBassNoteSymbolTexts.find(bassNoteSymbolText => {
-          let bassNotePitchSymbol = this.$_bassNoteSymbolTextToInstance.get(bassNoteSymbolText);
+          const bassNotePitchSymbol = this.$_bassNoteSymbolTextToInstance.get(bassNoteSymbolText);
           if (bassNotePitchSymbol === undefined) return false;
           if (chord.bass === undefined) return false;
           return chord.bass.symbol.isEqualTo(bassNotePitchSymbol);
@@ -254,12 +254,12 @@ export default {
         if (this.chord === null) return;
         let bassNotePitch: NotePitch | undefined = undefined;
         if (bassNoteSymbolText !== undefined) {
-          let bassNoteSymbol = this.$_bassNoteSymbolTextToInstance.get(bassNoteSymbolText);
+          const bassNoteSymbol = this.$_bassNoteSymbolTextToInstance.get(bassNoteSymbolText);
           if (bassNoteSymbol !== undefined) {
             bassNotePitch = NotePitch.findPredefinedNotePitch(bassNoteSymbol, this.chord.bass?.shift ?? 0);
           }
         }
-        let newChord = new Chord(
+        const newChord = new Chord(
           this.chord.root,
           this.chord.triad,
           this.chord.sixthOrSeventh,
@@ -283,18 +283,18 @@ export default {
     $_rootNoteAccidentalSign: {
       get(): string | undefined {
         if (this.chord === null) return undefined;
-        let chord = this.chord;
+        const chord = this.chord;
         return this.$_allNoteAccidentalSigns.find(rootNoteAccidentalSign => {
-          let rootNotePitchShift = this.$_noteAccidentalSignToPitchShift.get(rootNoteAccidentalSign);
+          const rootNotePitchShift = this.$_noteAccidentalSignToPitchShift.get(rootNoteAccidentalSign);
           if (rootNotePitchShift === undefined) return false;
           return chord.root.shift === rootNotePitchShift;
         });
       },
       set(rootNoteAccidentalSign: string) {
-        let rootNotePitchShift = this.$_noteAccidentalSignToPitchShift.get(rootNoteAccidentalSign);
+        const rootNotePitchShift = this.$_noteAccidentalSignToPitchShift.get(rootNoteAccidentalSign);
         if ((rootNotePitchShift !== undefined) && (this.chord !== null)) {
-          let rootNotePitch = NotePitch.findPredefinedNotePitch(this.chord.root.symbol, rootNotePitchShift);
-          let newChord = new Chord(
+          const rootNotePitch = NotePitch.findPredefinedNotePitch(this.chord.root.symbol, rootNotePitchShift);
+          const newChord = new Chord(
             rootNotePitch,
             this.chord.triad,
             this.chord.sixthOrSeventh,
@@ -309,9 +309,9 @@ export default {
     $_bassNoteAccidentalSign: {
       get(): string | undefined {
         if (this.chord === null) return undefined;
-        let chord = this.chord;
+        const chord = this.chord;
         return this.$_allNoteAccidentalSigns.find(rootNoteAccidentalSign => {
-          let bassNotePitchShift = this.$_noteAccidentalSignToPitchShift.get(rootNoteAccidentalSign);
+          const bassNotePitchShift = this.$_noteAccidentalSignToPitchShift.get(rootNoteAccidentalSign);
           if (bassNotePitchShift === undefined) return false;
           if (chord.bass === undefined) return false;
           return chord.bass.shift === bassNotePitchShift;
@@ -319,13 +319,13 @@ export default {
       },
       set(bassNoteAccidentalSign: string) {
         if (this.chord === null) return;
-        let bassNotePitchShift = this.$_noteAccidentalSignToPitchShift.get(bassNoteAccidentalSign);
+        const bassNotePitchShift = this.$_noteAccidentalSignToPitchShift.get(bassNoteAccidentalSign);
         if (bassNotePitchShift === undefined) return;
         let bassNotePitch: NotePitch | undefined = undefined;
         if (this.chord.bass !== undefined) {
           bassNotePitch = NotePitch.findPredefinedNotePitch(this.chord.bass.symbol, bassNotePitchShift);
         }
-        let newChord = new Chord(
+        const newChord = new Chord(
           this.chord.root,
           this.chord.triad,
           this.chord.sixthOrSeventh,
@@ -351,17 +351,17 @@ export default {
     $_triadText: {
       get(): string | undefined {
         if (this.chord === null) return undefined;
-        let chord = this.chord;
+        const chord = this.chord;
         return this.$_allTriadTexts.find(triadText => {
-          let triad = this.$_triadTextToInstance.get(triadText);
+          const triad = this.$_triadTextToInstance.get(triadText);
           if (triad === undefined) return false;
           return chord.triad === triad;
         });
       },
       set(triadText: string) {
-        let triad = this.$_triadTextToInstance.get(triadText);
+        const triad = this.$_triadTextToInstance.get(triadText);
         if ((triad !== undefined) && (this.chord !== null)) {
-          let newChord = new Chord(
+          const newChord = new Chord(
             NotePitch.findPredefinedNotePitch(this.chord.root.symbol, this.chord.root.shift),
             triad,
             this.chord.sixthOrSeventh,
@@ -386,9 +386,9 @@ export default {
     $_sixthOrSeventhText: {
       get(): string | undefined {
         if (this.chord === null) return undefined;
-        let chord = this.chord;
+        const chord = this.chord;
         return this.$_sixthOrSeventhTexts.find(rootNoteAccidentalSign => {
-          let sixthOrSeventh = this.$_sixthOrSeventhTextToInstance.get(rootNoteAccidentalSign);
+          const sixthOrSeventh = this.$_sixthOrSeventhTextToInstance.get(rootNoteAccidentalSign);
           if (sixthOrSeventh === undefined) return false;
           return chord.sixthOrSeventh === sixthOrSeventh;
         });
@@ -401,7 +401,7 @@ export default {
         } else {
           sixthOrSeventh = this.$_sixthOrSeventhTextToInstance.get(sixthOrSeventhText);
         }
-        let newChord = new Chord(
+        const newChord = new Chord(
           this.chord.root,
           this.chord.triad,
           sixthOrSeventh,
@@ -428,12 +428,12 @@ export default {
     $_tensionNotes(): TensionNotePitch[] { return [ ...this.$_tensionNotePitchTextToInstance.values() ] },
     $_tensionNoteTexts: {
       get(): string[] {
-        let tensionNotePitchTexts: string[] = [];
+        const tensionNotePitchTexts: string[] = [];
         if (this.chord === null) return tensionNotePitchTexts;
-        for (let tensionNotePitchText of this.$_allTensionNotePitchTexts) {
-          let tensionNotePitch = this.$_tensionNotePitchTextToInstance.get(tensionNotePitchText);
+        for (const tensionNotePitchText of this.$_allTensionNotePitchTexts) {
+          const tensionNotePitch = this.$_tensionNotePitchTextToInstance.get(tensionNotePitchText);
           if (tensionNotePitch === undefined) continue;
-          for (let tensionNotePitchInChord of this.chord.tensionNotes) {
+          for (const tensionNotePitchInChord of this.chord.tensionNotes) {
             if (tensionNotePitchInChord.isEqualTo(tensionNotePitch)) {
               tensionNotePitchTexts.push(tensionNotePitchText);
             }
@@ -443,13 +443,13 @@ export default {
       },
       set(tensionNotePitchTexts: string[]) {
         if (this.chord === null) return;
-        let tensionNotePitches = new Set<TensionNotePitch>();
-        for (let tentionNotePitchText of tensionNotePitchTexts) {
-          let tensionNotePitch = this.$_tensionNotePitchTextToInstance.get(tentionNotePitchText);
+        const tensionNotePitches = new Set<TensionNotePitch>();
+        for (const tentionNotePitchText of tensionNotePitchTexts) {
+          const tensionNotePitch = this.$_tensionNotePitchTextToInstance.get(tentionNotePitchText);
           if (tensionNotePitch === undefined) continue;
           tensionNotePitches.add(tensionNotePitch);
         }
-        let newChord = new Chord(
+        const newChord = new Chord(
           NotePitch.findPredefinedNotePitch(this.chord.root.symbol, this.chord.root.shift),
           this.chord.triad,
           this.chord.sixthOrSeventh,
@@ -462,7 +462,7 @@ export default {
     },
 
     $_isSixthOrSeventhDisabled(): Map<string, boolean> {
-      let isSixthOrSeventhDisabled = new Map<string, boolean>();
+      const isSixthOrSeventhDisabled = new Map<string, boolean>();
       for (let [ sixthOrSevenceText, sixthOrSeventh ] of this.$_sixthOrSeventhTextToInstance) {
         isSixthOrSeventhDisabled.set(
           sixthOrSevenceText,
@@ -473,7 +473,7 @@ export default {
     },
 
     $_isTensionNoteDisabled(): Map<string, boolean> {
-      let isTensionNoteDisabled = new Map<string, boolean>();
+      const isTensionNoteDisabled = new Map<string, boolean>();
       for (let [ tentionNotePitchText, tensionNotePitch ] of this.$_tensionNotePitchTextToInstance) {
         isTensionNoteDisabled.set(
           tentionNotePitchText,

@@ -103,7 +103,7 @@ export default {
 
     async $_ok() {
       if (this.$data.$_tempChord !== undefined) {
-        let note = this.$_note.clone();
+        const note = this.$_note.clone();
         note.pitchOrChord = this.$data.$_tempChord;
         await this.$store.dispatch(
           'score/replaceNote',

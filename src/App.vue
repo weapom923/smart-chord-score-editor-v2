@@ -199,7 +199,7 @@ const App = defineComponent({
           await this.$store.dispatch('score/setScore', score);
           await this.$store.dispatch('score/clearChangeHistory');
         } else {
-          let scoreJsonFromCookie = window.localStorage.getItem('score');
+          const scoreJsonFromCookie = window.localStorage.getItem('score');
           if (scoreJsonFromCookie !== null) {
             await this.$store.dispatch('score/setScore', Score.loadJson(scoreJsonFromCookie));
           } 
@@ -230,7 +230,7 @@ const App = defineComponent({
     $_scorePagePropsByRows(): scorePagePropType[][] {
       return this.$_scorePageProps.reduce(
         (scorePagePropsPerRow: scorePagePropType[][], scorePageProp: scorePagePropType): scorePagePropType[][] => {
-          let scorePagePropsInLastRow = scorePagePropsPerRow[scorePagePropsPerRow.length - 1];
+          const scorePagePropsInLastRow = scorePagePropsPerRow[scorePagePropsPerRow.length - 1];
           if (scorePagePropsInLastRow.length < this.$store.state.config.numPagesPerRow) {
             scorePagePropsInLastRow.push(scorePageProp);
           } else {
@@ -243,14 +243,14 @@ const App = defineComponent({
     },
 
     $_scorePageProps(): scorePagePropType[] {
-      let sectionAndBarRanges: SectionAndBarRange[] = []
+      const sectionAndBarRanges: SectionAndBarRange[] = []
       let sectionAndBarIdx: SectionAndBarIdx | undefined = this.$_score.firstSectionAndBarIdx;
       let pageFirstSectionAndBarIdx: SectionAndBarIdx | undefined = undefined;
       while (sectionAndBarIdx !== undefined) {
         if (pageFirstSectionAndBarIdx === undefined) {
           pageFirstSectionAndBarIdx = sectionAndBarIdx.clone();
         }
-        let bar = this.$_score.getBar(sectionAndBarIdx);
+        const bar = this.$_score.getBar(sectionAndBarIdx);
         if (bar.break.isEqualTo(bb.page) && !this.$store.state.appState.isMobileLayoutEnabled) {
           sectionAndBarRanges.push(new SectionAndBarRange(pageFirstSectionAndBarIdx, sectionAndBarIdx));
           pageFirstSectionAndBarIdx = undefined;
@@ -499,7 +499,7 @@ const App = defineComponent({
 
       async function setBarBreak(this: This, barBreak: BarBreak): Promise<boolean> {
         if (this.$store.state.score.selectedBars === undefined) return false;
-        let sectionAndBarIdx = this.$_score.getPreviousSectionAndBarIdx(this.$store.state.score.selectedBars.first);
+        const sectionAndBarIdx = this.$_score.getPreviousSectionAndBarIdx(this.$store.state.score.selectedBars.first);
         if (sectionAndBarIdx === undefined) return false;
         await this.$store.dispatch( 'score/setBarBreak', { sectionAndBarIdx, barBreak });
         return true;
@@ -525,9 +525,9 @@ const App = defineComponent({
 
       async function insertBarBefore(this: This): Promise<boolean> {
         if (this.$store.state.score.selectedBars === undefined) return false;
-        let baseSectionAndBarIdx = this.$store.state.score.selectedBars.first;
-        let baseBar = this.$_score.getBar(baseSectionAndBarIdx);
-        let targetSectionAndBarIdx = baseSectionAndBarIdx;
+        const baseSectionAndBarIdx = this.$store.state.score.selectedBars.first;
+        const baseBar = this.$_score.getBar(baseSectionAndBarIdx);
+        const targetSectionAndBarIdx = baseSectionAndBarIdx;
         await this.$store.dispatch(
           'score/insertBars',
           {
@@ -541,9 +541,9 @@ const App = defineComponent({
 
       async function insertBarAfter(this: This): Promise<boolean> {
         if (this.$store.state.score.selectedBars === undefined) return false;
-        let baseSectionAndBarIdx = this.$store.state.score.selectedBars.last;
-        let baseBar = this.$_score.getBar(baseSectionAndBarIdx);
-        let targetSectionAndBarIdx = new SectionAndBarIdx(baseSectionAndBarIdx.sectionIdx, baseSectionAndBarIdx.barIdx + 1);
+        const baseSectionAndBarIdx = this.$store.state.score.selectedBars.last;
+        const baseBar = this.$_score.getBar(baseSectionAndBarIdx);
+        const targetSectionAndBarIdx = new SectionAndBarIdx(baseSectionAndBarIdx.sectionIdx, baseSectionAndBarIdx.barIdx + 1);
         await this.$store.dispatch(
           'score/insertBars',
           {
@@ -557,9 +557,9 @@ const App = defineComponent({
 
       async function insertSectionBefore(this: This): Promise<boolean> {
         if (this.$store.state.score.selectedBars === undefined) return false;
-        let baseSectionIdx = this.$store.state.score.selectedBars.first.sectionIdx;
-        let baseSection = this.$_score.getSection(baseSectionIdx);
-        let baseBar = baseSection.firstBar;
+        const baseSectionIdx = this.$store.state.score.selectedBars.first.sectionIdx;
+        const baseSection = this.$_score.getSection(baseSectionIdx);
+        const baseBar = baseSection.firstBar;
         await this.$store.dispatch(
           'dialog/setDialog',
           {
@@ -579,9 +579,9 @@ const App = defineComponent({
 
       async function insertSectionAfter(this: This): Promise<boolean> {
         if (this.$store.state.score.selectedBars === undefined) return false;
-        let baseSectionIdx = this.$store.state.score.selectedBars.last.sectionIdx;
-        let baseSection = this.$_score.getSection(baseSectionIdx);
-        let baseBar = baseSection.lastBar;
+        const baseSectionIdx = this.$store.state.score.selectedBars.last.sectionIdx;
+        const baseSection = this.$_score.getSection(baseSectionIdx);
+        const baseBar = baseSection.lastBar;
         await this.$store.dispatch(
           'dialog/setDialog',
           {

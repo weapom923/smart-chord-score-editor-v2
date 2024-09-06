@@ -155,7 +155,7 @@ const messageJa = {
   },
 };
 
-let messageEn: Messages = {
+const messageEn: Messages = {
   undo: 'Undo',
   redo: 'Redo',
   createNewScore: 'Create a new score',

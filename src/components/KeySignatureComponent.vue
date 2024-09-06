@@ -57,7 +57,7 @@ export default {
     },
 
     $_keySignatureComponentStyle(): CSSProperties {
-      let keySignatureComponentStyle: CSSProperties = {};
+      const keySignatureComponentStyle: CSSProperties = {};
       if (this.$_keySignatureNotePitches.length > 0) {
         keySignatureComponentStyle.marginRight = `${10}px`;
       }
@@ -74,7 +74,7 @@ export default {
     },
 
     $_keySignatureNotePitches(): NotePitch[] {
-      let keySignatureNotePitches: NotePitch[] = [];
+      const keySignatureNotePitches: NotePitch[] = [];
       if (this.scale.numSharps > 0) {
         if (this.scale.numSharps >= 1) keySignatureNotePitches.push(np.fSharp);
         if (this.scale.numSharps >= 2) keySignatureNotePitches.push(np.cSharp);
@@ -102,7 +102,7 @@ export default {
 
   methods: {
     $_keySignatureStyle(notePitch: NotePitch, keySignatureIdx: number): CSSProperties {
-      let topOffset = getTopOffsetPx(this.$_staffLineStepPx, notePitch) + this.$_keySignatureGlobalTopOffset;
+      const topOffset = getTopOffsetPx(this.$_staffLineStepPx, notePitch) + this.$_keySignatureGlobalTopOffset;
       return {
         left: `${keySignatureIdx * keySignatureWidthPx}px`,
         top: `${topOffset}px`,

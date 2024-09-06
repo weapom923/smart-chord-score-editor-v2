@@ -12,7 +12,7 @@ const router = createRouter({
       path: '/:pathMatch(.*)*',
       component: App,
       async beforeEnter(to, from, next) {
-        let pathComponents = to.params.pathMatch as RouteParamValue[];
+        const pathComponents = to.params.pathMatch as RouteParamValue[];
         if ('mode' in to.query) {
           switch (to.query['mode']) {
             case 'print':
@@ -36,12 +36,12 @@ const router = createRouter({
         };
         const pitchOffset = getPitchOffset(to.query);
         try {
-          let response = await fetch(
+          const response = await fetch(
             `${googleCloudStorageDownloadBaseUrl}/${pathComponents.join('%2F')}.json?alt=media`,
             { headers: { 'Content-Type': 'application/json' } }
           )
           if (!response.ok) throw new Error(`Error ${response.status}: ${response.statusText}`);
-          let scoreRawObj = await response.json();
+          const scoreRawObj = await response.json();
           to.meta.score = Score.loadFromRawObj(scoreRawObj).transpose(pitchOffset);
           next();
         }

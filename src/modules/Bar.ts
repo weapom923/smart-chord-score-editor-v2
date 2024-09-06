@@ -157,12 +157,12 @@ export class Bar {
   }
 
   findSameTypedPartIndex(partInBarType: PartInBarType): PartIdx | undefined {
-    let foundPartIdx = this.parts.findIndex(part => (part.type === partInBarType));
+    const foundPartIdx = this.parts.findIndex(part => (part.type === partInBarType));
     return (foundPartIdx === -1)? undefined : foundPartIdx;
   }
 
   findSameTypedPart(partInBarType: PartInBarType): PartInBar | undefined {
-    let foundPartIdx = this.findSameTypedPartIndex(partInBarType);
+    const foundPartIdx = this.findSameTypedPartIndex(partInBarType);
     if (foundPartIdx === undefined) return undefined;
     return this.getPart(foundPartIdx);
   }
@@ -200,14 +200,14 @@ export class Bar {
   }
 
   transpose(pitchOffset: number): Bar {
-    let targetScale = this.scale.transposeByPitchOffset(pitchOffset);
-    let newBar = this.clone();
+    const targetScale = this.scale.transposeByPitchOffset(pitchOffset);
+    const newBar = this.clone();
     newBar.scale = targetScale;
-    for (let part of newBar.parts) {
+    for (const part of newBar.parts) {
       switch (part.type) {
         case 'chord':
         case 'normal':
-          for (let note of part.notes) {
+          for (const note of part.notes) {
             switch (note.type) {
               case 'normal':
                 if (note.pitchOrChord !== null) {

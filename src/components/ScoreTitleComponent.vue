@@ -48,7 +48,7 @@ export default {
     },
 
     $_credits(): Record<string, string> {
-      let credits: Record<string, string> = {};
+      const credits: Record<string, string> = {};
       if (this.$_scoreMetadata.composerName.length > 0) {
         credits['Composed by'] = this.$_scoreMetadata.composerName;
       }

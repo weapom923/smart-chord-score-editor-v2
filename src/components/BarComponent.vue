@@ -237,21 +237,21 @@ export default {
       if (!this.$data.$_partNoteElements.has(partIdx)) {
         this.$data.$_partNoteElements.set(partIdx, new Map<NoteIdx, Map<SplitNoteIdx, HTMLElement>>())
       }
-      let partNoteElements = this.$data.$_partNoteElements.get(partIdx);
+      const partNoteElements = this.$data.$_partNoteElements.get(partIdx);
       if (partNoteElements === undefined) return;
       if (!partNoteElements.has(noteIdx)) {
         partNoteElements.set(noteIdx, new Map<SplitNoteIdx, HTMLElement>());
       }
-      let noteElements = partNoteElements.get(noteIdx);
+      const noteElements = partNoteElements.get(noteIdx);
       if (noteElements === undefined) return;
       noteElements.set(splitNoteIdx, splitNoteElement);
       this.$_updateMarginTopAndBottom();
     },
 
     $_onSplitNoteElementBeforeUnmount(partIdx: PartIdx, { noteIdx, splitNoteIdx }: { noteIdx: NoteIdx, splitNoteIdx: SplitNoteIdx }) {
-      let partNoteElements = this.$data.$_partNoteElements.get(partIdx);
+      const partNoteElements = this.$data.$_partNoteElements.get(partIdx);
       if (partNoteElements === undefined) return;
-      let noteElements = partNoteElements.get(noteIdx);
+      const noteElements = partNoteElements.get(noteIdx);
       if (noteElements === undefined) return;
       noteElements.delete(splitNoteIdx);
       if (noteElements.size === 0) partNoteElements.delete(noteIdx);
@@ -271,7 +271,7 @@ export default {
     },
 
     $_onNoteChordElementBeforeUnmount(partIdx: PartIdx, noteIdx: NoteIdx) {
-      let partNoteChordElements = this.$data.$_partNoteChordElements.get(partIdx);
+      const partNoteChordElements = this.$data.$_partNoteChordElements.get(partIdx);
       if (partNoteChordElements === undefined) return;
       partNoteChordElements.delete(noteIdx);
       if (partNoteChordElements.size === 0) this.$data.$_partNoteChordElements.delete(partIdx);
@@ -342,18 +342,18 @@ export default {
       {
         let maxTopOffsetPx = this.$_internalMarginTopPx + this.$store.state.config.systemMarginTopPx;
         let maxBottomOffsetPx = this.$_internalMarginBottomPx + this.$store.state.config.systemMarginBottomPx;
-        let topBiasPx = this.$data.$_barElementBoundingClientRect.top;
-        let bottomBiasPx = this.$data.$_barElementBoundingClientRect.bottom;
-        for (let partNoteElements of this.$data.$_partNoteElements.values()) {
-          for (let partNoteElement of partNoteElements.values()) {
-            for (let partSplitNoteElement of partNoteElement.values()) {
+        const topBiasPx = this.$data.$_barElementBoundingClientRect.top;
+        const bottomBiasPx = this.$data.$_barElementBoundingClientRect.bottom;
+        for (const partNoteElements of this.$data.$_partNoteElements.values()) {
+          for (const partNoteElement of partNoteElements.values()) {
+            for (const partSplitNoteElement of partNoteElement.values()) {
               maxTopOffsetPx = getMaxTopOffsetPx(partSplitNoteElement, maxTopOffsetPx, topBiasPx);
               maxBottomOffsetPx = getMaxBottomOffsetPx(partSplitNoteElement, maxBottomOffsetPx, bottomBiasPx);
             }
           }
         }
-        for (let partNoteChordElements of this.$data.$_partNoteChordElements.values()) {
-          for (let partNoteChordElement of partNoteChordElements.values()) {
+        for (const partNoteChordElements of this.$data.$_partNoteChordElements.values()) {
+          for (const partNoteChordElement of partNoteChordElements.values()) {
             maxTopOffsetPx = getMaxTopOffsetPx(partNoteChordElement, maxTopOffsetPx, topBiasPx);
             maxBottomOffsetPx = getMaxBottomOffsetPx(partNoteChordElement, maxBottomOffsetPx, bottomBiasPx);
           }
@@ -366,7 +366,7 @@ export default {
 
       function getMaxTopOffsetPx(element: HTMLElement, currentMaxTopOffsetPx: number, topBiasPx: number): number {
         if (element.clientHeight === 0) return currentMaxTopOffsetPx;
-        let topOffsetPx = topBiasPx - element.getBoundingClientRect().top;
+        const topOffsetPx = topBiasPx - element.getBoundingClientRect().top;
         if (currentMaxTopOffsetPx < topOffsetPx) {
           currentMaxTopOffsetPx = topOffsetPx;
         }
@@ -375,7 +375,7 @@ export default {
 
       function getMaxBottomOffsetPx(element: HTMLElement, currentMaxBottomOffsetPx: number, bottomBiasPx: number): number {
         if (element.clientHeight === 0) return currentMaxBottomOffsetPx;
-        let bottomOffsetPx = element.getBoundingClientRect().bottom - bottomBiasPx;
+        const bottomOffsetPx = element.getBoundingClientRect().bottom - bottomBiasPx;
         if (currentMaxBottomOffsetPx < bottomOffsetPx) {
           currentMaxBottomOffsetPx = bottomOffsetPx;
         }
@@ -384,10 +384,10 @@ export default {
     },
 
     $_updateBarRepeatEndingStyle() {
-      let barRepeatEndingElementBoundingClientRect = this.barRepeatEndingComponent?.$el.getBoundingClientRect();
+      const barRepeatEndingElementBoundingClientRect = this.barRepeatEndingComponent?.$el.getBoundingClientRect();
       if (barRepeatEndingElementBoundingClientRect === undefined) return;
-      let barRepeatEndingWidthPx = this.$data.$_barElementBoundingClientRect.x + this.$data.$_barElementBoundingClientRect.width - barRepeatEndingElementBoundingClientRect.x;
-      let barRepeatEndingRightOffsetPx = barRepeatEndingElementBoundingClientRect.x + barRepeatEndingElementBoundingClientRect.width - this.$data.$_barElementBoundingClientRect.x;
+      const barRepeatEndingWidthPx = this.$data.$_barElementBoundingClientRect.x + this.$data.$_barElementBoundingClientRect.width - barRepeatEndingElementBoundingClientRect.x;
+      const barRepeatEndingRightOffsetPx = barRepeatEndingElementBoundingClientRect.x + barRepeatEndingElementBoundingClientRect.width - this.$data.$_barElementBoundingClientRect.x;
       this.$data.$_barRepeatEndingStyle = {
         marginTop: `${-this.$data.$_marginTopPxMax}px`,
         marginRight: `${-(this.$data.$_barElementBoundingClientRect.width - barRepeatEndingRightOffsetPx)}px`,

@@ -137,8 +137,8 @@ export default {
       get(): BarLine | undefined {
         if (this.$_selectedSectionAndBarRange === undefined) return undefined;
         if (!this.$_selectedSectionAndBarRange.includeSingleBarOnly) return undefined;
-        let uniqueBarLineStart = this.$_score.getBar(this.$_selectedSectionAndBarRange.first).lineStart;
-        for (let sectionAndBarIdx of this.$_score.getSectionAndBarIdxIterator(this.$_selectedSectionAndBarRange)) {
+        const uniqueBarLineStart = this.$_score.getBar(this.$_selectedSectionAndBarRange.first).lineStart;
+        for (const sectionAndBarIdx of this.$_score.getSectionAndBarIdxIterator(this.$_selectedSectionAndBarRange)) {
           if (!uniqueBarLineStart.isEqualTo(this.$_score.getBar(sectionAndBarIdx).lineStart)) return undefined;
         }
         return uniqueBarLineStart;
@@ -146,7 +146,7 @@ export default {
       set(barLineStart: BarLine) {
         if (this.$_selectedSectionAndBarRange === undefined) return undefined;
         this.$_selectedBars = this.$_score.getBars(this.$_selectedSectionAndBarRange).map(bar => {
-          let newBar = bar.clone();
+          const newBar = bar.clone();
           newBar.lineStart = barLineStart;
           return newBar;
         });
@@ -157,8 +157,8 @@ export default {
       get(): BarLine | undefined {
         if (this.$_selectedSectionAndBarRange === undefined) return undefined;
         if (!this.$_selectedSectionAndBarRange.includeSingleBarOnly) return undefined;
-        let uniqueBarLineEnd = this.$_score.getBar(this.$_selectedSectionAndBarRange.first).lineEnd;
-        for (let sectionAndBarIdx of this.$_score.getSectionAndBarIdxIterator(this.$_selectedSectionAndBarRange)) {
+        const uniqueBarLineEnd = this.$_score.getBar(this.$_selectedSectionAndBarRange.first).lineEnd;
+        for (const sectionAndBarIdx of this.$_score.getSectionAndBarIdxIterator(this.$_selectedSectionAndBarRange)) {
           if (!uniqueBarLineEnd.isEqualTo(this.$_score.getBar(sectionAndBarIdx).lineEnd)) return undefined;
         }
         return uniqueBarLineEnd;
@@ -166,7 +166,7 @@ export default {
       set(barLineEnd: BarLine) {
         if (this.$_selectedSectionAndBarRange === undefined) return undefined;
         this.$_selectedBars = this.$_score.getBars(this.$_selectedSectionAndBarRange).map(bar => {
-          let newBar = bar.clone();
+          const newBar = bar.clone();
           newBar.lineEnd = barLineEnd;
           return newBar;
         });
@@ -177,8 +177,8 @@ export default {
       get(): BarRepeatEnding | undefined {
         if (this.$_selectedSectionAndBarRange === undefined) return undefined;
         if (!this.$_selectedSectionAndBarRange.includeSingleBarOnly) return undefined;
-        let uniqueBarRepeatEnding = this.$_score.getBar(this.$_selectedSectionAndBarRange.first).repeatEnding;
-        for (let sectionAndBarIdx of this.$_score.getSectionAndBarIdxIterator(this.$_selectedSectionAndBarRange)) {
+        const uniqueBarRepeatEnding = this.$_score.getBar(this.$_selectedSectionAndBarRange.first).repeatEnding;
+        for (const sectionAndBarIdx of this.$_score.getSectionAndBarIdxIterator(this.$_selectedSectionAndBarRange)) {
           if (!uniqueBarRepeatEnding.isEqualTo(this.$_score.getBar(sectionAndBarIdx).repeatEnding)) return undefined;
         }
         return uniqueBarRepeatEnding;
@@ -186,7 +186,7 @@ export default {
       set(barRepeatEnding: BarRepeatEnding) {
         if (this.$_selectedSectionAndBarRange === undefined) return undefined;
         this.$_selectedBars = this.$_score.getBars(this.$_selectedSectionAndBarRange).map(bar => {
-          let newBar = bar.clone();
+          const newBar = bar.clone();
           newBar.repeatEnding = barRepeatEnding.clone();
           return newBar;
         });
@@ -197,8 +197,8 @@ export default {
       get(): BarBreak | undefined {
         if (this.$_selectedSectionAndBarRange === undefined) return undefined;
         if (!this.$_selectedSectionAndBarRange.includeSingleBarOnly) return undefined;
-        let uniqueBarBreak = this.$_score.getBar(this.$_selectedSectionAndBarRange.first).break;
-        for (let sectionAndBarIdx of this.$_score.getSectionAndBarIdxIterator(this.$_selectedSectionAndBarRange)) {
+        const uniqueBarBreak = this.$_score.getBar(this.$_selectedSectionAndBarRange.first).break;
+        for (const sectionAndBarIdx of this.$_score.getSectionAndBarIdxIterator(this.$_selectedSectionAndBarRange)) {
           if (!uniqueBarBreak.isEqualTo(this.$_score.getBar(sectionAndBarIdx).break)) return undefined;
         }
         return uniqueBarBreak;
@@ -206,7 +206,7 @@ export default {
       set(barBreak: BarBreak) {
         if (this.$_selectedSectionAndBarRange === undefined) return undefined;
         this.$_selectedBars = this.$_score.getBars(this.$_selectedSectionAndBarRange).map(bar => {
-          let newBar = bar.clone();
+          const newBar = bar.clone();
           newBar.break = barBreak;
           return newBar;
         });
@@ -216,8 +216,8 @@ export default {
     $_selectedBarsValue: {
       get(): NoteValue | undefined {
         if (this.$_selectedSectionAndBarRange === undefined) return undefined;
-        let uniqueBarValue = this.$_score.getBar(this.$_selectedSectionAndBarRange.first).value;
-        for (let sectionAndBarIdx of this.$_score.getSectionAndBarIdxIterator(this.$_selectedSectionAndBarRange)) {
+        const uniqueBarValue = this.$_score.getBar(this.$_selectedSectionAndBarRange.first).value;
+        for (const sectionAndBarIdx of this.$_score.getSectionAndBarIdxIterator(this.$_selectedSectionAndBarRange)) {
           if (!uniqueBarValue.isEqualTo(this.$_score.getBar(sectionAndBarIdx).value)) return undefined;
         }
         return uniqueBarValue;
@@ -225,7 +225,7 @@ export default {
       set(barValue: NoteValue) {
         if (this.$_selectedSectionAndBarRange === undefined) return undefined;
         this.$_selectedBars = this.$_score.getBars(this.$_selectedSectionAndBarRange).map(bar => {
-          let newBar = bar.clone();
+          const newBar = bar.clone();
           newBar.value = barValue.clone();
           return newBar;
         });
@@ -235,8 +235,8 @@ export default {
     $_selectedBarsGridNoteValue: {
       get(): NoteValue | undefined {
         if (this.$_selectedSectionAndBarRange === undefined) return undefined;
-        let uniqueBarGridNoteValue = this.$_score.getBar(this.$_selectedSectionAndBarRange.first).gridNoteValue;
-        for (let sectionAndBarIdx of this.$_score.getSectionAndBarIdxIterator(this.$_selectedSectionAndBarRange)) {
+        const uniqueBarGridNoteValue = this.$_score.getBar(this.$_selectedSectionAndBarRange.first).gridNoteValue;
+        for (const sectionAndBarIdx of this.$_score.getSectionAndBarIdxIterator(this.$_selectedSectionAndBarRange)) {
           if (!uniqueBarGridNoteValue.isEqualTo(this.$_score.getBar(sectionAndBarIdx).gridNoteValue)) return undefined;
         }
         return uniqueBarGridNoteValue;
@@ -244,7 +244,7 @@ export default {
       set(barGridNoteValue: NoteValue) {
         if (this.$_selectedSectionAndBarRange === undefined) return undefined;
         this.$_selectedBars = this.$_score.getBars(this.$_selectedSectionAndBarRange).map(bar => {
-          let newBar = bar.clone();
+          const newBar = bar.clone();
           newBar.gridNoteValue = barGridNoteValue.clone();
           return newBar;
         });
@@ -254,8 +254,8 @@ export default {
     $_selectedBarsClef: {
       get(): Clef | undefined {
         if (this.$_selectedSectionAndBarRange === undefined) return undefined;
-        let uniqueBarClef = this.$_score.getBar(this.$_selectedSectionAndBarRange.first).clef;
-        for (let sectionAndBarIdx of this.$_score.getSectionAndBarIdxIterator(this.$_selectedSectionAndBarRange)) {
+        const uniqueBarClef = this.$_score.getBar(this.$_selectedSectionAndBarRange.first).clef;
+        for (const sectionAndBarIdx of this.$_score.getSectionAndBarIdxIterator(this.$_selectedSectionAndBarRange)) {
           if (!uniqueBarClef.isEqualTo(this.$_score.getBar(sectionAndBarIdx).clef)) return undefined;
         }
         return uniqueBarClef;
@@ -263,7 +263,7 @@ export default {
       set(barClef: Clef) {
         if (this.$_selectedSectionAndBarRange === undefined) return undefined;
         this.$_selectedBars = this.$_score.getBars(this.$_selectedSectionAndBarRange).map(bar => {
-          let newBar = bar.clone();
+          const newBar = bar.clone();
           newBar.clef = barClef;
           return newBar;
         });
@@ -273,8 +273,8 @@ export default {
     $_selectedBarsScale: {
       get(): Scale | undefined {
         if (this.$_selectedSectionAndBarRange === undefined) return undefined;
-        let uniqueBarScale = this.$_score.getBar(this.$_selectedSectionAndBarRange.first).scale;
-        for (let sectionAndBarIdx of this.$_score.getSectionAndBarIdxIterator(this.$_selectedSectionAndBarRange)) {
+        const uniqueBarScale = this.$_score.getBar(this.$_selectedSectionAndBarRange.first).scale;
+        for (const sectionAndBarIdx of this.$_score.getSectionAndBarIdxIterator(this.$_selectedSectionAndBarRange)) {
           if (!uniqueBarScale.isEqualTo(this.$_score.getBar(sectionAndBarIdx).scale)) return undefined;
         }
         return uniqueBarScale;
@@ -282,7 +282,7 @@ export default {
       set(scale: Scale) {
         if (this.$_selectedSectionAndBarRange === undefined) return undefined;
         this.$_selectedBars = this.$_score.getBars(this.$_selectedSectionAndBarRange).map(bar => {
-          let newBar = bar.clone();
+          const newBar = bar.clone();
           newBar.scale = scale;
           return newBar;
         });

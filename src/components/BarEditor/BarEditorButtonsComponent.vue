@@ -275,13 +275,13 @@ export default {
 
   computed: {
     $_temporalSection(): Section {
-      let tempBars: Bar[] = [];
+      const tempBars: Bar[] = [];
       if (this.previousBar !== undefined) {
-        let previousBar = this.previousBar.clone();
+        const previousBar = this.previousBar.clone();
         previousBar.break = bb.system;
         tempBars.push(previousBar);
       }
-      let tempTargetBar = this.selectedBar.clone();
+      const tempTargetBar = this.selectedBar.clone();
       tempTargetBar.parts = [ this.selectedPart ];
       tempTargetBar.break = bb.system;
       tempBars.push(tempTargetBar);
@@ -344,7 +344,7 @@ export default {
         return this.selectedPart.getNote(this.selectedNoteIdx - 1);
       } else {
         if (this.previousBar === undefined) return undefined;
-        let selectedPreviousPart = this.previousBar.findSameTypedPart(this.selectedPart.type);
+        const selectedPreviousPart = this.previousBar.findSameTypedPart(this.selectedPart.type);
         return selectedPreviousPart?.lastNote;
       }
     },
@@ -356,7 +356,7 @@ export default {
         return this.selectedPart.getNote(this.selectedNoteIdx + 1);
       } else {
         if (this.nextBar === undefined) return undefined;
-        let selectedNextPart = this.nextBar.findSameTypedPart(this.selectedPart.type);
+        const selectedNextPart = this.nextBar.findSameTypedPart(this.selectedPart.type);
         if (selectedNextPart === undefined) return undefined;
         return selectedNextPart.firstNote;
       }
@@ -410,9 +410,9 @@ export default {
     },
 
     $_remainingNoteValue() {
-      let barValue = this.selectedBar.value.clone();
-      let totalExistingNoteValue = nv.zero;
-      for (let note of this.selectedPart.notes) {
+      const barValue = this.selectedBar.value.clone();
+      const totalExistingNoteValue = nv.zero;
+      for (const note of this.selectedPart.notes) {
         totalExistingNoteValue.add(note.value);
       }
       return barValue.subtract(totalExistingNoteValue);
@@ -501,7 +501,7 @@ export default {
 
     $_toggleSelectedNoteType() {
       if (this.$_selectedNote === undefined) return false;
-      let selectedNote = this.$_selectedNote.generateNewNoteFrom();
+      const selectedNote = this.$_selectedNote.generateNewNoteFrom();
       selectedNote.type = (this.$_isSelectedNoteTypeRest)? 'normal' : 'rest';
       this.$_selectedNote = selectedNote;
       return true;
@@ -509,7 +509,7 @@ export default {
 
     $_toggleSelectedNoteTied() {
       if (this.$_selectedNote === undefined) return false;
-      let newNote = this.$_selectedNote.clone();
+      const newNote = this.$_selectedNote.clone();
       newNote.tied = !newNote.tied;
       this.$_selectedNote = newNote; 
       return true;
@@ -524,7 +524,7 @@ export default {
     $_pasteCopiedNoteContent() {
       if (this.$_selectedNote === undefined) return false;
       if (this.$data.$_copiedNote === undefined) return false;
-      let pastedNote = this.$_selectedNote.clone();
+      const pastedNote = this.$_selectedNote.clone();
       pastedNote.pitchOrChord = this.$data.$_copiedNote.pitchOrChord;
       pastedNote.type = this.$data.$_copiedNote.type;
       pastedNote.tied = this.$data.$_copiedNote.tied;
@@ -534,7 +534,7 @@ export default {
 
     async $_removeSelectedNote() {
       if (this.selectedNoteIdx === undefined) return false;
-      let newPart = this.selectedPart.clone();
+      const newPart = this.selectedPart.clone();
       newPart.notes.splice(this.selectedNoteIdx, 1);
       this.$_selectedNoteIdx = undefined;
       await this.$store.dispatch(
@@ -553,8 +553,8 @@ export default {
     },
 
     async $_fillBarWithNote(withShiftKey: boolean): Promise<boolean> {
-      let remainingNoteValue = this.$_remainingNoteValue.clone();
-      let numExistingNotes = this.selectedPart.numNotes;
+      const remainingNoteValue = this.$_remainingNoteValue.clone();
+      const numExistingNotes = this.selectedPart.numNotes;
       let note: Note;
       if (withShiftKey) {
         note = new Note(null, remainingNoteValue, 'rest', false);

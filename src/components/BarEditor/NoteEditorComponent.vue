@@ -106,7 +106,7 @@ export default {
       },
       async set(chord: Chord | null) {
         if (this.$_selectedNote === undefined) return;
-        let newNote = this.$_selectedNote.clone();
+        const newNote = this.$_selectedNote.clone();
         newNote.pitchOrChord = chord;
         await this.$store.dispatch(
           'score/replaceNote',
@@ -151,10 +151,10 @@ export default {
     },
 
     $_preNoteAccumulatedValue(): NoteValue {
-      let preNoteAccumulatedValue = nv.zero;
-      for (let selectedNoteIdxInPart of this.$_selectedPart.noteIndices()) {
+      const preNoteAccumulatedValue = nv.zero;
+      for (const selectedNoteIdxInPart of this.$_selectedPart.noteIndices()) {
         if (selectedNoteIdxInPart === this.selectedNoteIdx) break;
-        let selectedNoteInPart = this.$_selectedPart.getNote(selectedNoteIdxInPart);
+        const selectedNoteInPart = this.$_selectedPart.getNote(selectedNoteIdxInPart);
         preNoteAccumulatedValue.add(selectedNoteInPart.value);
       }
       return preNoteAccumulatedValue;
@@ -186,10 +186,10 @@ export default {
     $_initialNoteValueSliderValues(): [ number, number ] | undefined {
       if (this.$_selectedNote === undefined) return undefined;
       if (this.$data.$_noteValueSliderUnitValue === undefined) return undefined;
-      let noteValueSliderValueLow = this.$_preNoteAccumulatedValue.clone()
+      const noteValueSliderValueLow = this.$_preNoteAccumulatedValue.clone()
         .divide(this.$data.$_noteValueSliderUnitValue)
         .toNumber();
-      let noteValueSliderValueHigh = this.$_preNoteAccumulatedValue.clone()
+      const noteValueSliderValueHigh = this.$_preNoteAccumulatedValue.clone()
         .add(this.$_selectedNote.value)
         .divide(this.$data.$_noteValueSliderUnitValue)
         .toNumber()
@@ -202,8 +202,8 @@ export default {
     $_safeNoteValueSliderUnitValue() {
       if (this.$_selectedPart.firstNote === undefined) return undefined;
       let safeSliderUnitValueDenominator = this.$_selectedPart.firstNote.value.clone().reduce().denominator;
-      for (let note of this.$_selectedPart.notes) {
-        let currentNoteValueDenominator = note.value.clone().reduce().denominator;
+      for (const note of this.$_selectedPart.notes) {
+        const currentNoteValueDenominator = note.value.clone().reduce().denominator;
         if (safeSliderUnitValueDenominator < currentNoteValueDenominator) {
           safeSliderUnitValueDenominator = currentNoteValueDenominator;
         }
@@ -245,29 +245,29 @@ export default {
       if (noteValueSliderValueHigh > this.$_noteValueSliderValueMax) {
         noteValueSliderValueHigh = this.$_noteValueSliderValueMax;
       }
-      let numNotesInPart = this.$_selectedPart.numNotes;
-      let isTargetNoteFirstNote = (this.selectedNoteIdx === 0);
+      const numNotesInPart = this.$_selectedPart.numNotes;
+      const isTargetNoteFirstNote = (this.selectedNoteIdx === 0);
 
-      let oldValueLow = this.$_initialNoteValueSliderValues[0];
-      let newValueLow = noteValueSliderValueLow;
-      let oldValueHigh = this.$_initialNoteValueSliderValues[1];
-      let newValueHigh = noteValueSliderValueHigh;
+      const oldValueLow = this.$_initialNoteValueSliderValues[0];
+      const newValueLow = noteValueSliderValueLow;
+      const oldValueHigh = this.$_initialNoteValueSliderValues[1];
+      const newValueHigh = noteValueSliderValueHigh;
 
-      let targetNoteValue = new NoteValue(newValueHigh - newValueLow).multiply(this.$data.$_noteValueSliderUnitValue);
-      let leftNoteValueDifference = new NoteValue(newValueLow - oldValueLow).multiply(this.$data.$_noteValueSliderUnitValue);
-      let rightNoteValueDifference = new NoteValue(newValueHigh - oldValueHigh).multiply(this.$data.$_noteValueSliderUnitValue);
-      let isValueLowChanged = (newValueLow !== oldValueLow);
+      const targetNoteValue = new NoteValue(newValueHigh - newValueLow).multiply(this.$data.$_noteValueSliderUnitValue);
+      const leftNoteValueDifference = new NoteValue(newValueLow - oldValueLow).multiply(this.$data.$_noteValueSliderUnitValue);
+      const rightNoteValueDifference = new NoteValue(newValueHigh - oldValueHigh).multiply(this.$data.$_noteValueSliderUnitValue);
+      const isValueLowChanged = (newValueLow !== oldValueLow);
 
-      let newNotes: Note[] = [];
+      const newNotes: Note[] = [];
       let newSelectedNoteIdx = this.selectedNoteIdx;
-      let insertRestNoteToFront = isValueLowChanged && isTargetNoteFirstNote;
+      const insertRestNoteToFront = isValueLowChanged && isTargetNoteFirstNote;
       if (insertRestNoteToFront) {
-        let noteValue = leftNoteValueDifference;
+        const noteValue = leftNoteValueDifference;
         newNotes.push(new Note(null, noteValue, 'rest', false));
         ++newSelectedNoteIdx;
       }
       for (let currentNoteIdx = 0; currentNoteIdx < numNotesInPart; ++currentNoteIdx) {
-        let currentNote = this.$_selectedPart.notes[currentNoteIdx].clone();
+        const currentNote = this.$_selectedPart.notes[currentNoteIdx].clone();
         if (currentNoteIdx === this.selectedNoteIdx) {
           currentNote.value.assign(targetNoteValue);
         } else if (currentNoteIdx === (this.$_previousNoteIdx)) {
@@ -284,10 +284,10 @@ export default {
     $_onFixValues([ noteValueSliderValueLow, noteValueSliderValueHigh ]: [ number, number ]) {
       this.$_onChangeValues(([ noteValueSliderValueLow, noteValueSliderValueHigh ]));
       this.$nextTick(async () => {
-        let newNotes = new Array();
+        const newNotes = new Array();
         let newSelectedNoteIdx = this.selectedNoteIdx;
         for (let currentNoteIdx = 0; currentNoteIdx < this.$_numNotes; ++currentNoteIdx) {
-          let note = this.$_selectedPart.notes[currentNoteIdx];
+          const note = this.$_selectedPart.notes[currentNoteIdx];
           if (note.value.isGreaterThan(nv.zero)) {
             newNotes.push(note);
           } else {
@@ -299,7 +299,7 @@ export default {
             }
           }
         }
-        let newPartInBar = new PartInBar(newNotes, this.$_selectedPart.type);
+        const newPartInBar = new PartInBar(newNotes, this.$_selectedPart.type);
         this.$emit('update:temporalSelectedPart', undefined);
         this.$emit('update:selectedNoteIdx', newSelectedNoteIdx);
         await this.$store.dispatch(

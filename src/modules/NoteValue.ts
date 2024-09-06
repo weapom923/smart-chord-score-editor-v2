@@ -75,7 +75,7 @@ export class NoteValue extends RationalNumber<NoteValue> {
     const remainingNoteValue: NoteValue = this.clone();
     const offsetNoteValueInGlobalGrid = offsetNoteValue.modulo(globalGridNoteValue);
     if (offsetNoteValueInGlobalGrid.isGreaterThan(nv.zero)) {
-      let remainingNoteValueInGlobalGrid = globalGridNoteValue.clone().subtract(offsetNoteValueInGlobalGrid);
+      const remainingNoteValueInGlobalGrid = globalGridNoteValue.clone().subtract(offsetNoteValueInGlobalGrid);
       if (remainingNoteValueInGlobalGrid.isGreaterThan(remainingNoteValue)) {
         remainingNoteValueInGlobalGrid.assign(remainingNoteValue);
       }

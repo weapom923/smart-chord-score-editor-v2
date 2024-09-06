@@ -65,7 +65,7 @@ namespace scse { namespace waveform_decimator {
                 const char* byte = reinterpret_cast<const char*>(vector.data());
                 ostream.write(byte, vector.size() * sizeof(T));
 #elif defined(SCSE_BIG_ENDIAN)
-                for (const T& data: vector) {
+                for (let T& data: vector) {
                     auto byte = reinterpret_cast<const char*>(&data);
                     for (std::size_t byteOffset = 0; byteOffset < sizeof(T); ++byteOffset) {
                         ostream.write(&byte[byteOffset], sizeof(char));

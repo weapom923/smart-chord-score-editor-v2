@@ -52,7 +52,7 @@ export class ScoreChangeHistoryManager {
 
   redo() {
     const self = raw(this);
-    let currentChangeToRedo = self.#currentChangeToRedo;
+    const currentChangeToRedo = self.#currentChangeToRedo;
     if (currentChangeToRedo !== undefined) {
       currentChangeToRedo.redo();
       ++self.#nextChangeIdx;
@@ -62,7 +62,7 @@ export class ScoreChangeHistoryManager {
 
   undo() {
     const self = raw(this);
-    let currentChangeToUndo = self.#currentChangeToUndo;
+    const currentChangeToUndo = self.#currentChangeToUndo;
     if (currentChangeToUndo !== undefined) {
       currentChangeToUndo.undo();
       --self.#nextChangeIdx;

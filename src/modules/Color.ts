@@ -53,7 +53,7 @@ export class Color {
 
   #rgb?: Array<number>;
   get rgb() {
-    let self = raw(this);
+    const self = raw(this);
     if (self.#rgb === undefined) {
       self.#rgb = [ self.red, self.green, self.blue ];
     }
@@ -62,7 +62,7 @@ export class Color {
 
   #rgba?: Array<number>;
   get rgba() {
-    let self = raw(this);
+    const self = raw(this);
     if (self.#rgba === undefined) {
       self.#rgba = [ ...self.rgb, self.alpha ];
     }
@@ -71,7 +71,7 @@ export class Color {
 
   #hex?: string;
   get hex(): string {
-    let self = raw(this);
+    const self = raw(this);
     if (self.#hex === undefined) {
       self.#hex = self.rgb.map((value: number) => value.toString(16)).join();
     }
@@ -81,7 +81,7 @@ export class Color {
   #styleString?: string;
   #styleStringWithAlpha?: string;
   styleString(withAlpha: boolean = true): string {
-    let self = raw(this);
+    const self = raw(this);
     if (withAlpha) {
       if (self.#styleStringWithAlpha === undefined) {
         self.#styleStringWithAlpha = `rgba(${self.red}, ${self.green}, ${self.blue}, ${self.alpha})`;

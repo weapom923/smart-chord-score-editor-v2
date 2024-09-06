@@ -157,8 +157,8 @@ export default {
       const tensionLikeNotes = new Set<TensionNotePitch>();
       const tensionNotes = new Set<TensionNotePitch>();
       for (const tensionNoteCandidate of tensionNotationCandidateSet) {
-        let tensionLikeNote = ChordTextParser.validTensionLikeNotes.get(tensionNoteCandidate);
-        let tensionNote = ChordTextParser.validTensionNotes.get(tensionNoteCandidate);
+        const tensionLikeNote = ChordTextParser.validTensionLikeNotes.get(tensionNoteCandidate);
+        const tensionNote = ChordTextParser.validTensionNotes.get(tensionNoteCandidate);
         if ((tensionLikeNote === undefined) && (tensionNote === undefined)) {
           throw new ChordTextParser.ParseError();
         }

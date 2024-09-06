@@ -82,12 +82,12 @@ const AudioPlayerBar = defineComponent({
     },
 
     async $_loadAudioSource() {
-      let fileInterface = await getFileInterface('audio/*');
+      const fileInterface = await getFileInterface('audio/*');
       if (fileInterface === undefined) return;
       this.$data.$_audioContext = undefined;
       this.$data.$_audioBuffer = undefined;
       this.$data.$_gainNode = undefined;
-      let audioUint8Array = await loadFileAsUint8Array(fileInterface);
+      const audioUint8Array = await loadFileAsUint8Array(fileInterface);
       if (audioUint8Array === undefined) return;
       this.$data.$_audioContext = new AudioContext();
       this.$data.$_audioContext.suspend();

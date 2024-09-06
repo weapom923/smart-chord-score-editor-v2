@@ -45,10 +45,10 @@ export default class WaveformDecimator {
     const numChannels = audioBuffer.numberOfChannels;
     const numSamples = audioBuffer.length;
 
-    let emscriptenHeapByteLength = numChannels * numSamples * Float32Array.BYTES_PER_ELEMENT;
+    const emscriptenHeapByteLength = numChannels * numSamples * Float32Array.BYTES_PER_ELEMENT;
     if (module.HEAP8.length < emscriptenHeapByteLength) throw new RangeError('WebAssembly heap memory is too short.');
     const emscriptenHeapAddress = module._malloc(emscriptenHeapByteLength);
-    let emscriptenHeap = new Float32Array(
+    const emscriptenHeap = new Float32Array(
       module.HEAPF32.buffer,
       emscriptenHeapAddress,
       emscriptenHeapByteLength,

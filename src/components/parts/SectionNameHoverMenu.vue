@@ -116,12 +116,12 @@ export default {
 
   methods: {
     async generateNewSection(sectionIdx: number) {
-      let numSection = this.$store.state.score.score.numSections;
+      const numSection = this.$store.state.score.score.numSections;
       if (numSection > 0) {
-        let baseSectionIdx = (sectionIdx > 0)? sectionIdx - 1 : sectionIdx;
-        let baseSection = this.$store.state.score.score.getSection(baseSectionIdx);
+        const baseSectionIdx = (sectionIdx > 0)? sectionIdx - 1 : sectionIdx;
+        const baseSection = this.$store.state.score.score.getSection(baseSectionIdx);
         if (baseSection.numBars > 0) {
-          let baseBar = baseSection.lastBar as Bar;
+          const baseBar = baseSection.lastBar as Bar;
           await this.$store.dispatch(
             'dialog/setDialog',
             {

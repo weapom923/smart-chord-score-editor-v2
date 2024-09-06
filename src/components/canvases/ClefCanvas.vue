@@ -108,9 +108,9 @@ const ClefCanvas = defineComponent({
 
     type This = InstanceType<typeof ClefCanvas>;
     function drawTrebleClef(this: This, canvas: CanvasRenderingContext2D) {
-      let anchorHorizontalOffsetPx = this.$_anchorHorizontalOffsetPx;
-      let anchorVerticalOffsetPx = this.$_anchorVerticalOffsetPx;
-      let staffLineStepPx = this.$_staffLineStepPx;
+      const anchorHorizontalOffsetPx = this.$_anchorHorizontalOffsetPx;
+      const anchorVerticalOffsetPx = this.$_anchorVerticalOffsetPx;
+      const staffLineStepPx = this.$_staffLineStepPx;
       canvas.strokeStyle = this.color.styleString();
       canvas.fillStyle = this.color.styleString();
       canvas.lineWidth = 1;
@@ -253,9 +253,9 @@ const ClefCanvas = defineComponent({
     }
 
     function drawBassClef(this: This, canvas: CanvasRenderingContext2D) {
-      let anchorHorizontalOffsetPx = this.$_anchorHorizontalOffsetPx;
-      let anchorVerticalOffsetPx = this.$_anchorVerticalOffsetPx;
-      let staffLineStepPx = this.$_staffLineStepPx;
+      const anchorHorizontalOffsetPx = this.$_anchorHorizontalOffsetPx;
+      const anchorVerticalOffsetPx = this.$_anchorVerticalOffsetPx;
+      const staffLineStepPx = this.$_staffLineStepPx;
       canvas.strokeStyle = this.color.styleString();
       canvas.fillStyle = this.color.styleString();
       canvas.lineWidth = 1;

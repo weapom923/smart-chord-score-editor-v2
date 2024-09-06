@@ -22,7 +22,7 @@ export function isEmptyLike(value: any) {
 
 export function min(...values: number[]) {
   let minValue = values[0];
-  for (let value of values) {
+  for (const value of values) {
     if (minValue > value) minValue = value;
   }
   return minValue;
@@ -30,7 +30,7 @@ export function min(...values: number[]) {
 
 export function max(...values: number[]) {
   let maxValue = values[0];
-  for (let value of values) {
+  for (const value of values) {
     if (maxValue < value) maxValue = value;
   }
   return maxValue;
@@ -74,19 +74,19 @@ export function calculateMaximumPowerOfTwoLessThanOrEqualTo(value: number) {
 
 export async function getFileInterface(accept?: string): Promise<File | undefined> {
   return new Promise((resolve, reject) => {
-    let inputElement = document.createElement('input');
+    const inputElement = document.createElement('input');
     inputElement.type = 'file';
     inputElement.onchange = (event: Event) => {
       if (event.target === null) {
         reject(event);
       } else {
-        let target = event.target as HTMLInputElement;
+        const target = event.target as HTMLInputElement;
         resolve(target.files?.[0])
       }
     };
     if (accept !== undefined) inputElement.accept = accept;
-    let windowFocusEventHandler = () => {
-      let timeoutId = window.setTimeout(
+    const windowFocusEventHandler = () => {
+      const timeoutId = window.setTimeout(
         () => {
           window.removeEventListener('focus', windowFocusEventHandler);
           window.clearTimeout(timeoutId);
@@ -101,8 +101,8 @@ export async function getFileInterface(accept?: string): Promise<File | undefine
 }
 
 export async function loadFileAsUint8Array(file: File): Promise<Uint8Array | undefined> {
-  let arrayBuffer = await new Promise((resolve, reject) => {
-    let fileReader = new FileReader();
+  const arrayBuffer = await new Promise((resolve, reject) => {
+    const fileReader = new FileReader();
     fileReader.onload = (event: ProgressEvent<FileReader>) => { resolve(event.target?.result) };
     fileReader.onabort = () => { reject() };
     fileReader.readAsArrayBuffer(file);
@@ -112,18 +112,18 @@ export async function loadFileAsUint8Array(file: File): Promise<Uint8Array | und
 }
 
 export async function loadFileAsUTF8Text(file: File) {
-  let textUtf8Array = await loadFileAsUint8Array(file);
+  const textUtf8Array = await loadFileAsUint8Array(file);
   if (textUtf8Array === undefined) return undefined;
-  let textEncoding = Encoding.detect(textUtf8Array);
+  const textEncoding = Encoding.detect(textUtf8Array);
   if (!textEncoding) return undefined;
-  let textUint8Array = new Uint8Array(Encoding.convert(textUtf8Array, 'UTF8', textEncoding));
-  let textDecoder = new TextDecoder();
+  const textUint8Array = new Uint8Array(Encoding.convert(textUtf8Array, 'UTF8', textEncoding));
+  const textDecoder = new TextDecoder();
   return textDecoder.decode(textUint8Array.buffer);
 }
 
 export function downloadFile(fileName: string, text: string, mimeType: string) {
-  let url = URL.createObjectURL(new Blob([ text ], { type: mimeType }));
-  let anchor = document.createElement('a');
+  const url = URL.createObjectURL(new Blob([ text ], { type: mimeType }));
+  const anchor = document.createElement('a');
   document.body.appendChild(anchor);
   anchor.download = fileName;
   anchor.href = url;

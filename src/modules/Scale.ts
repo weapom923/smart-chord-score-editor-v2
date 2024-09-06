@@ -214,9 +214,9 @@ export class Scale {
   }
 
   transposeByPitchOffset(pitchOffset: number): Scale {
-    let transposedTonicNoteNumber = NotePitch.convertToCyclicNoteNumber(this.tonicNotePitch.noteNumber + pitchOffset);
-    let transposedTonicNotePitches = NotePitch.findAllPredefinedPitchesFromCyclicNoteNumber(transposedTonicNoteNumber);
-    for (let transposedTonicNotePitch of transposedTonicNotePitches) {
+    const transposedTonicNoteNumber = NotePitch.convertToCyclicNoteNumber(this.tonicNotePitch.noteNumber + pitchOffset);
+    const transposedTonicNotePitches = NotePitch.findAllPredefinedPitchesFromCyclicNoteNumber(transposedTonicNoteNumber);
+    for (const transposedTonicNotePitch of transposedTonicNotePitches) {
       try {
         return Scale.findPredefinedScale(transposedTonicNotePitch, this.type);
       }
