@@ -9,7 +9,7 @@
         <div
           class="section-name-menu-area py-3 position-relative"
           v-if="systemIdx === 0 && $_isSectionContainingFirstBar"
-          v-on:contextmenu.capture.stop.prevent="$_onContextmenuStaff"
+          v-on:contextmenu.capture="$_onContextmenu"
         >
           {{ $_section.name }}
         </div>
@@ -212,12 +212,21 @@ export default defineComponent({
       }
     },
 
-    async $_onContextmenuStaff(event: Event) {
-      const parameters: ContextMenuParameters = {
-        activator: event.target as HTMLElement,
-        menuItems: this.$_sectionMenuItems,
+    async $_onContextmenu(event: Event) {
+      const onContextmenu = async(event: Event): Promise<boolean> => {
+        if (this.$store.state.appState.isPrintLayoutEnabled) return false;
+        const parameters: ContextMenuParameters = {
+          activator: event.target as HTMLElement,
+          menuItems: this.$_sectionMenuItems,
+        };
+        await this.$store.dispatch('contextMenu/setParameters', parameters);
+        return true;
       };
-      await this.$store.dispatch('contextMenu/setParameters', parameters);
+
+      if (await onContextmenu(event)) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
     },
   },
 })
