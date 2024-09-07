@@ -23,7 +23,7 @@
           v-if="($_selectedSectionAndBarIdx !== undefined) && ($data.$_selectedPartIdx !== undefined) && ($_selectedBar !== undefined)"
         >
           <bar-editor-buttons-component
-            ref="barEditorComponent"
+            ref="barEditorButtonsComponent"
             flat class="pa-0"
             v-if="$_selectedPart !== undefined"
             v-bind:selected-bar="$_selectedBar"

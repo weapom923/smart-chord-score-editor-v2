@@ -1,5 +1,11 @@
 <template>
-  <v-card flat color="transparent">
+  <v-card
+    flat
+    color="transparent"
+    class="position-relative"
+    ref="scoreTitle"
+    v-on:contextmenu.capture.stop.prevent="$_onContextmenu"
+  >
     <v-card-title class="d-flex align-center flex-column">
       <h1 v-if="$_title !== undefined">{{ $_title }}</h1>
       <h3 v-if="$_artistName !== undefined" class="ma-2">{{ $_artistName }}</h3>
@@ -31,10 +37,18 @@
 </style>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { ScoreMetadata } from '../modules/ScoreMetadata';
+import { ContextMenuItem, ContextMenuParameters } from '../store/module/ContextMenu'
+import { VCard } from 'vuetify/components';
 
 export default defineComponent({
+  setup() {
+    return {
+      scoreTitle: ref<InstanceType<typeof VCard>>(),
+    };
+  },
+  
   computed: {
     $_scoreMetadata(): ScoreMetadata {
       return this.$store.state.score.score.metadata;
@@ -61,6 +75,27 @@ export default defineComponent({
       }
       return credits;
     },
+
+    $_barMenuItems(): ContextMenuItem[] {
+      return [
+        {
+          icon: 'mdi-file-cog',
+          text: this.$t('scoreMetadata'),
+          callback: async () => { await this.$store.dispatch('dialog/setDialog', { componentName: 'score-metadata-editor-dialog' }) },
+        }
+      ];
+    },
   },
+
+  methods: {
+    async $_onContextmenu() {
+      if (!this.scoreTitle) return;
+      const parameters: ContextMenuParameters = {
+        activator: this.scoreTitle.$el as HTMLElement,
+        menuItems: this.$_barMenuItems,
+      };
+      await this.$store.dispatch('contextMenu/setParameters', parameters);
+    },
+  }
 })
 </script>

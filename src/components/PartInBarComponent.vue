@@ -1,5 +1,8 @@
 <template>
-  <div id="part-in-bar">
+  <div
+    id="part-in-bar"
+    ref="partInBar"
+  >
     <template
       v-for="noteIdx in part.noteIndices()"
       v-bind:key="noteIdx"
@@ -36,7 +39,7 @@
 </style>
 
 <script lang="ts">
-import { defineComponent, CSSProperties } from 'vue';
+import { defineComponent, CSSProperties, ref } from 'vue';
 import NoteBaseComponent from './NoteBaseComponent.vue';
 import TieCanvas from './canvases/TieCanvas.vue';
 import { NoteValue, nv } from '../modules/NoteValue';
@@ -48,6 +51,12 @@ type TieCanvasProps = InstanceType<typeof TieCanvas>['$props'];
 type NoteBaseComponentProps = InstanceType<typeof NoteBaseComponent>['$props'];
 
 export default defineComponent({
+  setup() {
+    return {
+      partInBar: ref<HTMLDivElement>(),
+    };
+  },
+
   emits: {
     tiePointUpdate: (event: { tieEndPointOffset?: DOMPoint, tieStartPointOffset?: DOMPoint }) => true,
     splitNoteElementMounted: (event: { noteIdx: NoteIdx, splitNoteIdx: SplitNoteIdx, splitNoteElement: HTMLElement }) => true,
@@ -119,14 +128,12 @@ export default defineComponent({
       }
       return noteBarComponentProps;
     },
-
-    $_partInBarElement(): HTMLDivElement {
-      return this.$el as HTMLDivElement;
-    },
   },
 
   mounted() {
-    this.$data.$_partInBarElementResizeObserver.observe(this.$_partInBarElement);
+    if (this.partInBar) {
+      this.$data.$_partInBarElementResizeObserver.observe(this.partInBar);
+    }
     this.$_updateTiePropsAndStyles();
   },
 
@@ -178,7 +185,8 @@ export default defineComponent({
     },
 
     $_emitTiePointUpdate() {
-      const partElementOffsetX = this.$_partInBarElement.getBoundingClientRect().x;
+      if (!this.partInBar) return;
+      const partElementOffsetX = this.partInBar.getBoundingClientRect().x;
       if (this.part.firstNoteIdx === undefined) return;
       const firstSplitNoteElements = this.$data.$_splitNoteElements.get(this.part.firstNoteIdx);
       if (firstSplitNoteElements === undefined) return;
@@ -217,7 +225,8 @@ export default defineComponent({
     },
 
     $_updateTiePropsAndStyles() {
-      const partElementOffsetX = this.$_partInBarElement.getBoundingClientRect().x;
+      if (!this.partInBar) return;
+      const partElementOffsetX = this.partInBar.getBoundingClientRect().x;
       const tieProps = new Map<NoteIdx, TieCanvasProps>();
       const tieStyles = new Map<NoteIdx, CSSProperties>();
       for (const noteIdx of this.part.noteIndices()) {

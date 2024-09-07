@@ -1,12 +1,16 @@
 <template>
-  <canvas id="note-canvas-container"></canvas>
+  <canvas
+    id="note-canvas-container"
+    ref="restNoteCanvas"
+  >
+  </canvas>
 </template>
 
-<style src="./styles/noteCanvas.css">
+<style scoped src="./styles/noteCanvas.css">
 </style>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import CanvasBase from './CanvasBase.vue';
 import { NoteValue, nv } from '../../modules/NoteValue';
 import { NotePitch } from '../../modules/NotePitch';
@@ -19,6 +23,12 @@ const wholeAndHalfRestNoteHeightRate = 0.4;
 
 const RestNoteCanvas = defineComponent({
   extends: CanvasBase,
+
+  setup() {
+    return {
+      restNoteCanvas: ref<HTMLCanvasElement>(),
+    };
+  },
 
   emits: {
     widthUpdate: (widthPx: number) => true,
@@ -56,7 +66,9 @@ const RestNoteCanvas = defineComponent({
     this.$_setCanvasHeightPx(this.$_noteHeightPx);
     this.$_updateMarginTop(this.$_marginTopPx);
     this.$emit('widthUpdate', this.$_noteWidthPx);
-    this.$emit('mounted', this.$el);
+    if (this.restNoteCanvas) {
+      this.$emit('mounted', this.restNoteCanvas);
+    }
   },
 
   beforeUnmount() {

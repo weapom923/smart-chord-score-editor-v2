@@ -1,5 +1,6 @@
 <template>
   <v-text-field
+    ref="vTextField"
     v-model="$_modelValue"
     v-bind="$props"
     v-on:compositionstart="$_onCompositionstart"
@@ -16,11 +17,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { VTextField } from 'vuetify/lib/components/VTextField/index.mjs';
 
 export default defineComponent({
   extends: VTextField,
+
+  setup() {
+    return {
+      vTextField: ref<InstanceType<typeof VTextField>>(),
+    };
+  },
 
   emits: {
     'update:modelValue': (modelValue: any) => true,
@@ -36,23 +43,23 @@ export default defineComponent({
   },
 
   mounted() {
-    this.$_vTextFieldElement.addEventListener('compositionstart', this.$_onCompositionstart);
-    this.$_vTextFieldElement.addEventListener('compositionend', this.$_onCompositionend);
+    if (this.vTextField) {
+      this.vTextField.addEventListener('compositionstart', this.$_onCompositionstart);
+      this.vTextField.addEventListener('compositionend', this.$_onCompositionend);
+    }
   },
 
   beforeUnmount() {
-    this.$_vTextFieldElement.removeEventListener('compositionstart', this.$_onCompositionstart);
-    this.$_vTextFieldElement.removeEventListener('compositionend', this.$_onCompositionend);
+    if (this.vTextField) {
+      this.vTextField.removeEventListener('compositionstart', this.$_onCompositionstart);
+      this.vTextField.removeEventListener('compositionend', this.$_onCompositionend);
+    }
   },
 
   computed: {
     $_modelValue: {
       get() { return this.modelValue },
       set(modelValue: any) { this.$emit('update:modelValue', modelValue) }
-    },
-
-    $_vTextFieldElement(): HTMLElement {
-      return this.$el as HTMLElement;
     },
   },
 

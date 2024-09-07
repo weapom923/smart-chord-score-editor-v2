@@ -1,5 +1,8 @@
 <template>
-  <div id="beat-and-part-container" ref="barElement">
+  <div
+    id="beat-and-part-container"
+    ref="barElement"
+  >
     <clef-canvas
       v-if="showClef"
       v-bind:clef="bar.clef"
@@ -92,7 +95,6 @@ import BarLineCanvas from './canvases/BarLineCanvas.vue';
 import BeatComponent from './BeatComponent.vue';
 import BarRepeatEndingComponent from './BarRepeatEndingComponent.vue';
 import KeySignatureComponent from './KeySignatureComponent.vue';
-import BarHoverMenu from './parts/BarHoverMenu.vue'
 import { Bar } from '../modules/Bar';
 import { bre } from '../modules/BarRepeatEnding';
 import { Color } from '../modules/Color';
@@ -129,7 +131,6 @@ export default defineComponent({
     BarLineCanvas,
     BarRepeatEndingComponent,
     KeySignatureComponent,
-    BarHoverMenu,
   },
 
   watch: {
@@ -158,7 +159,9 @@ export default defineComponent({
 
   mounted() {
     this.$_updatePositionAndSize();
-    this.$emit('mounted', this.$el);
+    if (this.barElement) {
+      this.$emit('mounted', this.barElement);
+    }
   },
 
   beforeUnmount() {
