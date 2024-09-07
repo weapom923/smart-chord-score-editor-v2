@@ -20,7 +20,8 @@
                   v-model="$data.$_sectionName"
                   v-bind:rules="$_rules.sectionName"
                   v-bind:label="$t('sectionName')"
-                />
+                >
+                </dialog-text-field>
               </v-col>
             </v-row>
           </v-container>

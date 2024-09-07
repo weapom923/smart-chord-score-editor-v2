@@ -59,7 +59,8 @@
               v-bind:key="tensionNoteIdx"
               v-bind:tension-note-pitch="tensionNote"
               v-bind:base-font-size-px="$_fontSizePx"
-            />
+            >
+            </tension-note-pitch-component>
           </div>
           )
         </div>

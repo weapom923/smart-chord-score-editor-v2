@@ -1,21 +1,23 @@
 <template>
   <div class="d-flex align-center">
     <v-text-field
-      number
       type="number"
+      class="w-50"
       v-model.number="$_barValueNumerator"
       v-bind:label="$t('beat')"
       v-bind="$attrs"
       v-bind:rules="$_rules"
       v-bind:min="barValueNumeratorMin"
-    />
-    <div>/</div>
+    >
+    </v-text-field>
     <v-select
-      variant="solo-filled"
+      class="w-50"
       v-model="$_barValueDenominator"
       v-bind="$attrs"
       v-bind:items="barValueDenominators"
-    />
+    >
+      <template v-slot:prepend-inner>/</template>
+    </v-select>
   </div>
 </template>
 

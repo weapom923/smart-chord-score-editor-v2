@@ -16,7 +16,8 @@
         v-on:mounted="$_onChordComponentMounted"
         v-on:before-unmount="$_onChordComponentBeforeUnmount"
         v-on:click="$_onClickNote"
-      />
+      >
+      </chord-component>
     </div>
     <div id="split-divisible-notes-container">
       <template
@@ -39,14 +40,16 @@
               v-on:tie-point-update="$_onNoteTiePointUpdate(splitNoteIdx, $event)"
               v-on:mounted="$_onSplitNoteElementMounted(splitNoteIdx, $event)"
               v-on:before-unmount="$_onSplitNoteElementBeforeUnmount(splitNoteIdx)"
-            />
+            >
+            </chord-note-canvas>
             <tie-canvas
               v-if="$data.$_tieProps.has(splitNoteIdx)"
               v-bind="assertDefined($data.$_tieProps.get(splitNoteIdx))"
               v-bind:style="$data.$_tieStyles.get(splitNoteIdx)"
               v-bind:color="$_chordNoteColor"
               v-bind:alpha-as-opacity="true"
-            />
+            >
+            </tie-canvas>
           </template>
           <rest-note-canvas
             v-if="$_isRestNote(splitNote.type)"
@@ -57,7 +60,8 @@
             v-on:width-update="$_onNoteWidthUpdate(splitNoteIdx, $event)"
             v-on:mounted="$_onSplitNoteElementMounted(splitNoteIdx, $event)"
             v-on:before-unmount="$_onSplitNoteElementBeforeUnmount(splitNoteIdx)"
-          />
+          >
+          </rest-note-canvas>
         </div>
       </template>
     </div>

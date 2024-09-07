@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card variant="plain">
     <v-card-text
       class="pa-2"
       v-if="$_selectedBar !== undefined"

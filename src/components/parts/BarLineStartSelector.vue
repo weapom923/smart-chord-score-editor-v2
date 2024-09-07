@@ -6,7 +6,8 @@
     v-bind:label="$t('barLineStartKind')"
     v-bind:items="$_allBarLineStarts"
     v-bind:disabled="barLineStart === undefined"
-  />
+  >
+  </v-select>
 </template>
 
 <script lang="ts">

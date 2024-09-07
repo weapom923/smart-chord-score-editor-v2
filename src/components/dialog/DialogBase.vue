@@ -15,7 +15,7 @@
           name="buttons"
           v-bind:on="$_buttonEventHandlers"
         >
-          <v-spacer />
+          <v-spacer></v-spacer>
           <v-btn
             color="secondary"
             v-on:click="$_onCancelClicked"

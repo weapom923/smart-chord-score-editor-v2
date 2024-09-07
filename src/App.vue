@@ -62,6 +62,7 @@
     <bar-editor-drawer
       ref="barEditorDrawer"
       class="no-print"
+      v-if="!$store.state.appState.isPrintLayoutEnabled"
     >
     </bar-editor-drawer>
   </v-app>

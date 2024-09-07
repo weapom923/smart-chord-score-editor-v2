@@ -2,7 +2,6 @@
   <v-navigation-drawer
     class="pa-0 ma-0 overflow-hidden"
     permanent app touchless
-    v-bind:model-value="$_showBarEditorDrawer"
     v-bind:width="$_barEditorDrawerWidth"
     v-bind:rail="$store.state.appState.isBarEditorDrawerMinimized"
     v-bind:rail-width="expandButtonWidthPx"
@@ -11,9 +10,10 @@
     <v-btn
       rounded="0" size="small"
       v-show="$store.state.appState.isBarEditorDrawerMinimized"
+      v-bind:disabled="!$_isBarEditorMaximizeButtonDisabled"
       v-bind:icon="$_barEditorMaximizeIcon"
-      v-bind:width="$_barEditorExpandButtonWidth"
-      v-bind:height="$_barEditorExpandButtonHeight"
+      v-bind:width="$_barEditorMaximizeButtonWidth"
+      v-bind:height="$_barEditorMaximizeButtonHeight"
       v-on:click="$_maximizeBarEditor"
     >
     </v-btn>
@@ -70,14 +70,8 @@ export default defineComponent({
   },
 
   computed: {
-    $_railWidth(): number {
-      if (!this.$_showBarEditorDrawer) return 0;
-      return expandButtonWidthPx;
-    },
-
-    $_showBarEditorDrawer(): boolean {
+    $_isBarEditorMaximizeButtonDisabled(): boolean {
       if (this.$store.state.score.selectedBars === undefined) return false;
-      if (this.$store.state.appState.isPrintLayoutEnabled) return false;
       return true;
     },
 
@@ -106,7 +100,7 @@ export default defineComponent({
       }
     },
 
-    $_barEditorExpandButtonWidth(): number | string {
+    $_barEditorMaximizeButtonWidth(): number | string {
       switch (this.$store.state.config.barEditorLocation) {
         case 'left':
         case 'right':
@@ -116,7 +110,7 @@ export default defineComponent({
       }
     },
 
-    $_barEditorExpandButtonHeight(): number | string {
+    $_barEditorMaximizeButtonHeight(): number | string {
       switch (this.$store.state.config.barEditorLocation) {
         case 'bottom':
         case 'top':

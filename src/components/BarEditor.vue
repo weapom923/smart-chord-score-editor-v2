@@ -8,14 +8,8 @@
     <v-container id="editor-container">
       <v-row>
         <v-col cols="3">
-          <v-card>
-            <v-card-text class="pa-0">
-              <bar-detail-editor-component
-                flat tile
-              >
-              </bar-detail-editor-component>
-            </v-card-text>
-          </v-card>
+          <bar-detail-editor-component>
+          </bar-detail-editor-component>
         </v-col>
 
         <v-col

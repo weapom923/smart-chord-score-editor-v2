@@ -5,7 +5,8 @@
     v-model="$_clef"
     v-bind:label="$t('clefSign')"
     v-bind:items="$_allClefs"
-  />
+  >
+  </v-select>
 </template>
 
 <script lang="ts">

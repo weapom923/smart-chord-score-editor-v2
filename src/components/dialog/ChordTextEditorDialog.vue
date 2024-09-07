@@ -13,7 +13,8 @@
           v-bind:chord="$data.$_parsedChord"
           v-bind:font-size-px="12"
           v-bind:color="$_color"
-        />
+        >
+        </chord-component>
         <v-form
           v-model="$data.$_valid"
           v-on:submit.prevent
@@ -25,7 +26,8 @@
             v-bind:error="$_hasError"
             v-bind:error-messages="$data.$_parseErrorMessage"
             v-on:update:model-value="$_tryParseChordText"
-          />
+          >
+          </dialog-text-field>
         </v-form>
       </v-card-text>
     </template>

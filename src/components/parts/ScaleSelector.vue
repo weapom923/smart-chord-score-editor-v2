@@ -5,7 +5,8 @@
     v-model="$_scale"
     v-bind:label="$t('scale')"
     v-bind:items="$_allScales"
-  />
+  >
+  </v-select>
 </template>
 
 <script lang="ts">

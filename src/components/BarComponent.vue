@@ -6,20 +6,28 @@
     <clef-canvas
       v-if="showClef"
       v-bind:clef="bar.clef"
-    />
+    >
+    </clef-canvas>
+
     <key-signature-component
       v-if="showKeySignature"
       v-bind:clef="bar.clef"
       v-bind:scale="bar.scale"
-    />
+    >
+    </key-signature-component>
+
     <beat-component
       v-if="showBeat"
       v-bind:bar-value="bar.value"
-    />
+    >
+    </beat-component>
+
     <bar-line-canvas
       v-if="bar.lineStart"
       v-bind:bar-line="bar.lineStart"
-    />
+    >
+    </bar-line-canvas>
+
     <div
       id="repeat-ending-container"
       v-if="!$_isBarRepeatEndingEmpty"
@@ -28,8 +36,10 @@
       <bar-repeat-ending-component
         ref="barRepeatEndingComponent"
         v-bind:bar-repeat-ending="bar.repeatEnding"
-      />
+      >
+      </bar-repeat-ending-component>
     </div>
+
     <div
       id="part-container"
       ref="partContainer"
@@ -47,11 +57,14 @@
         v-on:note-chord-element-before-unmount="$_onNoteChordElementBeforeUnmount(partIdx, $event)"
         v-on:tie-point-update="$_onPartTiePointUpdate(partIdx, $event)"
         v-on:click-note="$_onClickNote(partIdx, $event)"
-      />
+      >
+      </part-in-bar-component>
     </div>
+
     <bar-line-canvas
       v-bind:bar-line="bar.lineEnd"
-    />
+    >
+    </bar-line-canvas>
   </div>
 </template>           
 

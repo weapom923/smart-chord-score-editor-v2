@@ -5,7 +5,8 @@
     v-model="$_pitchOffset"
     v-bind:label="$t('transpose')"
     v-bind:items="$_targetPitchOffsets"
-  />
+  >
+  </v-select>
 </template>
 
 <script lang="ts">
