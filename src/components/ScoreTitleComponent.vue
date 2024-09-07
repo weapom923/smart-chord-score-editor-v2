@@ -4,7 +4,7 @@
     color="transparent"
     class="position-relative"
     ref="scoreTitle"
-    v-on:contextmenu.capture.stop.prevent="$_onContextmenu"
+    v-on:contextmenu.capture="$_onContextmenu"
   >
     <v-card-title class="d-flex align-center flex-column">
       <h1 v-if="$_title !== undefined">{{ $_title }}</h1>
@@ -88,13 +88,22 @@ export default defineComponent({
   },
 
   methods: {
-    async $_onContextmenu() {
-      if (!this.scoreTitle) return;
-      const parameters: ContextMenuParameters = {
-        activator: this.scoreTitle.$el as HTMLElement,
-        menuItems: this.$_barMenuItems,
+    async $_onContextmenu(event: Event) {
+      const onContextmenu = async(): Promise<boolean> => {
+        if (this.$store.state.appState.isPrintLayoutEnabled) return false;
+        if (!this.scoreTitle) return false;
+        const parameters: ContextMenuParameters = {
+          activator: this.scoreTitle.$el as HTMLElement,
+          menuItems: this.$_barMenuItems,
+        };
+        await this.$store.dispatch('contextMenu/setParameters', parameters);
+        return true;
       };
-      await this.$store.dispatch('contextMenu/setParameters', parameters);
+
+      if (await onContextmenu()) {
+        event.stopPropagation();
+        event.preventDefault();
+      }
     },
   }
 })
