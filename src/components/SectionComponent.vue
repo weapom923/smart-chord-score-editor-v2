@@ -102,6 +102,7 @@ export default defineComponent({
               barRange: new BarRange(firstBarIdxOfCurrentSystem, barIdx),
               showBeatOnFirstBar,
               showBarHoverMenu: true,
+              disableClickableArea: this.$store.state.appState.isPrintLayoutEnabled,
             },
           );
           firstBarIdxOfCurrentSystem = barIdx + 1;
