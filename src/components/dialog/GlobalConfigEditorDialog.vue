@@ -22,7 +22,8 @@
                   v-bind:min="numPagesPerRowMin"
                   v-bind:max="numPagesPerRowMax"
                   v-bind:label="$t('numPagesPerRow')"
-                />
+                >
+                </dialog-text-field>
               </v-col>
 
               <v-col sm="4" cols="12">
@@ -34,7 +35,8 @@
                   v-bind:max="staffLineStaffPxMax"
                   v-bind:min="staffLineStaffPxMin"
                   v-bind:label="$t('staffLineStepPx')"
-                />
+                >
+                </dialog-text-field>
               </v-col>
 
               <v-col sm="4" cols="12">
@@ -45,7 +47,8 @@
                   v-bind:rules="$_rules.systemMarginTopPx"
                   v-bind:min="systemMarginTopPxMin"
                   v-bind:label="$t('systemMarginTopPx')"
-                />
+                >
+                </dialog-text-field>
               </v-col>
 
               <v-col sm="4" cols="12">
@@ -56,7 +59,8 @@
                   v-bind:rules="$_rules.systemMarginBottomPx"
                   v-bind:min="systemMerginBottomPxMin"
                   v-bind:label="$t('systemMarginBottomPx')"
-                />
+                >
+                </dialog-text-field>
               </v-col>
 
               <v-col sm="4" cols="12">
@@ -67,7 +71,8 @@
                   v-bind:rules="$_rules.pagePaddingTopPx"
                   v-bind:min="pagePaddingTopPxMin"
                   v-bind:label="$t('pagePaddingTopPx')"
-                />
+                >
+                </dialog-text-field>
               </v-col>
 
               <v-col sm="4" cols="12">
@@ -76,7 +81,8 @@
                   v-model:grid-note-value="$data.$_defaultGridNoteValue"
                   v-bind:rules="$_rules.defaultGridNoteValue"
                   v-bind:label="$t('defaultGridNoteValue')"
-                />
+                >
+                </grid-note-selector>
               </v-col>
 
               <v-col sm="4" cols="12">
@@ -87,7 +93,8 @@
                   v-bind:rules="$_rules.chordFontSizePx"
                   v-bind:min="chordFontSizePxMin"
                   v-bind:label="$t('chordFontSizePx')"
-                />
+                >
+                </dialog-text-field>
               </v-col>
 
               <v-col sm="4" cols="12">
@@ -154,7 +161,7 @@
       >
       </v-btn>
 
-      <v-spacer />
+      <v-spacer></v-spacer>
 
       <v-btn
         color="secondary"

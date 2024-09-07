@@ -6,7 +6,8 @@
     v-bind:label="$t('barBreakKind')"
     v-bind:items="$_allBarBreaks"
     v-bind:disabled="barBreak === undefined"
-  />
+  >
+  </v-select>
 </template>
 
 <script lang="ts">

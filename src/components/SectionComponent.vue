@@ -17,7 +17,8 @@
       <system-component
         v-bind="systemComponentProp"
         v-on:mousedown-staff="$_selectBar"
-      />
+      >
+      </system-component>
     </div>
   </div>
 </template>

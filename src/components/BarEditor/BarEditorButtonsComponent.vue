@@ -227,7 +227,8 @@
         v-bind:selected-staff-background-color="$_colorTransparent"
         v-bind:show-bar-hover-menu="false"
         v-on:select-note="$_onSelectNote"
-      />
+      >
+      </system-component>
     </v-card-text>
   </v-card>
 </template>

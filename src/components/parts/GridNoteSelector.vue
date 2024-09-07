@@ -3,7 +3,8 @@
     v-bind:label="$t('gridNoteValue')"
     v-model="$_gridNoteValueLabel"
     v-bind:items="$_gridNoteValueLabels"
-  />
+  >
+  </v-select>
 </template>
 
 <script lang="ts">

@@ -7,7 +7,7 @@
           <span class="section-title">{{ $_score.getSection($_selectedSectionAndBarRange.first.sectionIdx).name }}</span>
           <span>{{ $_selectedSectionAndBarRange.first.barIdx + 1 }}</span>
         </span>
-        <span class="connector-symbol" v-if="$_numSelectedBars > 1" />
+        <span class="connector-symbol" v-if="$_numSelectedBars > 1"></span>
         <span v-if="$_numSelectedBars > 1">
           <span class="section-index">{{ $_selectedSectionAndBarRange.last.sectionIdx + 1 }}</span>
           <span class="section-title">{{ $_score.getSection($_selectedSectionAndBarRange.last.sectionIdx).name }}</span>
@@ -18,7 +18,7 @@
         <template v-if="$_numSelectedBars === 1">({{ $_numSelectedBars }} {{ $t('barSelected') }})</template>
         <template v-else>({{ $_numSelectedBars }} {{ $t('barsSelected') }})</template>
       </div>
-      <v-spacer />
+      <v-spacer></v-spacer>
       <v-btn-toggle class="py-1" variant="outlined" mandatory v-model="$_barEditorLocation">
         <v-btn size="small" icon="mdi-dock-left" v-bind:value="barEditorLocationLeft"></v-btn>
         <v-btn size="small" icon="mdi-dock-bottom" v-bind:value="barEditorLocationBottom"></v-btn>

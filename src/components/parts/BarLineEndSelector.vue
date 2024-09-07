@@ -6,7 +6,8 @@
     v-bind:label="$t('barLineEndKind')"
     v-bind:items="$_allBarLineEnds"
     v-bind:disabled="barLineEnd === undefined"
-  />
+  >
+  </v-select>
 </template>
 
 <script lang="ts">

@@ -7,7 +7,8 @@
     v-bind:label="$t('partType')"
     v-bind:items="$_allPartIdcs"
     v-bind:disabled="$_isPartEmpty"
-  />
+  >
+  </v-select>
 </template>
 
 <script lang="ts">

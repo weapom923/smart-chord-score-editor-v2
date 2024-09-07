@@ -20,7 +20,8 @@
                   v-model="$data.$_metadata.title"
                   v-bind:rules="$_rules.title"
                   v-bind:label="$t('songTitle')"
-                />
+                >
+                </dialog-text-field>
               </v-col>
 
               <v-col sm="4" cols="12">
@@ -29,7 +30,8 @@
                   v-model="$data.$_metadata.artistName"
                   v-bind:rules="$_rules.artistName"
                   v-bind:label="$t('artistName')"
-                />
+                >
+                </dialog-text-field>
               </v-col>
 
               <v-col sm="4" cols="12">
@@ -38,7 +40,8 @@
                   v-model="$data.$_metadata.composerName"
                   v-bind:rules="$_rules.composerName"
                   v-bind:label="$t('composerName')"
-                />
+                >
+                </dialog-text-field>
               </v-col>
 
               <v-col sm="4" cols="12">
@@ -47,7 +50,8 @@
                   v-model="$data.$_metadata.arrangerName"
                   v-bind:rules="$_rules.arrangerName"
                   v-bind:label="$t('arrangerName')"
-                />
+                >
+                </dialog-text-field>
               </v-col>
 
               <v-col sm="4" cols="12">
@@ -56,7 +60,8 @@
                   v-model="$data.$_metadata.lyricistName"
                   v-bind:rules="$_rules.lyricistName"
                   v-bind:label="$t('lyricistName')"
-                />
+                >
+                </dialog-text-field>
               </v-col>
             </v-row>
           </v-container>

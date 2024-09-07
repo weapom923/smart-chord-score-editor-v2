@@ -15,18 +15,21 @@
         v-on:keydown.down.stop="$_fixCurrentSliderValues"
         v-on:keydown.left.stop="$_fixCurrentSliderValues"
         v-on:keydown.right.stop="$_fixCurrentSliderValues"
-      />
+      >
+      </v-range-slider>
       <note-value-selector-buttons
         v-if="($_safeNoteValueSliderUnitValue !== undefined) && ($data.$_noteValueSliderUnitValue !== undefined)"
         v-model:unit-note-value="$data.$_noteValueSliderUnitValue"
         v-bind:safe-unit-note-value="$_safeNoteValueSliderUnitValue"
-      />
+      >
+      </note-value-selector-buttons>
       <chord-editor-component
         class="mt-3"
         v-if="($_selectedNoteChord !== undefined) && ($_selectedNote !== undefined)"
         v-model:chord="$_selectedNoteChord"
         v-bind:note-type="$_selectedNote.type"
-      />
+      >
+      </chord-editor-component>
     </v-card-text>
   </v-card>
 </template>

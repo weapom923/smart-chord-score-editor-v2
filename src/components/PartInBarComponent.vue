@@ -18,14 +18,16 @@
         v-on:tie-point-update="$_onNoteTiePointUpdate(noteIdx, $event)"
         v-on:click-note="$_onClickNote(noteIdx)"
         v-on:resize="$_updateTiePropsAndStyles"
-      />
+      >
+      </note-base-component>
       <tie-canvas
         v-if="$data.$_tieProps.has(noteIdx)"
         v-bind="assertDefined($data.$_tieProps.get(noteIdx))"
         v-bind:color="noteColor"
         v-bind:alpha-as-opacity="true"
         v-bind:style="$data.$_tieStyles.get(noteIdx)"
-      />
+      >
+      </tie-canvas>
     </template>
   </div>
 </template>
