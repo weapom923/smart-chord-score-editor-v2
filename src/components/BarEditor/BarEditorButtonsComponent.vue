@@ -216,6 +216,7 @@
     </v-card-actions>
     <v-card-text class="pa-0">
       <system-component
+        disable-clickable-area
         v-bind:score="$_temporalScore"
         v-bind:section="$_temporalSection"
         v-bind:sectionIdx="0"
