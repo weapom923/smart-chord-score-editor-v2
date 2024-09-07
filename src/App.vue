@@ -45,7 +45,10 @@
       >
       </component>
 
-      <context-menu></context-menu>
+      <context-menu
+        v-if="!$store.state.appState.isPrintLayoutEnabled"
+      >
+      </context-menu>
     </v-main>
 
     <snack-bar class="no-print"></snack-bar>
@@ -357,6 +360,7 @@ const App = defineComponent({
             break;
         }
       }
+      if (this.print) return false;
       if (this.dialog?.onKeydown(event)) return true;
       if (await this.barEditorDrawer?.onKeydown(event)) return true;
       if (this.audioPlayerBar?.onKeydown(event)) return true;

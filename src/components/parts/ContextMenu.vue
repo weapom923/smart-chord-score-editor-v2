@@ -9,7 +9,6 @@
     min-width="0"
     v-model="$data.$_isMenuActive"
     v-bind:activator="$data.$_focusRetainer"
-    v-bind:disabled="$store.state.appState.isPrintLayoutEnabled"
   >
     <v-list
       min-width="fit-content"
