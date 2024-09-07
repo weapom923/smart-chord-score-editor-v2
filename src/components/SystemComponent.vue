@@ -57,6 +57,7 @@
         </bar-component>
         <div
           class="clickable-area"
+          v-if="!disableClickableArea"
           v-bind:style="$_clickableAreaStyle.get(barProps.barIdx)"
           v-on:mousedown.stop="$_onMousedownStaff(barProps.barIdx, $event)"
           v-on:contextmenu.capture.stop.prevent="$_onContextmenu(sectionIdx, barProps.barIdx, $event)"
@@ -158,6 +159,7 @@ export default defineComponent({
     showBarHoverMenu: { type: Boolean, required: true },
     staffBackgroundColor: { type: Color },
     selectedStaffBackgroundColor: { type: Color, default: () => selectedBarStaffBackgroundColor },
+    disableClickableArea: { type: Boolean, default: false },
   },
 
   data(): {
