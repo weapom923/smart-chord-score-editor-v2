@@ -1,6 +1,7 @@
 <template>
   <div
     id="note-base-component"
+    ref="noteBaseComponent"
     v-bind:style="$_noteBaseComponentStyle"
   >
     <div
@@ -92,7 +93,7 @@
 </style>
 
 <script lang="ts">
-import { defineComponent, CSSProperties } from 'vue';
+import { defineComponent, CSSProperties, ref } from 'vue';
 import ChordComponent from './ChordComponent.vue';
 import ChordNoteCanvas from './canvases/ChordNoteCanvas.vue';
 import RestNoteCanvas from './canvases/RestNoteCanvas.vue';
@@ -105,6 +106,12 @@ import { Color, cl } from '../modules/Color';
 import { max, assertDefined } from '../modules/utils';
 
 export default defineComponent({
+  setup() {
+    return {
+      noteBaseComponent: ref<HTMLDivElement>(),
+    };
+  },
+
   emits: {
     chordComponentMounted: (event: HTMLElement) => true,
     chordComponentBeforeUnmount: () => true,
@@ -252,14 +259,12 @@ export default defineComponent({
       if (tieEndPointOffset === undefined) return undefined;
       return { tieStartPointOffset, tieEndPointOffset };
     },
-
-    $_noteBaseElement(): HTMLDivElement {
-      return this.$el as HTMLDivElement;
-    },
   },
 
   mounted() {
-    this.$data.$_noteBaseElementResizeObserver.observe(this.$_noteBaseElement);
+    if (this.noteBaseComponent) {
+      this.$data.$_noteBaseElementResizeObserver.observe(this.noteBaseComponent);
+    }
     this.$_updateTiePropsAndStyles();
   },
 
@@ -318,7 +323,8 @@ export default defineComponent({
     },
 
     $_updateTiePropsAndStyles() {
-      const noteBaseElementOffsetX = this.$_noteBaseElement.getBoundingClientRect().x;
+      if (!this.noteBaseComponent) return;
+      const noteBaseElementOffsetX = this.noteBaseComponent.getBoundingClientRect().x;
       const tieProps = new Map<SplitNoteIdx, InstanceType<typeof TieCanvas>['$props']>();
       const tieStyles = new Map<SplitNoteIdx, CSSProperties>();
       for (let currentSplitNoteIdx = 0; currentSplitNoteIdx < this.$_lastSplitNoteIdx; ++currentSplitNoteIdx) {

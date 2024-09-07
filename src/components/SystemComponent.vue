@@ -1,6 +1,7 @@
 <template>
   <div
     id="system"
+    ref="system"
     v-bind:style="$_systemStyle"
   >
     <staff-canvas
@@ -47,7 +48,6 @@
           v-model:selected-part-idx="$_selectedPartIdx"
           v-model:selected-note-idx="$_selectedNoteIdx"
           v-bind="barProps"
-          v-bind:note-color="$store.state.config.noteColor"
           v-on:tie-point-update="$_onTiePointUpdate(barProps.barIdx, $event)"
           v-on:margin-top-px-update="$_onMarginTopPxUpdate(barProps.barIdx, $event)"
           v-on:margin-bottom-px-update="$_onMarginBottomPxUpdate(barProps.barIdx, $event)"
@@ -55,34 +55,14 @@
           v-on:before-unmount="$_deleteBarElement(barProps.barIdx)"
         >
         </bar-component>
-        <v-menu
-          open-on-hover
-          close-on-back
-          close-on-content-click
-          location="bottom"
-          open-delay="0"
-          close-delay="50"
-          transition="fade-transition"
-          v-if="showBarHoverMenu"
-          v-bind:disabled="$store.state.appState.isPrintLayoutEnabled"
+        <div
+          class="clickable-area"
+          v-bind:style="$_clickableAreaStyle.get(barProps.barIdx)"
+          v-on:mousedown.stop="$_onMousedownStaff(barProps.barIdx, $event)"
+          v-on:contextmenu.capture.stop.prevent="$_onContextmenu(sectionIdx, barProps.barIdx, $event)"
+          v-on:keydown.stop
         >
-          <template v-slot:activator="{ props }">
-            <div
-              id="clickable-area"
-              v-bind="props"
-              v-bind:style="$_clickableAreaStyle.get(barProps.barIdx)"
-              v-on:mousedown.stop="$_onMousedownStaff(barProps.barIdx, $event)"
-            >
-            </div>
-          </template>
-
-          <bar-hover-menu
-            width="200"
-            v-bind:section-idx="sectionIdx"
-            v-bind:bar-idx="barProps.barIdx"
-          >
-          </bar-hover-menu>
-        </v-menu>
+        </div>
       </div>
     </template>
   </div>
@@ -107,7 +87,7 @@
   width: 100%;
 }
 
-#clickable-area {
+.clickable-area {
   z-index: 2;
   cursor: pointer;
   position: absolute;
@@ -124,17 +104,17 @@
 </style>
 
 <script lang="ts">
-import { defineComponent, CSSProperties } from 'vue';
+import { defineComponent, CSSProperties, ref } from 'vue';
 import BarComponent from '../components/BarComponent.vue';
 import StaffCanvas from './canvases/StaffCanvas.vue';
-import BarHoverMenu from './parts/BarHoverMenu.vue';
 import { Score } from '../modules/Score';
 import { Section } from '../modules/Section';
 import { bb } from '../modules/BarBreak';
 import { Color, cl } from '../modules/Color';
 import { assertDefined, max } from '../modules/utils';
 import TieCanvas from './canvases/TieCanvas.vue';
-import { SectionAndBarIdx, BarRange } from '../modules/SectionAndBarRange';
+import { SectionAndBarIdx, SectionAndBarRange, BarRange } from '../modules/SectionAndBarRange';
+import { ContextMenuItem, ContextMenuParameters } from '../store/module/ContextMenu'
 
 const selectedBarStaffBackgroundColor = new Color(170, 210, 160, 0.3);
 
@@ -142,6 +122,12 @@ type TieCanvasProps = InstanceType<typeof TieCanvas>['$props'];
 type BarComponentPropsType = InstanceType<typeof BarComponent>['$props'];
 
 export default defineComponent({
+  setup() {
+    return {
+      system: ref<HTMLDivElement>(),
+    };
+  },
+
   emits: {
     mousedownStaff: ({ barIdx, event }: { barIdx: BarIdx, event: MouseEvent }) => true,
     'update:selectedNoteIdx': (noteIdx: NoteIdx) => true,
@@ -150,7 +136,6 @@ export default defineComponent({
 
   components: {
     BarComponent,
-    BarHoverMenu,
     StaffCanvas,
     TieCanvas,
   },
@@ -292,6 +277,7 @@ export default defineComponent({
           showKeySignature: this.$_getShowKeySignature(barIdx),
           isSelected: this.$_getIsSelected(barIdx),
           selectedStaffBackgroundColor: this.selectedStaffBackgroundColor,
+          noteColor: this.$store.state.config.noteColor,
         };
       })
     },
@@ -332,14 +318,12 @@ export default defineComponent({
       }
       return isTiedToNextSystem;
     },
-
-    $_systemElement(): HTMLDivElement {
-      return this.$el as HTMLDivElement;
-    },
   },
 
   mounted() {
-    this.$data.$_systemElementResizeObserver.observe(this.$_systemElement);
+    if (this.system) {
+      this.$data.$_systemElementResizeObserver.observe(this.system);
+    }
   },
 
   beforeUnmount() {
@@ -427,8 +411,9 @@ export default defineComponent({
       const tieProps = new Map<BarIdx, Map<PartIdx, TieCanvasProps>>();
       const tieStyles = new Map<BarIdx, Map<PartIdx, CSSProperties>>();
       const firstBar = this.section.getBar(this.barRange.firstBarIdx);
-      if (this.$_systemElement.nodeType === Node.COMMENT_NODE) return;
-      const systemElementBoundingClientRect = this.$_systemElement.getBoundingClientRect();
+      if (!this.system) return;
+      if (this.system.nodeType === Node.COMMENT_NODE) return;
+      const systemElementBoundingClientRect = this.system.getBoundingClientRect();
       const partIdcs = this.$_partIdcs.get(this.barRange.firstBarIdx) as PartIdx[];
       for (const partIdxInFirstBar of partIdcs) {
         const partInFirstBar = firstBar.getPart(partIdxInFirstBar);
@@ -545,7 +530,71 @@ export default defineComponent({
       if (!this.$store.state.appState.isAutoScrollEnabled) return;
       if (this.$store.state.appState.isBarEditorDrawerMinimized) return;
       // FIXME
-      // this.$vuetify.goTo(this.$_systemElement);
+      // this.$vuetify.goTo(this.system);
+    },
+
+    $_barMenuItems(sectionIdx: number, barIdx: number): ContextMenuItem[] {
+      const sectionAndBarIdx = new SectionAndBarIdx(sectionIdx, barIdx);
+      const nextBarIdxInCurrentSection = new SectionAndBarIdx(sectionIdx, barIdx + 1);
+      const sectionAndBarRange = new SectionAndBarRange(sectionAndBarIdx);
+      return [
+        {
+          icon: 'mdi-plus',
+          text: this.$t('insertBarBefore'),
+          callback: async () => {
+            await this.$store.dispatch(
+              'score/insertBars',
+              {
+                sectionAndBarIdx: sectionAndBarIdx,
+                bars: [ this.$store.state.score.score.getBar(sectionAndBarIdx).generateEmptyFrom() ],
+                selects: false,
+              },
+            );
+          },
+        },
+        {
+          icon: 'mdi-delete',
+          text: this.$t('removeBar'),
+          callback: async () => {
+            await this.$store.dispatch('score/removeBars', sectionAndBarRange);
+            await this.$store.dispatch('score/unselectBar');
+          },
+        },
+        {
+          icon: 'mdi-content-copy',
+          text: this.$t('copyBar'),
+          callback: async () => { await this.$store.dispatch('score/setCopiedBars', sectionAndBarRange) },
+        },
+        {
+          icon: 'mdi-content-paste',
+          text: this.$t('pasteBar'),
+          callback: async () => { await this.$store.dispatch('score/pasteCopiedBarsPartOnly', sectionAndBarRange) },
+          disabled: (this.$store.state.score.copiedBars.length === 0),
+        },
+        {
+          icon: 'mdi-plus',
+          text: this.$t('insertBarAfter'),
+          callback: async () => {
+            await this.$store.dispatch(
+              'score/insertBars',
+              {
+                sectionAndBarIdx: nextBarIdxInCurrentSection,
+                bars: [ this.$store.state.score.score.getBar(sectionAndBarIdx).generateEmptyFrom() ],
+                selects: false,
+              },
+            );
+          },
+        },
+      ];
+    },
+
+    async $_onContextmenu(sectionIdx: number, barIdx: number, event: Event) {
+      await this.$store.dispatch('contextMenu/clearParameters');
+      const parameters: ContextMenuParameters = {
+        activator: event.target as HTMLElement,
+        menuItems: this.$_barMenuItems(sectionIdx, barIdx),
+      };
+      await this.$store.dispatch('contextMenu/setParameters', parameters);
     },
 
     assertDefined,

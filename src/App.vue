@@ -1,5 +1,8 @@
 <template>
-  <v-app id="app">
+  <v-app
+    id="app"
+    v-on:contextmenu="$_onContextmenu"
+  >
     <app-bar
       class="no-print" color="secondary" flat
       v-if="!$store.state.appState.isPrintLayoutEnabled"
@@ -41,6 +44,8 @@
         v-bind="$store.state.dialog.dialog?.props"
       >
       </component>
+
+      <context-menu></context-menu>
     </v-main>
 
     <snack-bar class="no-print"></snack-bar>
@@ -128,6 +133,7 @@ import ScorePage from './components/ScorePage.vue';
 import SnackBar from './components/snack_bar/SnackBar.vue';
 import BarEditorDrawer from './components/BarEditorDrawer.vue';
 import DialogBase from './components/dialog/DialogBase.vue';
+import ContextMenu from './components/parts/ContextMenu.vue';
 import { Score } from './modules/Score';
 import { BarBreak, bb } from './modules/BarBreak';
 import { SectionAndBarRange, SectionAndBarIdx } from './modules/SectionAndBarRange';
@@ -154,6 +160,7 @@ const App = defineComponent({
     ScorePage,
     SnackBar,
     BarEditorDrawer,
+    ContextMenu,
     GlobalConfigEditorDialog,
     ScoreMetadataEditorDialog,
     SectionEditorDialog,
@@ -604,6 +611,10 @@ const App = defineComponent({
         await this.$store.dispatch('score/removeBars', this.$store.state.score.selectedBars);
         return true;
       }
+    },
+
+    async $_onContextmenu() {
+      await this.$store.dispatch('contextMenu/clearParameters');
     },
   },
 });

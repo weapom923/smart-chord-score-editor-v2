@@ -1,11 +1,16 @@
 <template>
-  <canvas id="note-canvas-container"></canvas>
+  <canvas
+    id="note-canvas-container"
+    ref="chordNoteCanvas"
+  >
+  </canvas>
 </template>
 
-<style src="./styles/noteCanvas.css"></style>
+<style scoped src="./styles/noteCanvas.css">
+</style>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import CanvasBase from './CanvasBase.vue';
 import { Note } from '../../modules/Note';
 import { NoteValue, nv } from '../../modules/NoteValue';
@@ -20,14 +25,20 @@ const noteDotRadiusRate = 0.15;
 const noteDotMarginPx = 2;
 
 const ChordNoteCanvas = defineComponent({
+  extends: CanvasBase,
+
+  setup() {
+    return {
+      chordNoteCanvas: ref<HTMLCanvasElement>(),
+    };
+  },
+
   emits: {
     widthUpdate: (noteWidthPx: number) => true,
     tiePointUpdate: ({ tieStartPointOffset, tieEndPointOffset }: { tieStartPointOffset: DOMPoint, tieEndPointOffset: DOMPoint }) => true,
     mounted: (element: HTMLCanvasElement) => true,
     beforeUnmount: () => true,
   },
-
-  extends: CanvasBase,
 
   watch: {
     note() { this.draw() },
@@ -58,7 +69,9 @@ const ChordNoteCanvas = defineComponent({
     this.$_updateMarginTop(this.$_marginTopPx);
     this.$_emitWidthUpdate();
     this.$_emitTiePointUpdate();
-    this.$emit('mounted', this.$el);
+    if (this.chordNoteCanvas) {
+      this.$emit('mounted', this.chordNoteCanvas);
+    }
   },
 
   beforeUnmount() {

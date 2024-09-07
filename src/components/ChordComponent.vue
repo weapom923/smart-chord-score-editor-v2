@@ -1,6 +1,7 @@
 <template>
   <div
     id="chord-container"
+    ref="chordContainer"
     class="d-flex flex-column align-center"
     v-bind:style="$_chordContainerStyle"
   >
@@ -125,7 +126,7 @@
 </style>
 
 <script lang="ts">
-import { defineComponent, CSSProperties } from 'vue';
+import { defineComponent, CSSProperties, ref } from 'vue';
 import { TensionNotePitch } from '../modules/TensionNotePitch';
 import { Chord } from '../modules/Chord';
 import { Color } from '../modules/Color';
@@ -154,6 +155,12 @@ function getNoteFlatOrSharpText(notePitch: NotePitch): string {
 }
 
 export default defineComponent({
+  setup() {
+    return {
+      chordContainer: ref<HTMLDivElement>(),
+    };
+  },
+
   emits: {
     widthUpdate: (widthPx: number) => true,
     mounted: (element: HTMLDivElement) => true,
@@ -179,8 +186,10 @@ export default defineComponent({
   },
 
   mounted() {
-    this.$data.$_resizeObverber.observe(this.$_chordElement);
-    this.$emit('mounted', this.$el);
+    if (this.chordContainer) {
+      this.$data.$_resizeObverber.observe(this.chordContainer);
+      this.$emit('mounted', this.chordContainer);
+    }
   },
 
   beforeUnmount() {
@@ -258,10 +267,6 @@ export default defineComponent({
       };
     },
 
-    $_chordElement(): HTMLDivElement {
-      return this.$el as HTMLDivElement;
-    },
-
     $_containsChordText(): boolean {
       return (this.$_basicChordText.length > 0) || this.$_containsChordAdditional;
     },
@@ -273,7 +278,9 @@ export default defineComponent({
 
   methods: {
     $_emitWidthUpdate() {
-      this.$emit('widthUpdate', this.$_chordElement.getBoundingClientRect().width);
+      if (this.chordContainer) {
+        this.$emit('widthUpdate', this.chordContainer.getBoundingClientRect().width);
+      }
     },
   },
 })
