@@ -91,6 +91,7 @@ export default defineComponent({
         this.$data.$_focusRetainer.style.height = '100%';
         this.$data.$_focusRetainer.style.outline = 'none';
         this.$data.$_focusRetainer.style.pointerEvents = 'none';
+        this.$data.$_focusRetainer.onkeydown = this.$_onKeydownAtMenu;
         newActivator.appendChild(this.$data.$_focusRetainer);
         this.$data.$_focusRetainer.focus();
         this.$data.$_isMenuActive = true;
@@ -102,7 +103,6 @@ export default defineComponent({
     $_onKeydownAtMenu(event: KeyboardEvent): boolean {
       switch (event.key) {
         case 'Enter':
-        case 'Space':
         case 'Escape':
           this.$data.$_isMenuActive = false;
           return true;
