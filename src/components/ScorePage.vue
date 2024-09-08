@@ -1,43 +1,49 @@
 <template>
-  <v-sheet
-    id="score-page"
-    class="overflow-y-hidden"
-    color="background"
-    v-bind:class="$_pageClass"
+  <v-hover
+    v-slot="{ isHovering, props }"
+    v-bind:disabled="$store.state.appState.isPrintLayoutEnabled"
   >
-    <score-page-toolbar
-      v-if="!$store.state.appState.isPrintLayoutEnabled"
-      id="score-page-tool-bar"
-      class="no-print"
-      collapse absolute 
-      v-bind:section-and-bar-range="sectionAndBarRange"
+    <v-sheet
+      id="score-page"
+      class="overflow-y-hidden"
+      color="background"
+      v-bind:class="$_pageClass"
+      v-bind:style="$_pageStyle"
+      v-bind="props"
     >
-    </score-page-toolbar>
-
-    <div class="d-flex flex-column px-2" v-bind:style="$_pageStyle">
-      <score-title-component v-if="$_isFirstPage">
-      </score-title-component>
-      <template
-        v-for="sectionComponentProp of $_sectionComponentProps"
-        v-bind:key="sectionComponentProp.sectionIdx"
+      <score-page-toolbar
+        id="score-page-tool-bar"
+        class="no-print"
+        collapse absolute
+        v-if="isHovering"
+        v-bind:section-and-bar-range="sectionAndBarRange"
       >
-        <section-component v-bind="sectionComponentProp">
+      </score-page-toolbar>
+  
+      <div class="d-flex flex-column px-2">
+        <score-title-component v-if="$_isFirstPage"></score-title-component>
+        <section-component
+          v-for="sectionComponentProp of $_sectionComponentProps"
+          v-bind:key="sectionComponentProp.sectionIdx"
+          v-bind="sectionComponentProp"
+        >
         </section-component>
-      </template>
-      <score-footer-component
-        class="mt-auto"
-        v-bind:score-page-index="scorePageIndex"
-        v-bind:num-score-pages="numScorePages"
-      >
-      </score-footer-component>
-    </div>
-  </v-sheet>
+        <score-footer-component
+          class="mt-auto"
+          v-bind:score-page-index="scorePageIndex"
+          v-bind:num-score-pages="numScorePages"
+        >
+        </score-footer-component>
+      </div>
+    </v-sheet>
+  </v-hover>
 </template>
 
 <style scoped>
 #score-page {
   user-select: none;
   border: 1px #cccccc dotted;
+  position: relative;
 }
 
 #score-page:not(.last-page) {
@@ -46,6 +52,8 @@
 
 #score-page-tool-bar {
   z-index: 1;
+  top: 0;
+  left: 0;
 }
 
 @media print {
