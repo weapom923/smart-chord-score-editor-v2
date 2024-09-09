@@ -87,7 +87,12 @@ export default defineComponent({
         ),
         generateNewScore: new MenuItemDefinition(
           'mdi-file', this.$t('createNewScore'),
-          async () => { await this.$store.dispatch('score/setScore', new Score()) },
+          async () => {
+            await this.$store.dispatch(
+              'score/setScore',
+              new Score(new ScoreMetadata(this.$t('untitled'))),
+            );
+          },
         ),
         loadScoreFile: new MenuItemDefinition(
           'mdi-folder-open', this.$t('loadScore'),

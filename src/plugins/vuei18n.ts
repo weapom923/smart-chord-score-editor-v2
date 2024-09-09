@@ -108,6 +108,7 @@ const messageJa = {
   editAllBars: '全小節一括編集',
   editAllBarsInCurrentPage: 'ページ内全小節一括編集',
   deleteAllBarsInCurrentPage: 'ページ内全小節削除',
+  untitled: '無題',
 
   barSelected: '小節選択',
   barsSelected: '小節選択',
@@ -261,6 +262,7 @@ const messageEn: Messages = {
   editAllBars: 'Edit all bars',
   editAllBarsInCurrentPage: 'Edit all bars in current page',
   deleteAllBarsInCurrentPage: 'Delete all bars in current page',
+  untitled: 'Untitled',
 
   barSelected: 'bar selected',
   barsSelected: 'bars selected',

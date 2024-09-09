@@ -13,27 +13,23 @@
       v-bind:scrollable="!$store.state.appState.isPrintLayoutEnabled"
       v-on:mousedown.left="$_onClickBackground"
     >
-      <v-btn
-        variant="outlined"
-        v-if="$_score.numSections === 0"
-        v-on:click="$_generateNewSection"
-        v-bind:text="$t('generateNewSection')"
+      <div
+        class="score-row-container"
+        v-bind:class="{ 'print-layout': $store.state.appState.isPrintLayoutEnabled }"
+        v-bind:key="$data.$_forceRemountKey"
       >
-      </v-btn>
-      <div v-bind:class="$_scoreRowContainerClass">
         <div
+          class="score-page-row-container"
           v-for="(scorePageProps, rowIdx) of $_scorePagePropsByRows"
           v-bind:key="rowIdx"
-          v-bind:class="$_scorePageRawContainerClass"
+          v-bind:class="{ 'print-layout': $store.state.appState.isPrintLayoutEnabled }"
         >
-          <template v-if="!$data.$_isForcedReloading">
-            <score-page
-              v-for="(scorePageProp, scorePageDefinitionIdx) of scorePageProps"
-              v-bind:key="scorePageDefinitionIdx"
-              v-bind="scorePageProp"
-            >
-            </score-page>
-          </template>
+          <score-page
+            v-for="(scorePageProp, scorePageDefinitionIdx) of scorePageProps"
+            v-bind:key="scorePageDefinitionIdx"
+            v-bind="scorePageProp"
+          >
+          </score-page>
         </div>
       </div>
       
@@ -226,10 +222,10 @@ const App = defineComponent({
   },
 
   data(): {
-    $_isForcedReloading: boolean,
+    $_forceRemountKey: number,
   } {
     return {
-      $_isForcedReloading: false,
+      $_forceRemountKey: 0,
     };
   },
 
@@ -238,7 +234,7 @@ const App = defineComponent({
 
     $_score(): Score { return this.$store.state.score.score },
 
-    $_scorePagePropsByRows(): scorePagePropType[][] {
+    $_scorePagePropsByRows(): scorePagePropType[][] | undefined {
       return this.$_scorePageProps.reduce(
         (scorePagePropsPerRow: scorePagePropType[][], scorePageProp: scorePagePropType): scorePagePropType[][] => {
           const scorePagePropsInLastRow = scorePagePropsPerRow[scorePagePropsPerRow.length - 1];
@@ -256,6 +252,14 @@ const App = defineComponent({
     $_scorePageProps(): scorePagePropType[] {
       const sectionAndBarRanges: SectionAndBarRange[] = []
       let sectionAndBarIdx: SectionAndBarIdx | undefined = this.$_score.firstSectionAndBarIdx;
+      if (sectionAndBarIdx === undefined) {
+        return [{
+          sectionAndBarRange: undefined,
+          scorePageIndex: 0,
+          numScorePages: 1,
+          aspectRatio: this.$store.state.score.scorePageWHRatio,
+        }]
+      }
       let pageFirstSectionAndBarIdx: SectionAndBarIdx | undefined = undefined;
       while (sectionAndBarIdx !== undefined) {
         if (pageFirstSectionAndBarIdx === undefined) {
@@ -283,22 +287,6 @@ const App = defineComponent({
         aspectRatio: this.$store.state.score.scorePageWHRatio,
       }));
     },
-
-    $_scorePageRawContainerClass(): string {
-      const classNameList = [ 'score-page-row-container' ];
-      if (this.$store.state.appState.isPrintLayoutEnabled) {
-        classNameList.push('print-layout');
-      }
-      return classNameList.join(' ');
-    },
-
-    $_scoreRowContainerClass(): string {
-      const classNameList = [ 'score-row-container' ];
-      if (this.$store.state.appState.isPrintLayoutEnabled) {
-        classNameList.push('print-layout');
-      }
-      return classNameList.join(' ');
-    },
   },
 
   async beforeCreate() {
@@ -321,9 +309,7 @@ const App = defineComponent({
 
   methods: {
     $_reloadScore() {
-      if (this.$data.$_isForcedReloading) return;
-      this.$data.$_isForcedReloading = true;
-      this.$nextTick(() => { this.$data.$_isForcedReloading = false });
+      this.$data.$_forceRemountKey++;
     },
 
     async $_onClickBackground() {
@@ -331,18 +317,6 @@ const App = defineComponent({
       if (!this.print) {
         await this.$store.dispatch('appState/setIsPrintLayoutEnabled', false);
       }
-    },
-
-    async $_generateNewSection() {
-      await this.$store.dispatch(
-        'dialog/setDialog',
-        {
-          componentName: 'generate-section-dialog',
-          props: {
-            sectionIdx: 0,
-          },
-        },
-      );
     },
 
     async onKeydown(event: KeyboardEvent) {
