@@ -10,7 +10,7 @@
     <v-btn
       rounded="0" size="small"
       v-show="$store.state.appState.isBarEditorDrawerMinimized"
-      v-bind:disabled="!$_isBarEditorMaximizeButtonDisabled"
+      v-bind:disabled="!isBarEditorMaximizable"
       v-bind:icon="$_barEditorMaximizeIcon"
       v-bind:width="$_barEditorMaximizeButtonWidth"
       v-bind:height="$_barEditorMaximizeButtonHeight"
@@ -59,6 +59,10 @@ export default defineComponent({
     },
   },
 
+  props: {
+    isBarEditorMaximizable: { type: Boolean, required: true },
+  },
+
   data(): {
     $_barEditorDrawerWidthPxMax: number,
     $_barEditorDrawerHeightPxMax: number,
@@ -70,11 +74,6 @@ export default defineComponent({
   },
 
   computed: {
-    $_isBarEditorMaximizeButtonDisabled(): boolean {
-      if (this.$store.state.score.selectedBars === undefined) return false;
-      return true;
-    },
-
     $_barEditorMaximizeIcon(): string | undefined {
       switch (this.$store.state.config.barEditorLocation) {
         case 'left':
