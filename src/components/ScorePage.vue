@@ -5,7 +5,7 @@
   >
     <v-sheet
       id="score-page"
-      class="overflow-y-hidden"
+      class="d-flex overflow-y-hidden"
       color="background"
       v-bind:class="$_pageClass"
       v-bind:style="$_pageStyle"
@@ -15,19 +15,31 @@
         id="score-page-tool-bar"
         class="no-print"
         collapse absolute
-        v-if="isHovering"
+        v-if="sectionAndBarRange && isHovering"
         v-bind:section-and-bar-range="sectionAndBarRange"
       >
       </score-page-toolbar>
-  
-      <div class="d-flex flex-column px-2">
+
+      <div class="flex-grow-1 d-flex flex-column px-2">
         <score-title-component v-if="$_isFirstPage"></score-title-component>
-        <section-component
-          v-for="sectionComponentProp of $_sectionComponentProps"
-          v-bind:key="sectionComponentProp.sectionIdx"
-          v-bind="sectionComponentProp"
-        >
-        </section-component>
+        <div class="flex-grow-1">
+          <section-component
+            v-if="sectionAndBarRange"
+            v-for="sectionComponentProp of $_sectionComponentProps"
+            v-bind:key="sectionComponentProp.sectionIdx"
+            v-bind="sectionComponentProp"
+          >
+          </section-component>
+
+          <v-btn
+            variant="outlined"
+            v-else-if="!$store.state.appState.isPrintLayoutEnabled"
+            v-bind:text="$t('generateNewSection')"
+            v-on:click="$_generateNewSection"
+          >
+          </v-btn>
+        </div>
+
         <score-footer-component
           class="mt-auto"
           v-bind:score-page-index="scorePageIndex"
@@ -84,7 +96,7 @@ export default defineComponent({
   },
 
   props: {
-    sectionAndBarRange: { type: SectionAndBarRange, required: true },
+    sectionAndBarRange: { type: SectionAndBarRange },
     scorePageIndex: { type: Number, default: 0 },
     numScorePages: { type: Number, default: 0 },
     aspectRatio: { type: Number, required: true },
@@ -121,6 +133,7 @@ export default defineComponent({
     $_sectionComponentProps(): SectionComponentPropsType[] {
       const sectionDefinitions: SectionComponentPropsType[] = [];
       if (this.$_numSections === 0) return sectionDefinitions;
+      if (!this.sectionAndBarRange) return sectionDefinitions;
       for (const currentSectionIdx of this.sectionAndBarRange.sectionIndices()) {
         const currentSection = this.$_score.getSection(currentSectionIdx);
 
