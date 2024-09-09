@@ -62,6 +62,7 @@
       ref="barEditorDrawer"
       class="no-print"
       v-if="!$store.state.appState.isPrintLayoutEnabled"
+      v-bind:is-bar-editor-maximizable="$_isBarEditorMaximizable"
     >
     </bar-editor-drawer>
   </v-app>
@@ -287,6 +288,11 @@ const App = defineComponent({
         aspectRatio: this.$store.state.score.scorePageWHRatio,
       }));
     },
+
+    $_isBarEditorMaximizable(): boolean {
+      if (this.$store.state.score.selectedBars === undefined) return false;
+      return true;
+    },
   },
 
   async beforeCreate() {
@@ -364,8 +370,13 @@ const App = defineComponent({
               this.$store.dispatch('dialog/setDialog', { componentName: 'help-dialog' });
               return true;
             case 'KeyE':
-              await this.$store.dispatch('appState/setIsBarEditorMinimized', !this.$store.state.appState.isBarEditorDrawerMinimized);
-              return true;
+              if (this.$_isBarEditorMaximizable && this.$store.state.appState.isBarEditorDrawerMinimized) {
+                await this.$store.dispatch('appState/setIsBarEditorMinimized', false);
+                return false;
+              } else {
+                await this.$store.dispatch('appState/setIsBarEditorMinimized', true);
+                return true;
+              }
             case 'KeyP':
               await this.$store.dispatch('appState/setIsPrintLayoutEnabled', true);
               return true;
