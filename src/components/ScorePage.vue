@@ -7,7 +7,7 @@
       id="score-page"
       class="d-flex overflow-y-hidden"
       color="background"
-      v-bind:class="$_pageClass"
+      v-bind:class="{ 'last-page': $_isLastPage }"
       v-bind:style="$_pageStyle"
       v-bind="props"
     >
@@ -114,11 +114,6 @@ export default defineComponent({
     $_numSections(): number { return this.$_score.numSections },
 
     $_pageElevation() { return ((this.$store.state.appState.isPrintLayoutEnabled)? 0 : 3) },
-
-    $_pageClass(): string | undefined {
-      if (this.$_isLastPage) return 'last-page';
-      return undefined;
-    },
 
     $_pageStyle(): CSSProperties {
       const pageStyle: CSSProperties = {};
