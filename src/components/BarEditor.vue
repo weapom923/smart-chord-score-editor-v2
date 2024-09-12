@@ -6,7 +6,7 @@
     >
     </bar-editor-toolbar>
     <v-container id="editor-container">
-      <v-row>
+      <v-row v-if="$_selectedSectionAndBarRange">
         <v-col cols="3">
           <bar-detail-editor-component>
           </bar-detail-editor-component>
@@ -41,6 +41,8 @@
           </note-editor-component>
         </v-col>
       </v-row>
+
+      <div v-else>{{ $t('editorAppearsHereWhenBarsSelected') }}</div>
     </v-container>
   </div>
 </template>

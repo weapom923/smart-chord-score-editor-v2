@@ -1,18 +1,26 @@
 <template>
   <v-toolbar>
-    <v-container class="d-flex flex-row align-center" id="bar-editor-toolbar-item-container">
-      <div v-if="$_selectedSectionAndBarRange !== undefined">
-        <span>
+    <v-container
+      class="d-flex flex-row align-center gc-3"
+      id="bar-editor-toolbar-item-container"
+    >
+      <div
+        class="d-flex flex-row gc-1 align-center"
+        v-if="$_selectedSectionAndBarRange !== undefined"
+      >
+        <div class="d-flex flex-row gc-1 align-center">
           <span class="section-index">{{ $_selectedSectionAndBarRange.first.sectionIdx + 1 }}</span>
           <span class="section-title">{{ $_score.getSection($_selectedSectionAndBarRange.first.sectionIdx).name }}</span>
           <span>{{ $_selectedSectionAndBarRange.first.barIdx + 1 }}</span>
-        </span>
-        <span class="connector-symbol" v-if="$_numSelectedBars > 1"></span>
-        <span v-if="$_numSelectedBars > 1">
-          <span class="section-index">{{ $_selectedSectionAndBarRange.last.sectionIdx + 1 }}</span>
-          <span class="section-title">{{ $_score.getSection($_selectedSectionAndBarRange.last.sectionIdx).name }}</span>
-          <span>{{ $_selectedSectionAndBarRange.last.barIdx + 1 }}</span>
-        </span>
+        </div>
+        <template v-if="$_numSelectedBars > 1">
+          <div class="connector-symbol"></div>
+          <div class="d-flex flex-row gc-1 align-center">
+            <span class="section-index">{{ $_selectedSectionAndBarRange.last.sectionIdx + 1 }}</span>
+            <span class="section-title">{{ $_score.getSection($_selectedSectionAndBarRange.last.sectionIdx).name }}</span>
+            <span>{{ $_selectedSectionAndBarRange.last.barIdx + 1 }}</span>
+          </div>
+        </template>
       </div>
       <div v-if="$_numSelectedBars > 0">
         <template v-if="$_numSelectedBars === 1">({{ $_numSelectedBars }} {{ $t('barSelected') }})</template>
@@ -36,17 +44,9 @@
 </template>
 
 <style scoped>
-#bar-editor-toolbar-item-container div:not(:last-child) {
-  margin-right: 10px;
-}
-
 #bar-editor-toolbar-item-container div {
   font-size: 12px;
   line-height: 12px;
-}
-
-#bar-editor-toolbar-item-container div span:not(:last-child) {
-  margin-right: 5px;
 }
 
 .section-title {

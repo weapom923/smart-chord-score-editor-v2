@@ -1,9 +1,6 @@
 <template>
   <v-card variant="plain">
-    <v-card-text
-      class="pa-2"
-      v-if="$_selectedBar !== undefined"
-    >
+    <v-card-text class="pa-2">
       <bar-line-start-selector
         density="compact"
         v-model:bar-line-start="$_selectedBarsLineStart"

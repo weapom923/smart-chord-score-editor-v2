@@ -320,6 +320,7 @@ const App = defineComponent({
 
     async $_onClickBackground() {
       await this.$store.dispatch('score/unselectBar');
+      await this.$store.dispatch('appState/setIsBarEditorMinimized', true);
       if (!this.print) {
         await this.$store.dispatch('appState/setIsPrintLayoutEnabled', false);
       }
