@@ -9,8 +9,7 @@
   >
     <v-btn
       rounded="0" size="small"
-      v-show="$store.state.appState.isBarEditorDrawerMinimized"
-      v-bind:disabled="!isBarEditorMaximizable"
+      v-if="$store.state.appState.isBarEditorDrawerMinimized"
       v-bind:icon="$_barEditorMaximizeIcon"
       v-bind:width="$_barEditorMaximizeButtonWidth"
       v-bind:height="$_barEditorMaximizeButtonHeight"
@@ -20,7 +19,7 @@
 
     <bar-editor
       ref="barEditor"
-      v-show="!$store.state.appState.isBarEditorDrawerMinimized"
+      v-else
       v-bind:width="$_barEditorWidth"
       v-bind:height="$_barEditorHeight"
     >

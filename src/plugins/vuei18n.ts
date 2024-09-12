@@ -114,6 +114,8 @@ const messageJa = {
   barSelected: '小節選択',
   barsSelected: '小節選択',
 
+  editorAppearsHereWhenBarsSelected: '小節を選択するとここにエディターが表示されます',
+
   helpMessage: {
     help: 'ヘルプ',
     common: '共通',
@@ -268,6 +270,8 @@ const messageEn: Messages = {
 
   barSelected: 'bar selected',
   barsSelected: 'bars selected',
+
+  editorAppearsHereWhenBarsSelected: 'Editor appers here when bars selected',
 
   helpMessage: {
     help: 'Help',
