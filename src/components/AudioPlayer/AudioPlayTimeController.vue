@@ -5,6 +5,7 @@
     class="d-flex flex-grow-1 flex-column position-relative overflow-hidden"
     v-on:wheel.prevent="$_onWheel"
     v-on:mousedown="$_onMousedown"
+    v-on:contextmenu.capture="$_onContextmenu"
   >
     <div
       id="view-begin-shadow"
@@ -69,20 +70,6 @@
       </div>
     </div>
   </div>
-  <v-tooltip location="top" v-bind:text="$t($data.$_isAutoScrollEnabled? 'disableAutoScroll' : 'enableAutoScroll')">
-    <template v-slot:activator="{ props }">
-      <v-btn
-        icon="mdi-arrow-collapse-right" size="small"
-        v-bind="props"
-        v-bind:base-color="playTimeColor.styleString(false)"
-        v-bind:active="$data.$_isAutoScrollEnabled"
-        v-bind:disabled="$_isViewBeginEdgeDisplayed && $_isViewEndEdgeDisplayed"
-        v-on:click.stop="$_toggleAutoScroll"
-        v-on:keydown.enter.stop="$_toggleAutoScroll"
-      >
-      </v-btn>
-    </template>
-  </v-tooltip>
 </template>
 
 <style scoped>
@@ -117,6 +104,7 @@
 
 <script lang="ts">
 import { CSSProperties, defineComponent, ref } from 'vue';
+import { ContextMenuItem, ContextMenuParameters } from '../../store/module/ContextMenu'
 import WaveformCanvas from '../canvases/WaveformCanvas.vue';
 import WaveformDecimator from '../../modules/WaveformDecimator';
 import { TimeRangeSec, TimeRangeSecInterface } from './modules/TimeRangeSec';
@@ -157,7 +145,6 @@ const AudioPlaytimeController = defineComponent({
 
   setup() {
     return {
-      playTimeColor,
       waveformColor,
       audioPlayTimeController: ref<HTMLDivElement>(),
     };
@@ -322,6 +309,21 @@ const AudioPlaytimeController = defineComponent({
         width: `${loopTimeDurationPx}px`,
       };
     },
+    $_menuItems(): ContextMenuItem[] {
+      return [
+        {
+          icon: this.$data.$_isAutoScrollEnabled? 'mdi-arrow-right' : 'mdi-arrow-collapse-right',
+          text: this.$t(this.$data.$_isAutoScrollEnabled? 'disableAutoScroll' : 'enableAutoScroll'),
+          callback: this.$_toggleAutoScroll,
+        },
+        {
+          icon: 'mdi-cancel',
+          text: this.$t('clearLoopRange'),
+          callback: () => { this.$emit('update:loopDefinition', undefined) },
+          disabled: this.loopDefinition === undefined,
+        },
+      ];
+    },
   },
 
   watch: {
@@ -363,14 +365,18 @@ const AudioPlaytimeController = defineComponent({
       const eventTimeSec = this.$_getEventTimeSec(mouseEvent);
       if (eventTimeSec === undefined) return;
       this.$data.$_timeSecOnMousedown = eventTimeSec;
-      if (dragMode) {
-        this.$data.$_dragMode = dragMode;
+      if (mouseEvent.button === 0) {
+        if (dragMode) {
+          this.$data.$_dragMode = dragMode;
+        } else if (mouseEvent.shiftKey) {
+          this.$data.$_dragMode = 'set_loop_definition';
+        } else {
+          this.$data.$_dragMode = 'seek';
+        }
       } else if (mouseEvent.button === 1) {
         this.$data.$_dragMode = 'offset_view';
-      } else if (mouseEvent.shiftKey) {
-        this.$data.$_dragMode = 'set_loop_definition';
       } else {
-        this.$data.$_dragMode = 'seek';
+        return;
       }
       switch (this.$data.$_dragMode) {
         case 'seek':
@@ -446,6 +452,26 @@ const AudioPlaytimeController = defineComponent({
       }
       if (onWheel(wheelEvent)) {
         wheelEvent.stopPropagation();
+      }
+    },
+
+    async $_onContextmenu(event: MouseEvent) {
+      const onContextmenu = async(): Promise<boolean> => {
+        if (this.$store.state.appState.isPrintLayoutEnabled) return false;
+        if (!this.audioPlayTimeController) return false;
+        const { y } = this.audioPlayTimeController.getBoundingClientRect();
+        const parameters: ContextMenuParameters = {
+          activator: this.audioPlayTimeController,
+          position: [ event.clientX, y ],
+          menuItems: this.$_menuItems,
+        };
+        await this.$store.dispatch('contextMenu/setParameters', parameters);
+        return true;
+      };
+
+      if (await onContextmenu()) {
+        event.stopPropagation();
+        event.preventDefault();
       }
     },
 

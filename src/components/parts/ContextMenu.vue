@@ -9,6 +9,7 @@
     min-width="0"
     v-model="$data.$_isMenuActive"
     v-bind:activator="$data.$_focusRetainer"
+    v-bind:target="$_pointerPosition"
   >
     <v-list
       min-width="fit-content"
@@ -55,6 +56,10 @@ export default defineComponent({
     $_activator(): HTMLElement | undefined {
       return this.$store.state.contextMenu.parameters?.activator;
     },
+
+    $_pointerPosition(): [ number, number ] | undefined {
+      return this.$store.state.contextMenu.parameters?.position;
+    }, 
 
     $_menuItems(): ContextMenuItem[] {
       return this.$store.state.contextMenu.parameters?.menuItems ?? [];

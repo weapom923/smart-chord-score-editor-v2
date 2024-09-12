@@ -10,6 +10,7 @@ export type ContextMenuItem = {
 
 export type ContextMenuParameters = {
   activator: HTMLElement,
+  position?: [ number, number ],
   menuItems: ContextMenuItem[],
 };
 
