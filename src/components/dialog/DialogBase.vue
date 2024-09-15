@@ -101,6 +101,7 @@ const DialogBase = defineComponent({
 
   methods: {
     onKeydown(event: KeyboardEvent): boolean {
+      if (!this.$data.$_tempShows) return false;
       switch (event.key) {
         case 'Enter':
           if (this.okDisabled) return false;
