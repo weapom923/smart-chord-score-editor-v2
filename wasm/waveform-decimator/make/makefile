@@ -1,19 +1,26 @@
 ifeq ($(OS),Windows_NT)
-    MV = cmd /C move /Y
+    MV_F = cmd /C move /Y
 	RM_F = cmd /C del /F
 	Path = $(subst /,\,$1)
 else
-    MV = mv -f
+    MV_F = mv -f
 	RM_F = rm -f
 	Path = $1
 endif
 
-build: ../../../public/wasm/waveform-decimator.wasm
+install: ../waveform-decimator.wasm
+	${MV_F} \
+	$(call Path,../waveform-decimator.wasm) $(call Path,../../../public/wasm)
+	${MV_F} \
+	$(call Path,../waveform-decimator.d.ts) $(call Path,../../../src/modules)
+	${MV_F} \
+	$(call Path,../waveform-decimator.mjs) $(call Path,../../../src/modules)
 
-../../../public/wasm/waveform-decimator.wasm: \
+build: ../waveform-decimator.wasm
+
+../waveform-decimator.wasm: \
 	$(call Path,../src/waveform_decimator.cpp) \
-	$(call Path,../src/waveform_decimator_emscripten.cpp) \
-	$(call Path,../../../public/wasm)
+	$(call Path,../src/waveform_decimator_emscripten.cpp)
 	em++ -Wall -Wextra -pedantic -std=c++17 -O2 \
 	-s EXPORT_ES6=1 \
 	-s USE_ES6_IMPORT_META=1 \
@@ -26,18 +33,12 @@ build: ../../../public/wasm/waveform-decimator.wasm
 	-s EXPORTED_FUNCTIONS="['_malloc','_free']" \
 	-lembind \
 	--emit-tsd waveform-decimator.d.ts \
-	-o $(call Path,../../../src/modules/waveform-decimator.mjs) \
+	-o $(call Path,../waveform-decimator.mjs) \
 	$(call Path,../src/waveform_decimator.cpp) \
 	$(call Path,../src/waveform_decimator_emscripten.cpp)
-	${MV} \
-	$(call Path,../../../src/modules/waveform-decimator.wasm) \
-	$(call Path,../../../public/wasm/waveform-decimator.wasm)
-
-../../../public/wasm:
-	mkdir -p $(call Path,../../../public/wasm)
 
 clean:
 	${RM_F} \
-	$(call Path,../../../src/modules/waveform-decimator.mjs) \
-	$(call Path,../../../public/wasm/waveform-decimator.wasm)
-
+	$(call Path,../waveform-decimator.mjs) \
+	$(call Path,../waveform-decimator.d.ts) \
+	$(call Path,../waveform-decimator.wasm)
