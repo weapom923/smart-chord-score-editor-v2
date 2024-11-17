@@ -116,8 +116,6 @@ import { SectionAndBarIdx } from '../modules/SectionAndBarRange';
 const selectedBarStaffBackgroundColor = new Color(0, 0, 0, 0.2);
 
 export default defineComponent({
-  inheritAttrs: false,
-
   setup() {
     return {
       partContainer: ref<HTMLDivElement>(),
@@ -130,11 +128,11 @@ export default defineComponent({
     'update:selectedPartIdx': (partIdx: PartIdx) => true,
     'update:selectedNoteIdx': (partIdx: NoteIdx) => true,
     tiePointUpdate: ({ tieStartPointOffsets, tieEndPointOffsets }: { tieStartPointOffsets: Map<PartIdx, DOMPoint>, tieEndPointOffsets: Map<PartIdx, DOMPoint> }) => true,
-    mousedownStaff: (event: MouseEvent) => true,
     marginTopPxUpdate: (marginTopPx: number) => true,
     marginBottomPxUpdate: (marginBottomPx: number) => true,
     mounted: (element: HTMLDivElement) => true,
     beforeUnmount: () => true,
+    clickNote: (event: { partIdx: PartIdx, noteIdx: NoteIdx, event: MouseEvent }) => true,
   },
 
   components: {
@@ -412,9 +410,10 @@ export default defineComponent({
       };
     },
 
-    $_onClickNote(partIdx: PartIdx, noteIdx: NoteIdx) {
+    $_onClickNote(partIdx: PartIdx, { noteIdx, event }: { noteIdx: NoteIdx, event: MouseEvent }) {
       this.$emit('update:selectedPartIdx', partIdx);
       this.$emit('update:selectedNoteIdx', noteIdx);
+      this.$emit('clickNote', { partIdx, noteIdx, event });
     },
   },
 })

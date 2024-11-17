@@ -9,13 +9,14 @@
       v-if="$_noteChord"
     >
       <chord-component
+        v-bind:class="{ 'cursor-pointer': !$store.state.appState.isPrintLayoutEnabled }"
         v-bind:chord="$_noteChord"
         v-bind:color="$_chordTextColor"
         v-bind:style="$_chordStyle"
         v-on:width-update="$_onChordElementWidthUpdate"
         v-on:mounted="$_onChordComponentMounted"
         v-on:before-unmount="$_onChordComponentBeforeUnmount"
-        v-on:click="$_onClickNote"
+        v-on:mousedown.stop="$_onClickNote"
       >
       </chord-component>
     </div>
@@ -26,8 +27,9 @@
       >
         <div
           class="split-divisible-note-container"
+          v-bind:class="{ 'cursor-pointer': !$store.state.appState.isPrintLayoutEnabled }"
           v-bind:style="assertDefined($_splitNoteContainerStyles.get(splitNoteIdx))"
-          v-on:click="$_onClickNote"
+          v-on:mousedown.stop="$_onClickNote"
         >
           <template v-if="$_isNormalNote(splitNote.type)">
             <chord-note-canvas
@@ -121,7 +123,7 @@ export default defineComponent({
     chordComponentBeforeUnmount: () => true,
     splitNoteElementMounted: (event: { splitNoteIdx: SplitNoteIdx, splitNoteElement: HTMLElement }) => true,
     splitNoteElementBeforeUnmount: (event: SplitNoteIdx) => true,
-    clickNote: () => true,
+    clickNote: (mouseEvent: MouseEvent) => true,
     tiePointUpdate: (event: { tieStartPointOffset: DOMPoint, tieEndPointOffset: DOMPoint } | undefined) => true,
     resize: () => true,
   },
@@ -322,8 +324,8 @@ export default defineComponent({
       this.$nextTick(() => { this.$_updateTiePropsAndStyles() });
     },
 
-    $_onClickNote() {
-      this.$emit('clickNote');
+    $_onClickNote(event: MouseEvent) {
+      this.$emit('clickNote', event);
     },
 
     $_updateTiePropsAndStyles() {

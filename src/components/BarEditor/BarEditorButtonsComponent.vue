@@ -227,7 +227,6 @@
         v-bind:staff-background-color="$_colorTransparent"
         v-bind:selected-staff-background-color="$_colorTransparent"
         v-bind:show-bar-hover-menu="false"
-        v-on:select-note="$_onSelectNote"
       >
       </system-component>
     </v-card-text>
@@ -250,7 +249,6 @@ import { bb } from '../../modules/BarBreak';
 
 export default defineComponent({
   emits: {
-    'update:selectedPartIdx': (partIdx: PartIdx) => true,
     'update:selectedNoteIdx': (noteIdx: NoteIdx) => true,
   },
 
@@ -596,11 +594,6 @@ export default defineComponent({
         },
       );
       return true;
-    },
-
-    $_onSelectNote({ partIdx, noteIdx }: { partIdx: PartIdx, noteIdx: NoteIdx }) {
-      this.$emit('update:selectedPartIdx', partIdx);
-      this.$emit('update:selectedNoteIdx', noteIdx);
     },
 
     async $_selectPreviousBar() {

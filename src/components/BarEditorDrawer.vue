@@ -50,18 +50,6 @@ export default defineComponent({
     BarEditor,
   },
 
-  watch: {
-    '$store.state.score.selectedBars'(selectedBars?: SectionAndBarRange) {
-      if (selectedBars === undefined) {
-        this.$store.dispatch('appState/setIsBarEditorMinimized', true);
-      }
-    },
-  },
-
-  props: {
-    isBarEditorMaximizable: { type: Boolean, required: true },
-  },
-
   data(): {
     $_barEditorDrawerWidthPxMax: number,
     $_barEditorDrawerHeightPxMax: number,

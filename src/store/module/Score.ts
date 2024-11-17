@@ -8,6 +8,7 @@ import { BarBreak } from '../../modules/BarBreak';
 import { Note } from '../../modules/Note';
 import { ScoreChangeHistoryManager, ScoreChange } from '../../modules/ScoreChangeHistoryManager';
 import { SectionAndBarIdx, SectionAndBarRange } from '../../modules/SectionAndBarRange';
+import { PartAndNoteIdx } from '../../modules/PartAndNoteIdx';
 import { RootState } from '..';
 
 export namespace ScorePageWHRatio {
@@ -19,6 +20,7 @@ export type ScoreState = {
   scorePageWHRatio: number,
   scoreChangeHistoryManager: ScoreChangeHistoryManager,
   selectedBars?: SectionAndBarRange,
+  selectedPartAndNoteIdx?: PartAndNoteIdx,
   isRedoable: boolean,
   isUndoable: boolean,
   copiedBars: Bar[],
@@ -480,6 +482,15 @@ const ScoreModule: Module<ScoreState, RootState> = {
       state.selectedBars = sectionAndBarRange;
     },
 
+    selectPartAndNote(state: ScoreState, { sectionAndBarIdx, partAndNoteIdx }: { sectionAndBarIdx: SectionAndBarIdx, partAndNoteIdx: PartAndNoteIdx }) {
+      state.selectedBars = new SectionAndBarRange(sectionAndBarIdx);
+      state.selectedPartAndNoteIdx = partAndNoteIdx;
+    },
+
+    unselectPartAndNote(state: ScoreState) {
+      state.selectedPartAndNoteIdx = undefined;
+    },
+
     expandSelectedBars(state: ScoreState, sectionAndBarIdx: SectionAndBarIdx) {
       if (state.selectedBars === undefined) {
         state.selectedBars = new SectionAndBarRange(sectionAndBarIdx);
@@ -677,6 +688,14 @@ const ScoreModule: Module<ScoreState, RootState> = {
 
     selectBars(context: ActionContext<ScoreState, RootState>, sectionAndBarRange: SectionAndBarRange) {
       context.commit('selectBars', sectionAndBarRange);
+    },
+
+    selectPartAndNote(context: ActionContext<ScoreState, RootState>, { sectionAndBarIdx, partAndNoteIdx }: { sectionAndBarIdx: SectionAndBarIdx, partAndNoteIdx: PartAndNoteIdx }) {
+      context.commit('selectPartAndNote', { sectionAndBarIdx, partAndNoteIdx });
+    },
+
+    unselectPartAndNote(context: ActionContext<ScoreState, RootState>) {
+      context.commit('unselectPartAndNote');
     },
 
     selectAllBars(context: ActionContext<ScoreState, RootState>) {

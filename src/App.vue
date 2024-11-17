@@ -62,7 +62,6 @@
       ref="barEditorDrawer"
       class="no-print"
       v-if="!$store.state.appState.isPrintLayoutEnabled"
-      v-bind:is-bar-editor-maximizable="$_isBarEditorMaximizable"
     >
     </bar-editor-drawer>
   </v-app>
@@ -288,11 +287,6 @@ const App = defineComponent({
         aspectRatio: this.$store.state.score.scorePageWHRatio,
       }));
     },
-
-    $_isBarEditorMaximizable(): boolean {
-      if (this.$store.state.score.selectedBars === undefined) return false;
-      return true;
-    },
   },
 
   async beforeCreate() {
@@ -319,11 +313,8 @@ const App = defineComponent({
     },
 
     async $_onClickBackground() {
-      await this.$store.dispatch('score/unselectBar');
-      await this.$store.dispatch('appState/setIsBarEditorMinimized', true);
-      if (!this.print) {
-        await this.$store.dispatch('appState/setIsPrintLayoutEnabled', false);
-      }
+      if (this.print) return;
+      return await this.$_resetStateStepByStep();
     },
 
     async onKeydown(event: KeyboardEvent) {
@@ -353,8 +344,7 @@ const App = defineComponent({
         case 'key':
           switch (event.code) {
             case 'Escape':
-              await this.$store.dispatch('score/unselectBar');
-              return true;
+              return await this.$_resetStateStepByStep();
             case 'ArrowRight':
               await this.$store.dispatch('score/selectNextBar');
               return true;
@@ -371,7 +361,7 @@ const App = defineComponent({
               this.$store.dispatch('dialog/setDialog', { componentName: 'help-dialog' });
               return true;
             case 'KeyE':
-              if (this.$_isBarEditorMaximizable && this.$store.state.appState.isBarEditorDrawerMinimized) {
+              if (this.$store.state.appState.isBarEditorDrawerMinimized) {
                 await this.$store.dispatch('appState/setIsBarEditorMinimized', false);
                 return false;
               } else {
@@ -606,6 +596,20 @@ const App = defineComponent({
 
     async $_onContextmenu() {
       await this.$store.dispatch('contextMenu/clearParameters');
+    },
+
+    async $_resetStateStepByStep(): Promise<boolean> {
+      if (this.$store.state.appState.isPrintLayoutEnabled) {
+        await this.$store.dispatch('appState/setIsPrintLayoutEnabled', false);
+        return true;
+      } else if (this.$store.state.score.selectedBars) {
+        await this.$store.dispatch('score/unselectBar');
+        return true;
+      } else if (!this.$store.state.appState.isBarEditorDrawerMinimized) {
+        await this.$store.dispatch('appState/setIsBarEditorMinimized', true);
+        return true;
+      }
+      return false;
     },
   },
 });

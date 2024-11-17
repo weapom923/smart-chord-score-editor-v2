@@ -16,7 +16,7 @@
         v-on:chord-component-mounted="$_onChordComponentMounted(noteIdx, $event)"
         v-on:chord-component-before-unmount="$_onChordComponentBeforeUnmount(noteIdx)"
         v-on:tie-point-update="$_onNoteTiePointUpdate(noteIdx, $event)"
-        v-on:click-note="$_onClickNote(noteIdx)"
+        v-on:click-note="$_onClickNote(noteIdx, $event)"
         v-on:resize="$_updateTiePropsAndStyles"
       >
       </note-base-component>
@@ -65,7 +65,7 @@ export default defineComponent({
     splitNoteElementBeforeUnmount: (event: { noteIdx: NoteIdx, splitNoteIdx: SplitNoteIdx }) => true,
     noteChordElementMounted: (event: { noteIdx: NoteIdx, noteChordElement: HTMLElement }) => true,
     noteChordElementBeforeUnmount: (event: NoteIdx) => true,
-    clickNote: (event: NoteIdx) => true,
+    clickNote: (event: { noteIdx: NoteIdx, event: MouseEvent }) => true,
     'update:noteIdx': (event: NoteIdx) => true,
   },
 
@@ -182,8 +182,8 @@ export default defineComponent({
       this.$nextTick(() => this.$_updateTiePropsAndStyles());
     },
 
-    $_onClickNote(noteIdx: NoteIdx) {
-      this.$emit('clickNote', noteIdx);
+    $_onClickNote(noteIdx: NoteIdx, event: MouseEvent) {
+      this.$emit('clickNote', { noteIdx, event });
     },
 
     $_emitTiePointUpdate() {
