@@ -16,7 +16,7 @@
       </div>
       <system-component
         v-bind="systemComponentProp"
-        v-on:mousedown-staff="$_selectBar"
+        v-on:mousedown-staff="$_selectBarAndNote"
       >
       </system-component>
     </div>
@@ -55,6 +55,7 @@ import { Section } from '../modules/Section';
 import { Bar } from '../modules/Bar';
 import { bb } from '../modules/BarBreak';
 import { SectionAndBarIdx, SectionAndBarRange, BarRange } from '../modules/SectionAndBarRange';
+import { PartAndNoteIdx } from '../modules/PartAndNoteIdx';
 
 type SystemComponentPropsType = InstanceType<typeof SystemComponent>['$props'];
 
@@ -170,11 +171,20 @@ export default defineComponent({
   },
 
   methods: {
-    async $_selectBar({ barIdx, event }: { barIdx: number, event: MouseEvent }) {
+    async $_selectBarAndNote({ barIdx, partIdx, noteIdx, event }: { barIdx: number, partIdx?: PartIdx, noteIdx?: NoteIdx, event: MouseEvent }) {
       await this.$store.dispatch(
         (event.shiftKey)? 'score/expandSelectedBars' : 'score/selectBar',
         new SectionAndBarIdx(this.sectionIdx, barIdx),
       );
+      if ((!event.shiftKey) && (partIdx !== undefined) && (noteIdx !== undefined)) {
+        await this.$store.dispatch(
+          'score/selectPartAndNote',
+          {
+            sectionAndBarIdx: new SectionAndBarIdx(this.sectionIdx, barIdx),
+            partAndNoteIdx: new PartAndNoteIdx(partIdx, noteIdx),
+          },
+        );
+      }
     },
 
     async $_generateNewSection(sectionIdx: number) {

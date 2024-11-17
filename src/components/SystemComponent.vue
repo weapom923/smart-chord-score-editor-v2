@@ -44,17 +44,6 @@
         </template>
       </template>
       <div class="bar-container">
-        <bar-component
-          v-model:selected-part-idx="$_selectedPartIdx"
-          v-model:selected-note-idx="$_selectedNoteIdx"
-          v-bind="barProps"
-          v-on:tie-point-update="$_onTiePointUpdate(barProps.barIdx, $event)"
-          v-on:margin-top-px-update="$_onMarginTopPxUpdate(barProps.barIdx, $event)"
-          v-on:margin-bottom-px-update="$_onMarginBottomPxUpdate(barProps.barIdx, $event)"
-          v-on:mounted="$_setBarElement(barProps.barIdx, $event)"
-          v-on:before-unmount="$_deleteBarElement(barProps.barIdx)"
-        >
-        </bar-component>
         <div
           class="clickable-area"
           v-if="!disableClickableArea"
@@ -64,6 +53,18 @@
           v-on:keydown.stop
         >
         </div>
+        <bar-component
+          v-model:selected-part-idx="$_selectedPartIdx"
+          v-model:selected-note-idx="$_selectedNoteIdx"
+          v-bind="barProps"
+          v-on:tie-point-update="$_onTiePointUpdate(barProps.barIdx, $event)"
+          v-on:margin-top-px-update="$_onMarginTopPxUpdate(barProps.barIdx, $event)"
+          v-on:margin-bottom-px-update="$_onMarginBottomPxUpdate(barProps.barIdx, $event)"
+          v-on:clickNote="$_onClickNote(barProps.barIdx, $event)"
+          v-on:mounted="$_setBarElement(barProps.barIdx, $event)"
+          v-on:before-unmount="$_deleteBarElement(barProps.barIdx)"
+        >
+        </bar-component>
       </div>
     </template>
   </div>
@@ -89,7 +90,6 @@
 }
 
 .clickable-area {
-  z-index: 2;
   cursor: pointer;
   position: absolute;
   width: 100%;
@@ -130,7 +130,7 @@ export default defineComponent({
   },
 
   emits: {
-    mousedownStaff: ({ barIdx, event }: { barIdx: BarIdx, event: MouseEvent }) => true,
+    mousedownStaff: (event: { barIdx: BarIdx, partIdx?: PartIdx, noteIdx?: NoteIdx, event: MouseEvent }) => true,
     'update:selectedNoteIdx': (noteIdx: NoteIdx) => true,
     'update:selectedPartIdx': (partIdx: PartIdx) => true,
   },
@@ -405,6 +405,10 @@ export default defineComponent({
 
     $_onMousedownStaff(barIdx: BarIdx, event: MouseEvent) {
       this.$emit('mousedownStaff', { barIdx, event });
+    },
+
+    $_onClickNote(barIdx: BarIdx, { partIdx, noteIdx, event }: { partIdx: PartIdx, noteIdx: NoteIdx, event: MouseEvent }) {
+      this.$emit('mousedownStaff', { barIdx, partIdx, noteIdx, event });
     },
 
     $_updateTiePropsAndStyles() {

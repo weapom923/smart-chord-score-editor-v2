@@ -172,4 +172,10 @@ export class SectionAndBarRange {
   isPosteriorTo(sectionAndBarRange: SectionAndBarRange): boolean {
     return this.first.isPosteriorTo(sectionAndBarRange.last);
   }
+
+  isEqualTo(that: SectionAndBarRange): boolean {
+    if (!this.first.isEqualTo(that.first)) return false;
+    if (!this.last.isEqualTo(that.last)) return false;
+    return true;
+  }
 }

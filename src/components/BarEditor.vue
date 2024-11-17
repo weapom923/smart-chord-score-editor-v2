@@ -25,18 +25,18 @@
             v-bind:next-bar="$_nextBar"
             v-bind:selected-part="$_selectedPart"
             v-bind:selected-section-and-bar-idx="$_selectedSectionAndBarIdx"
-            v-model:selected-part-idx="$data.$_selectedPartIdx"
-            v-model:selected-note-idx="$data.$_selectedNoteIdx"
+            v-bind:selected-part-idx="$data.$_selectedPartIdx"
+            v-model:selected-note-idx="$_selectedNoteIdx"
           >
           </bar-editor-buttons-component>
           <note-editor-component
             flat class="pa-0"
-            v-if="$data.$_selectedNoteIdx !== undefined"
+            v-if="$_selectedNoteIdx !== undefined"
             v-model:temporal-selected-part="$data.$_temporalSelectedPart"
             v-bind:selected-bar="$_selectedBar"
             v-bind:selected-section-and-bar-idx="$_selectedSectionAndBarIdx"
             v-bind:selected-part-idx="$data.$_selectedPartIdx"
-            v-model:selected-note-idx="$data.$_selectedNoteIdx"
+            v-model:selected-note-idx="$_selectedNoteIdx"
           >
           </note-editor-component>
         </v-col>
@@ -68,6 +68,7 @@ import { getKeyEventType } from '../modules/KeyEventType';
 import { Bar } from '../modules/Bar';
 import { PartInBar, PartInBarType } from '../modules/PartInBar';
 import { SectionAndBarIdx, SectionAndBarRange } from '../modules/SectionAndBarRange';
+import { PartAndNoteIdx } from '@/modules/PartAndNoteIdx';
 
 const BarEditor = defineComponent({
   setup() {
@@ -85,7 +86,19 @@ const BarEditor = defineComponent({
 
   watch: {
     $_selectedSectionAndBarRange: {
-      handler() { this.$_resetSelection() },
+      handler(
+        newSelectedSectionAndBarRange?: SectionAndBarRange,
+        oldSelectedSectionAndBarRange?: SectionAndBarRange,
+      ) {
+        if (
+          newSelectedSectionAndBarRange &&
+          oldSelectedSectionAndBarRange &&
+          newSelectedSectionAndBarRange.isEqualTo(oldSelectedSectionAndBarRange)
+        ) {
+          return;
+        }
+        this.$_resetSelection();
+      },
       deep: true,
     },
 
@@ -112,19 +125,61 @@ const BarEditor = defineComponent({
 
   data(): {
     $_selectedPartIdx?: PartIdx,
-    $_selectedNoteIdx?: NoteIdx,
     $_temporalSelectedPart?: PartInBar,
     $_lastPartInBarType?: PartInBarType,
   } {
     return {
       $_selectedPartIdx: undefined,
-      $_selectedNoteIdx: undefined,
       $_temporalSelectedPart: undefined,
       $_lastPartInBarType: undefined,
     };
   },
 
   computed: {
+    $_selectedPartAndNoteIdx: {
+      get(): PartAndNoteIdx | undefined {
+        return this.$store.state.score.selectedPartAndNoteIdx;
+      },
+      set(selectedPartAndNoteIdx?: PartAndNoteIdx) {
+        if (!this.$_selectedSectionAndBarIdx) return;
+        if (selectedPartAndNoteIdx !== undefined) {
+          this.$store.dispatch(
+            'score/selectPartAndNote',
+            {
+              sectionAndBarIdx: this.$_selectedSectionAndBarIdx,
+              partAndNoteIdx: selectedPartAndNoteIdx,
+            },
+          );
+        } else {
+          this.$store.dispatch('score/unselectPartAndNote');
+        }
+      },
+    },
+
+    $_selectedNoteIdx: {
+      get(): NoteIdx | undefined {
+        return this.$_selectedPartAndNoteIdx?.noteIdx;
+      },
+      set(noteIdx?: NoteIdx) {
+        if (!this.$_selectedSectionAndBarIdx) return;
+        if (this.$data.$_selectedPartIdx === undefined) return;
+        if (noteIdx !== undefined) {
+          this.$store.dispatch(
+            'score/selectPartAndNote',
+            {
+              sectionAndBarIdx: this.$_selectedSectionAndBarIdx,
+              partAndNoteIdx: new PartAndNoteIdx(
+                this.$data.$_selectedPartIdx,
+                noteIdx,
+              ),
+            },
+          );
+        } else {
+          this.$store.dispatch('score/unselectPartAndNote');
+        }
+      },
+    },
+
     $_barEditorStyle(): CSSProperties {
       const barEditorStyle: CSSProperties = {};
       if (this.width) {
@@ -229,25 +284,28 @@ const BarEditor = defineComponent({
       function incrementNoteIdx(this: This) {
         if (this.$_numNotesInSelectedPart === undefined) return false;
         if (this.$_numNotesInSelectedPart === 0) return false;
-        if (this.$data.$_selectedNoteIdx === undefined) return false;
-        if (this.$data.$_selectedNoteIdx === (this.$_numNotesInSelectedPart - 1)) return true;
-        ++this.$data.$_selectedNoteIdx;
+        if (this.$_selectedNoteIdx === undefined) return false;
+        if (this.$_selectedNoteIdx === (this.$_numNotesInSelectedPart - 1)) return true;
+        ++this.$_selectedNoteIdx;
         return true;
       }
 
       function decrementNoteIdx(this: This) {
         if (this.$_numNotesInSelectedPart === undefined) return false;
         if (this.$_numNotesInSelectedPart === 0) return false;
-        if (this.$data.$_selectedNoteIdx === undefined) return false;
-        if (this.$data.$_selectedNoteIdx === 0) return true;
-        --this.$data.$_selectedNoteIdx;
+        if (this.$_selectedNoteIdx === undefined) return false;
+        if (this.$_selectedNoteIdx === 0) return true;
+        --this.$_selectedNoteIdx;
         return true;
       }
     },
 
     $_resetSelection() {
-      if ((this.$_numPartsInSelectedBar === undefined) || (this.$_numPartsInSelectedBar === 0)) {
-        this.$data.$_selectedPartIdx = undefined;
+      if (
+        (this.$_numPartsInSelectedBar === undefined) ||
+        (this.$_numPartsInSelectedBar === 0)
+      ) {
+        this.$_selectedPartAndNoteIdx = undefined;
       } else {
         if (this.$data.$_lastPartInBarType === undefined) {
           this.$data.$_selectedPartIdx = 0;
@@ -256,9 +314,9 @@ const BarEditor = defineComponent({
         }
       }
       if ((this.$_numNotesInSelectedPart === undefined) || (this.$_numNotesInSelectedPart === 0)) {
-        this.$data.$_selectedNoteIdx = undefined;
+        this.$_selectedNoteIdx = undefined;
       } else {
-        this.$data.$_selectedNoteIdx = 0;
+        this.$_selectedNoteIdx = 0;
       }
       this.$data.$_temporalSelectedPart = undefined;
     },
@@ -279,13 +337,13 @@ const BarEditor = defineComponent({
 
     $_truncateSelectedNoteIdx(selectedPart?: PartInBar) {
       if ((selectedPart?.firstNoteIdx === undefined) || (selectedPart?.lastNoteIdx === undefined)) {
-        this.$data.$_selectedNoteIdx = undefined;
+        this.$_selectedNoteIdx = undefined;
       } else {
-        if (this.$data.$_selectedNoteIdx !== undefined) {
-          if (this.$data.$_selectedNoteIdx < selectedPart.firstNoteIdx) {
-            this.$data.$_selectedNoteIdx = selectedPart.firstNoteIdx;
-          } else if (this.$data.$_selectedNoteIdx > selectedPart.lastNoteIdx) {
-            this.$data.$_selectedNoteIdx = selectedPart.lastNoteIdx;
+        if (this.$_selectedNoteIdx !== undefined) {
+          if (this.$_selectedNoteIdx < selectedPart.firstNoteIdx) {
+            this.$_selectedNoteIdx = selectedPart.firstNoteIdx;
+          } else if (this.$_selectedNoteIdx > selectedPart.lastNoteIdx) {
+            this.$_selectedNoteIdx = selectedPart.lastNoteIdx;
           }
         }
       }
