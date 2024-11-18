@@ -1,6 +1,6 @@
 {
   "name": "smart-chord-score-editor-v2",
-  "version": "0.2.24",
+  "version": "0.2.25",
   "private": true,
   "scripts": {
     "serve": "vite preview",
