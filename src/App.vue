@@ -126,6 +126,7 @@ import SectionEditorDialog from './components/dialog/SectionEditorDialog.vue';
 import GenerateSectionDialog from './components/dialog/GenerateSectionDialog.vue';
 import ChordTextEditorDialog from './components/dialog/ChordTextEditorDialog.vue';
 import AppInfoDialog from './components/dialog/AppInfoDialog.vue';
+import AudioPlaybackConfigDialog from './components/dialog/AudioPlaybackConfigDialog.vue';
 import HelpDialog from './components/dialog/HelpDialog.vue';
 import AudioPlayerBar from './components/AudioPlayerBar.vue';
 import AppBar from './components/AppBar.vue';
@@ -167,6 +168,7 @@ const App = defineComponent({
     GenerateSectionDialog,
     ChordTextEditorDialog,
     AppInfoDialog,
+    AudioPlaybackConfigDialog,
     HelpDialog,
   },
 

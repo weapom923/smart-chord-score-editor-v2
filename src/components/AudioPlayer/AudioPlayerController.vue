@@ -99,6 +99,18 @@
         </v-card-text>
       </v-card>
     </v-menu>
+
+    <v-tooltip location="top" v-bind:text="$t('audioPlaybackConfig')">
+      <template v-slot:activator="{ props }">
+        <v-btn
+          icon="mdi-cog-play" size="small"
+          v-bind="props"
+          v-on:click.stop="$_showSetBarTimeOffsetDialog"
+          v-on:keydown.enter.stop="$_showSetBarTimeOffsetDialog"
+        >
+        </v-btn>
+      </template>
+    </v-tooltip>
   </div>
 </template>
 
@@ -226,6 +238,10 @@ export default defineComponent({
     $_setInterval(callback: () => void, intervalSec: number) {
       this.$_clearInterval();
       this.$data.$_intervalId = window.setInterval(callback, intervalSec);
+    },
+
+    async $_showSetBarTimeOffsetDialog() {
+      await this.$store.dispatch('dialog/setDialog', { componentName: 'audio-playback-config-dialog' });
     },
   },
 });

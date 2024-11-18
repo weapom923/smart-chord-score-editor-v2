@@ -36,6 +36,7 @@ import AudioPlayerController from './AudioPlayer/AudioPlayerController.vue';
 import { TimeRangeSec } from './AudioPlayer/modules/TimeRangeSec';
 import AudioPlayTimeController from './AudioPlayer/AudioPlayTimeController.vue';
 import WaveformDecimator from '../modules/WaveformDecimator';
+import { SectionAndBarIdx } from '@/modules/SectionAndBarRange';
 
 type AudioBufferSourceNodePool = Set<AudioBufferSourceNode>;
 
@@ -65,6 +66,12 @@ export default defineComponent({
       } else {
         this.$_seekInstantlyInSec(loopDefinition.begin);
         this.$data.$_latestAudioBufferSourceNode.loop = true;
+      }
+    },
+
+    '$data.$_playTimeSec'(playTimeSec: number) {
+      if (this.$store.state.score.isAutoSelectBarByPlayTimeEnabled) {
+        this.$_autoSelectBar(playTimeSec);
       }
     },
   },
@@ -112,6 +119,27 @@ export default defineComponent({
     $_volume: {
       get(): number       { return this.volume }, 
       set(volume: number) { this.$emit('update:volume', volume) },
+    },
+
+    $_searchStartSectionAndBarIdx() {
+      const score = this.$store.state.score.score;
+      const numSections = score.numSections;
+      const searchStartBarIdx = this.$store.state.score.barTimeOffset.barIdx;
+      for (
+        let [ currentSectionIdx, accumulatedNumBars ] = [ 0, 0 ];
+        currentSectionIdx < numSections;
+        ++currentSectionIdx
+      ) {
+        if (searchStartBarIdx >= accumulatedNumBars) {
+          return new SectionAndBarIdx(currentSectionIdx, searchStartBarIdx - accumulatedNumBars);
+        }
+        accumulatedNumBars += score.getNumBars(currentSectionIdx);
+      }
+      return undefined;
+    },
+
+    $_quarterNoteDurationSec() {
+      return 60 / (this.$store.state.score.beatPerMinutes * 4 * this.$store.state.score.unitBeatValue.toNumber());
     },
   },
 
@@ -255,6 +283,23 @@ export default defineComponent({
         this.$data.$_audioBufferSourceNodePool.delete(audioBufferSourceNode);
         audioBufferSourceNode.onended = null;
         audioBufferSourceNode.stop();
+      }
+    },
+
+    $_autoSelectBar(playTimeSec: number) {
+      const offsetTimeSec = playTimeSec - this.$store.state.score.barTimeOffset.timeSec;
+      const barValueOffset = (offsetTimeSec / this.$_quarterNoteDurationSec) / 4;
+      const score = this.$store.state.score.score;
+      for (
+        let [ currentSectionAndBarIdx, accumulatedBarValue ] = [ this.$_searchStartSectionAndBarIdx, 0 ];
+        currentSectionAndBarIdx !== undefined;
+        currentSectionAndBarIdx = score.getNextSectionAndBarIdx(currentSectionAndBarIdx)
+      ) {
+        accumulatedBarValue += score.getBar(currentSectionAndBarIdx).value.toNumber();
+        if (barValueOffset <= accumulatedBarValue) {
+          this.$store.commit('score/selectBar', currentSectionAndBarIdx);
+          break;
+        }
       }
     },
   },

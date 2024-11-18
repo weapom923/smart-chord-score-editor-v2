@@ -317,6 +317,11 @@ const AudioPlaytimeController = defineComponent({
           callback: this.$_toggleAutoScroll,
         },
         {
+          icon: 'mdi-timeline-clock',
+          text: this.$t('setBarTimeOffset'),
+          callback: this.$_showSetBarTimeOffsetDialog,
+        },
+        {
           icon: 'mdi-cancel',
           text: this.$t('clearLoopRange'),
           callback: () => { this.$emit('update:loopDefinition', undefined) },
@@ -365,7 +370,7 @@ const AudioPlaytimeController = defineComponent({
       const eventTimeSec = this.$_getEventTimeSec(mouseEvent);
       if (eventTimeSec === undefined) return;
       this.$data.$_timeSecOnMousedown = eventTimeSec;
-      if (mouseEvent.button === 0) {
+      if ((mouseEvent.button === 0) || (mouseEvent.button === 2)) {
         if (dragMode) {
           this.$data.$_dragMode = dragMode;
         } else if (mouseEvent.shiftKey) {
@@ -547,6 +552,16 @@ const AudioPlaytimeController = defineComponent({
 
     $_toggleAutoScroll() {
       this.$data.$_isAutoScrollEnabled = !this.$data.$_isAutoScrollEnabled;
+    },
+
+    async $_showSetBarTimeOffsetDialog() {
+      await this.$store.dispatch(
+        'dialog/setDialog',
+        {
+          componentName: 'audio-playback-config-dialog',
+          props: { timeOffsetSec: this.playTimeSec },
+        },
+      );
     },
   },
 });

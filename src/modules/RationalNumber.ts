@@ -125,8 +125,7 @@ export class RationalNumber<T extends RationalNumber<any> = RationalNumber<any>>
   }
 
   toNumber(): number {
-    const reducedRationalNumber = this.reduce();
-    return reducedRationalNumber.numeratorWithSign / reducedRationalNumber.denominator;
+    return this.numeratorWithSign / this.denominator;
   }
 
   toString(): string {
