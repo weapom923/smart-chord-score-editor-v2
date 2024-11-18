@@ -9,6 +9,8 @@ import { Note } from '../../modules/Note';
 import { ScoreChangeHistoryManager, ScoreChange } from '../../modules/ScoreChangeHistoryManager';
 import { SectionAndBarIdx, SectionAndBarRange } from '../../modules/SectionAndBarRange';
 import { PartAndNoteIdx } from '../../modules/PartAndNoteIdx';
+import { BarTimeOffset } from '../../modules/BarTimeOffset';
+import { NoteValue, nv } from '../../modules/NoteValue';
 import { RootState } from '..';
 
 export namespace ScorePageWHRatio {
@@ -24,6 +26,10 @@ export type ScoreState = {
   isRedoable: boolean,
   isUndoable: boolean,
   copiedBars: Bar[],
+  barTimeOffset: BarTimeOffset,
+  beatPerMinutes: number,
+  unitBeatValue: NoteValue,
+  isAutoSelectBarByPlayTimeEnabled: boolean,
 };
 
 const ScoreModule: Module<ScoreState, RootState> = {
@@ -37,6 +43,10 @@ const ScoreModule: Module<ScoreState, RootState> = {
     isUndoable: false,
     selectedBars: undefined,
     copiedBars: [],
+    barTimeOffset: new BarTimeOffset(0, 0),
+    beatPerMinutes: 120,
+    unitBeatValue: nv.divisible.quarter,
+    isAutoSelectBarByPlayTimeEnabled: false,
   },
 
   mutations: {
@@ -607,6 +617,19 @@ const ScoreModule: Module<ScoreState, RootState> = {
         }),
       );
     },
+
+    setBarTimeOffset(state: ScoreState, barTimeOffset: BarTimeOffset) {
+      state.barTimeOffset = barTimeOffset;
+    },
+
+    setBeatPerMinutes(state: ScoreState, { beatPerMinutes, unitBeatValue }: { beatPerMinutes: number, unitBeatValue: NoteValue }) {
+      state.beatPerMinutes = beatPerMinutes;
+      state.unitBeatValue = unitBeatValue;
+    },
+
+    setIsAutoSelectBarByPlayTimeEnabled(state: ScoreState, isAutoSelectBarByPlayTimeEnabled: boolean) {
+      state.isAutoSelectBarByPlayTimeEnabled = isAutoSelectBarByPlayTimeEnabled;
+    },
   },
 
   actions: {
@@ -733,6 +756,19 @@ const ScoreModule: Module<ScoreState, RootState> = {
 
     decrementSelectedBarsLastIdx(context: ActionContext<ScoreState, RootState>) {
       context.commit('decrementSelectedBarsLastIdx');
+    },
+
+    // Others
+    setBarTimeOffset(context: ActionContext<ScoreState, RootState>, barTimeOffset: BarTimeOffset) {
+      context.commit('setBarTimeOffset', barTimeOffset);
+    },
+
+    setBeatPerMinutes(context: ActionContext<ScoreState, RootState>, { beatPerMinutes, unitBeatValue }: { beatPerMinutes: number, unitBeatValue: NoteValue }) {
+      context.commit('setBeatPerMinutes', { beatPerMinutes, unitBeatValue });
+    },
+
+    setIsAutoSelectBarByPlayTimeEnabled(context: ActionContext<ScoreState, RootState>, isAutoSelectBarByPlayTimeEnabled: boolean) {
+      context.commit('setIsAutoSelectBarByPlayTimeEnabled', isAutoSelectBarByPlayTimeEnabled);
     },
   },
 }
