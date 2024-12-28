@@ -89,12 +89,7 @@ export default defineComponent({
         const isSectionLastBar = (barIdx === this.barRange.lastBarIdx);
         const isSectionBroken = !currentBar.break.isEqualTo(bb.empty);
         if (isSectionBroken || isSectionLastBar) {
-          let showBeatOnFirstBar = this.showBeatOnFirstBar;
-          if (firstBarIdxOfCurrentSystem !== this.barRange.firstBarIdx) {
-            if (previousBar !== undefined) {
-              showBeatOnFirstBar = !previousBar.value.isEqualTo(currentBar.value);
-            }
-          }
+          let showBeatOnFirstBar = this.showBeatOnFirstBar && (firstBarIdxOfCurrentSystem === 0);
           systemDefinitions.push(
             {
               score: this.score,
