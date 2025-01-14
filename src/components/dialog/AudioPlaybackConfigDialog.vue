@@ -86,7 +86,6 @@ import { defineComponent } from 'vue';
 import DialogBase from './DialogBase.vue';
 import DialogTextField from '../parts/DialogTextField.vue';
 import UnitBeatValueSelector from '../parts/UnitBeatValueSelector.vue';
-import { VNumberInput } from 'vuetify/labs/VNumberInput';
 import { isEmptyLike } from '../../modules/utils';
 import { BarTimeOffset } from '@/modules/BarTimeOffset';
 import { NoteValue } from '@/modules/NoteValue';
@@ -97,7 +96,6 @@ export default defineComponent({
   components: {
     DialogBase,
     DialogTextField,
-    VNumberInput,
     UnitBeatValueSelector,
   },
 
