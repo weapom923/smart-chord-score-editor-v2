@@ -31,7 +31,7 @@
 
 .section-name-container {
   display: flex;
-  min-width: 100px;
+  width: 100px;
   align-items: center;
 }
 
