@@ -322,7 +322,7 @@ export class Score {
   }
 
   getBar(sectionAndBarIdx: SectionAndBarIdx): Bar {
-    return this.getSection(sectionAndBarIdx.sectionIdx).getBar(sectionAndBarIdx.barIdx) ?? new Bar();
+    return this.getSection(sectionAndBarIdx.sectionIdx).getBar(sectionAndBarIdx.barIdx);
   }
 
   barExists(sectionAndBarIdx: SectionAndBarIdx): boolean {

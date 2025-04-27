@@ -256,24 +256,34 @@ const BarEditor = defineComponent({
         case 'key':
           switch (event.code) {
             case 'KeyL':
-              return incrementNoteIdx.apply(this);
+              return await incrementNoteIdx.apply(this);
             case 'KeyH':
-              return decrementNoteIdx.apply(this);
-            case 'KeyN':
+              return await decrementNoteIdx.apply(this);
+            case 'KeyN': {
+              const selectedPart = this.$store.getters['score/selectedPart'];
               await this.$store.dispatch('score/selectNextBar');
+              if (selectedPart !== undefined) {
+                await this.$store.dispatch('score/selectFirstNoteInSelectedBar', selectedPart.type);
+              }
               return true;
-            case 'KeyB':
+            }
+            case 'KeyB': {
+              const selectedPart = this.$store.getters['score/selectedPart'];
               await this.$store.dispatch('score/selectPreviousBar');
+              if (selectedPart !== undefined) {
+                await this.$store.dispatch('score/selectFirstNoteInSelectedBar', selectedPart.type);
+              }
               return true;
+            }
           }
           break;
         case 'repeated_key':
           switch (event.code) {
             case 'KeyL':
-              incrementNoteIdx.apply(this);
+              await incrementNoteIdx.apply(this);
               return true;
             case 'KeyH':
-              decrementNoteIdx.apply(this);
+              await decrementNoteIdx.apply(this);
               return true;
           }
           break;
@@ -281,22 +291,38 @@ const BarEditor = defineComponent({
       return false;
 
       type This = InstanceType<typeof BarEditor>;
-      function incrementNoteIdx(this: This) {
+      async function incrementNoteIdx(this: This) {
         if (this.$_numNotesInSelectedPart === undefined) return false;
         if (this.$_numNotesInSelectedPart === 0) return false;
         if (this.$_selectedNoteIdx === undefined) return false;
-        if (this.$_selectedNoteIdx === (this.$_numNotesInSelectedPart - 1)) return true;
-        ++this.$_selectedNoteIdx;
-        return true;
+        if (this.$_selectedNoteIdx === (this.$_numNotesInSelectedPart - 1)) {
+          const selectedPart = this.$store.getters['score/selectedPart'];
+          await this.$store.dispatch('score/selectNextBar');
+          if (selectedPart !== undefined) {
+            await this.$store.dispatch('score/selectFirstNoteInSelectedBar', selectedPart.type);
+          }
+          return true;
+        } else {
+          ++this.$_selectedNoteIdx;
+          return true;
+        }
       }
 
-      function decrementNoteIdx(this: This) {
+      async function decrementNoteIdx(this: This) {
         if (this.$_numNotesInSelectedPart === undefined) return false;
         if (this.$_numNotesInSelectedPart === 0) return false;
         if (this.$_selectedNoteIdx === undefined) return false;
-        if (this.$_selectedNoteIdx === 0) return true;
-        --this.$_selectedNoteIdx;
-        return true;
+        if (this.$_selectedNoteIdx === 0) {
+          const selectedPart = this.$store.getters['score/selectedPart'];
+          await this.$store.dispatch('score/selectPreviousBar');
+          if (selectedPart !== undefined) {
+            await this.$store.dispatch('score/selectLastNoteInSelectedBar', selectedPart.type);
+          }
+          return true;
+        } else {
+          --this.$_selectedNoteIdx;
+          return true;
+        }
       }
     },
 

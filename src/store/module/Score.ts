@@ -3,7 +3,7 @@ import { Score } from '../../modules/Score';
 import { ScoreMetadata } from '../../modules/ScoreMetadata';
 import { Section } from '../../modules/Section';
 import { Bar } from '../../modules/Bar';
-import { PartInBar } from '../../modules/PartInBar';
+import { PartInBar, PartInBarType } from '../../modules/PartInBar';
 import { BarBreak } from '../../modules/BarBreak';
 import { Note } from '../../modules/Note';
 import { ScoreChangeHistoryManager, ScoreChange } from '../../modules/ScoreChangeHistoryManager';
@@ -47,6 +47,18 @@ const ScoreModule: Module<ScoreState, RootState> = {
     beatPerMinutes: 120,
     unitBeatValue: nv.divisible.quarter,
     isAutoSelectBarByPlayTimeEnabled: false,
+  },
+
+  getters: {
+    selectedPart(state: ScoreState): PartInBar | undefined {
+      if (state.selectedBars === undefined) return undefined;
+      if (!state.selectedBars.includeSingleBarOnly) return undefined;
+      if (state.selectedPartAndNoteIdx === undefined) return undefined;
+      return state.score.getPart({
+        sectionAndBarIdx: state.selectedBars.idx,
+        partIdx: state.selectedPartAndNoteIdx.partIdx,
+      });
+    },
   },
 
   mutations: {
@@ -509,6 +521,30 @@ const ScoreModule: Module<ScoreState, RootState> = {
       }
     },
 
+    selectFirstNoteInSelectedBar(state: ScoreState, type: PartInBarType) {
+      if (state.selectedBars === undefined) return;
+      if (!state.selectedBars.includeSingleBarOnly) return;
+      const selectedSectionAndBarIdx = state.selectedBars.idx;
+      const partIdx = state.score.getBar(selectedSectionAndBarIdx).findSameTypedPartIndex(type);
+      if (partIdx === undefined) return;
+      const part = state.score.getPart({ sectionAndBarIdx: selectedSectionAndBarIdx, partIdx });
+      if (part.numNotes === 0) return;
+      const firstNoteIdx = 0;
+      state.selectedPartAndNoteIdx = new PartAndNoteIdx(partIdx, firstNoteIdx);
+    },
+
+    selectLastNoteInSelectedBar(state: ScoreState, type: PartInBarType) {
+      if (state.selectedBars === undefined) return;
+      if (!state.selectedBars.includeSingleBarOnly) return;
+      const selectedSectionAndBarIdx = state.selectedBars.idx;
+      const partIdx = state.score.getBar(selectedSectionAndBarIdx).findSameTypedPartIndex(type);
+      if (partIdx === undefined) return;
+      const part = state.score.getPart({ sectionAndBarIdx: selectedSectionAndBarIdx, partIdx });
+      if (part.numNotes === 0) return;
+      const lastNoteIdx = part.numNotes - 1;
+      state.selectedPartAndNoteIdx = new PartAndNoteIdx(partIdx, lastNoteIdx);
+    },
+
     selectNextBar(state: ScoreState) {
       if (state.selectedBars === undefined) {
         state.selectedBars = new SectionAndBarRange(new SectionAndBarIdx(0, 0));
@@ -740,6 +776,14 @@ const ScoreModule: Module<ScoreState, RootState> = {
 
     selectPreviousBar(context: ActionContext<ScoreState, RootState>) {
       context.commit('selectPreviousBar');
+    },
+
+    selectFirstNoteInSelectedBar(context: ActionContext<ScoreState, RootState>, type: PartInBarType) {
+      context.commit('selectFirstNoteInSelectedBar', type);
+    },
+
+    selectLastNoteInSelectedBar(context: ActionContext<ScoreState, RootState>, type: PartInBarType) {
+      context.commit('selectLastNoteInSelectedBar', type);
     },
 
     incrementSelectedBarsFirstIdx(context: ActionContext<ScoreState, RootState>) {

@@ -347,12 +347,22 @@ const App = defineComponent({
           switch (event.code) {
             case 'Escape':
               return await this.$_resetStateStepByStep();
-            case 'ArrowRight':
+            case 'ArrowRight': {
+              const selectedPart = this.$store.getters['score/selectedPart'];
               await this.$store.dispatch('score/selectNextBar');
+              if (selectedPart !== undefined) {
+                await this.$store.dispatch('score/selectFirstNoteInSelectedBar', selectedPart.type);
+              }
               return true;
-            case 'ArrowLeft':
+            }
+            case 'ArrowLeft': {
+              const selectedPart = this.$store.getters['score/selectedPart'];
               await this.$store.dispatch('score/selectPreviousBar');
+              if (selectedPart !== undefined) {
+                await this.$store.dispatch('score/selectFirstNoteInSelectedBar', selectedPart.type);
+              }
               return true;
+            }
             case 'Enter':
               return setBarBreak.call(this, bb.system);
             case 'Backspace':
