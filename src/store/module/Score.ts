@@ -522,27 +522,35 @@ const ScoreModule: Module<ScoreState, RootState> = {
     },
 
     selectFirstNoteInSelectedBar(state: ScoreState, type: PartInBarType) {
-      if (state.selectedBars === undefined) return;
-      if (!state.selectedBars.includeSingleBarOnly) return;
-      const selectedSectionAndBarIdx = state.selectedBars.idx;
-      const partIdx = state.score.getBar(selectedSectionAndBarIdx).findSameTypedPartIndex(type);
-      if (partIdx === undefined) return;
-      const part = state.score.getPart({ sectionAndBarIdx: selectedSectionAndBarIdx, partIdx });
-      if (part.numNotes === 0) return;
-      const firstNoteIdx = 0;
-      state.selectedPartAndNoteIdx = new PartAndNoteIdx(partIdx, firstNoteIdx);
+      if (state.selectedBars?.includeSingleBarOnly === true) {
+        const selectedSectionAndBarIdx = state.selectedBars.idx;
+        const partIdx = state.score.getBar(selectedSectionAndBarIdx).findSameTypedPartIndex(type);
+        if (partIdx !== undefined)  {
+          const part = state.score.getPart({ sectionAndBarIdx: selectedSectionAndBarIdx, partIdx });
+          if (part.numNotes > 0) {
+            const firstNoteIdx = 0;
+            state.selectedPartAndNoteIdx = new PartAndNoteIdx(partIdx, firstNoteIdx);
+            return;
+          }
+        }
+      }
+      state.selectedPartAndNoteIdx = undefined;
     },
 
     selectLastNoteInSelectedBar(state: ScoreState, type: PartInBarType) {
-      if (state.selectedBars === undefined) return;
-      if (!state.selectedBars.includeSingleBarOnly) return;
-      const selectedSectionAndBarIdx = state.selectedBars.idx;
-      const partIdx = state.score.getBar(selectedSectionAndBarIdx).findSameTypedPartIndex(type);
-      if (partIdx === undefined) return;
-      const part = state.score.getPart({ sectionAndBarIdx: selectedSectionAndBarIdx, partIdx });
-      if (part.numNotes === 0) return;
-      const lastNoteIdx = part.numNotes - 1;
-      state.selectedPartAndNoteIdx = new PartAndNoteIdx(partIdx, lastNoteIdx);
+      if (state.selectedBars?.includeSingleBarOnly === true) {
+        const selectedSectionAndBarIdx = state.selectedBars.idx;
+        const partIdx = state.score.getBar(selectedSectionAndBarIdx).findSameTypedPartIndex(type);
+        if (partIdx !== undefined) {
+          const part = state.score.getPart({ sectionAndBarIdx: selectedSectionAndBarIdx, partIdx });
+          if (part.numNotes > 0) {
+            const lastNoteIdx = part.numNotes - 1;
+            state.selectedPartAndNoteIdx = new PartAndNoteIdx(partIdx, lastNoteIdx);
+            return;
+          }
+        }
+      }
+      state.selectedPartAndNoteIdx = undefined;
     },
 
     selectNextBar(state: ScoreState) {

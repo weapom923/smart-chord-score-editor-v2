@@ -111,7 +111,9 @@ const BarEditor = defineComponent({
 
     $_selectedPart: {
       handler(selectedPart?: PartInBar) {
-        this.$data.$_lastPartInBarType = selectedPart?.type;
+        if (selectedPart) {
+          this.$data.$_lastPartInBarType = selectedPart.type;
+        }
         this.$_truncateSelectedNoteIdx(selectedPart);
       },
       deep: true,
@@ -256,35 +258,39 @@ const BarEditor = defineComponent({
         case 'key':
           switch (event.code) {
             case 'KeyL':
-              return await incrementNoteIdx.apply(this);
-            case 'KeyH':
-              return await decrementNoteIdx.apply(this);
-            case 'KeyN': {
-              const selectedPart = this.$store.getters['score/selectedPart'];
-              await this.$store.dispatch('score/selectNextBar');
-              if (selectedPart !== undefined) {
-                await this.$store.dispatch('score/selectFirstNoteInSelectedBar', selectedPart.type);
+              if (this.$_selectedNoteIdx === undefined) {
+                return await selectFirstNoteInNextBar.apply(this);
+              } else {
+                return await incrementNoteIdx.apply(this);
               }
-              return true;
+            case 'KeyH':
+              if (this.$_selectedNoteIdx === undefined) {
+                return await selectLastNoteInPreviousBar.apply(this);
+              } else {
+                return await decrementNoteIdx.apply(this);
+              }
+            case 'KeyN': {
+              return await selectFirstNoteInNextBar.apply(this);
             }
             case 'KeyB': {
-              const selectedPart = this.$store.getters['score/selectedPart'];
-              await this.$store.dispatch('score/selectPreviousBar');
-              if (selectedPart !== undefined) {
-                await this.$store.dispatch('score/selectFirstNoteInSelectedBar', selectedPart.type);
-              }
-              return true;
+              return await selectLastNoteInPreviousBar.apply(this);
             }
           }
           break;
         case 'repeated_key':
           switch (event.code) {
             case 'KeyL':
-              await incrementNoteIdx.apply(this);
-              return true;
+              if (this.$_selectedNoteIdx === undefined) {
+                return await selectFirstNoteInNextBar.apply(this);
+              } else {
+                return await incrementNoteIdx.apply(this);
+              }
             case 'KeyH':
-              await decrementNoteIdx.apply(this);
-              return true;
+              if (this.$_selectedNoteIdx === undefined) {
+                return await selectLastNoteInPreviousBar.apply(this);
+              } else {
+                return await decrementNoteIdx.apply(this);
+              }
           }
           break;
       }
@@ -323,6 +329,22 @@ const BarEditor = defineComponent({
           --this.$_selectedNoteIdx;
           return true;
         }
+      }
+
+      async function selectFirstNoteInNextBar(this: This): Promise<boolean> {
+        await this.$store.dispatch('score/selectNextBar');
+        if (this.$data.$_lastPartInBarType !== undefined) {
+          await this.$store.dispatch('score/selectFirstNoteInSelectedBar', this.$data.$_lastPartInBarType);
+        }
+        return true;
+      }
+
+      async function selectLastNoteInPreviousBar(this: This): Promise<boolean> {
+        await this.$store.dispatch('score/selectPreviousBar');
+        if (this.$data.$_lastPartInBarType !== undefined) {
+          await this.$store.dispatch('score/selectLastNoteInSelectedBar', this.$data.$_lastPartInBarType);
+        }
+        return true;
       }
     },
 
