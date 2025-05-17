@@ -62,6 +62,8 @@
       ref="barEditorDrawer"
       class="no-print"
       v-if="!$store.state.appState.isPrintLayoutEnabled"
+      v-bind:window-inner-width-px="$data.$_windowInnerWidthPx"
+      v-bind:window-inner-height-px="$data.$_windowInnerHeightPx"
     >
     </bar-editor-drawer>
   </v-app>
@@ -119,7 +121,7 @@
 </style>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { CSSProperties, defineComponent, ref } from 'vue';
 import GlobalConfigEditorDialog from './components/dialog/GlobalConfigEditorDialog.vue';
 import ScoreMetadataEditorDialog from './components/dialog/ScoreMetadataEditorDialog.vue';
 import SectionEditorDialog from './components/dialog/SectionEditorDialog.vue';
@@ -225,9 +227,13 @@ const App = defineComponent({
 
   data(): {
     $_forceRemountKey: number,
+    $_windowInnerWidthPx: number,
+    $_windowInnerHeightPx: number,
   } {
     return {
       $_forceRemountKey: 0,
+      $_windowInnerWidthPx: window.innerWidth,
+      $_windowInnerHeightPx: window.innerHeight,
     };
   },
 
@@ -297,6 +303,7 @@ const App = defineComponent({
 
   created() {
     window.addEventListener('keydown', this.onKeydown);
+    window.addEventListener('resize', this.$_updateWindowInnerSize);
   },
 
   async beforeMount() {
@@ -307,9 +314,15 @@ const App = defineComponent({
 
   beforeUnmount() {
     window.removeEventListener('keydown', this.onKeydown);
+    window.removeEventListener('resize', this.$_updateWindowInnerSize);
   },
 
   methods: {
+    $_updateWindowInnerSize() {
+      this.$data.$_windowInnerWidthPx = window.innerWidth;
+      this.$data.$_windowInnerHeightPx = window.innerHeight;
+    },
+
     $_reloadScore() {
       this.$data.$_forceRemountKey++;
     },

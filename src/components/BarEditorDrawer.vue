@@ -5,7 +5,7 @@
     v-bind:width="$_barEditorDrawerWidth"
     v-bind:rail="$store.state.appState.isBarEditorDrawerMinimized"
     v-bind:rail-width="expandButtonWidthPx"
-    v-bind:location="$store.state.config.barEditorLocation"
+    v-bind:location="$_barEditorLocation"
   >
     <v-btn
       rounded="0" size="small"
@@ -17,20 +17,14 @@
     >
     </v-btn>
 
-    <bar-editor
-      ref="barEditor"
-      v-else
-      v-bind:width="$_barEditorWidth"
-      v-bind:height="$_barEditorHeight"
-    >
-    </bar-editor>
+    <bar-editor ref="barEditor" v-else></bar-editor>
   </v-navigation-drawer>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import BarEditor from './BarEditor.vue';
-import { SectionAndBarRange } from '../modules/SectionAndBarRange';
+import type { BarEditorLocationType } from '@/store/module/Config';
 
 const idealDrawerWidthPx = 800;
 const idealDrawerHeightPx = 700;
@@ -50,19 +44,30 @@ export default defineComponent({
     BarEditor,
   },
 
-  data(): {
-    $_barEditorDrawerWidthPxMax: number,
-    $_barEditorDrawerHeightPxMax: number,
-  } {
-    return {
-      $_barEditorDrawerWidthPxMax: window.innerWidth * 0.8,
-      $_barEditorDrawerHeightPxMax: window.innerHeight * 0.8,
-    };
+  props: {
+    windowInnerWidthPx: { type: Number, required: true },
+    windowInnerHeightPx: { type: Number, required: true },
   },
 
   computed: {
+    $_barEditorDrawerWidthPxMax(): number {
+      if (this.$store.state.appState.isMobileLayoutEnabled) {
+        return this.windowInnerWidthPx * 0.5;
+      } else {
+        return this.windowInnerWidthPx * 0.8 
+      }
+    },
+
+    $_barEditorDrawerHeightPxMax(): number {
+      if (this.$store.state.appState.isMobileLayoutEnabled) {
+        return this.windowInnerHeightPx * 0.5;
+      } else {
+        return this.windowInnerHeightPx * 0.8 
+      }
+    },
+
     $_barEditorMaximizeIcon(): string | undefined {
-      switch (this.$store.state.config.barEditorLocation) {
+      switch (this.$_barEditorLocation) {
         case 'left':
           return 'mdi-chevron-double-right';
         case 'right':
@@ -75,19 +80,27 @@ export default defineComponent({
     },
 
     $_barEditorDrawerWidth(): number {
-      switch (this.$store.state.config.barEditorLocation) {
+      switch (this.$_barEditorLocation) {
         case 'left':
         case 'right':
-          return Math.min(idealDrawerWidthPx, this.$data.$_barEditorDrawerWidthPxMax);
+          return Math.min(idealDrawerWidthPx, this.$_barEditorDrawerWidthPxMax);
         case 'bottom':
-          return Math.min(idealDrawerHeightPx, this.$data.$_barEditorDrawerHeightPxMax);
+          return Math.min(idealDrawerHeightPx, this.$_barEditorDrawerHeightPxMax);
         default:
           return 0;
       }
     },
 
+    $_barEditorLocation(): BarEditorLocationType {
+      if (this.$store.state.appState.isMobileLayoutEnabled) {
+        return 'bottom';
+      } else {
+        return this.$store.state.config.barEditorLocation;
+      }
+    },
+
     $_barEditorMaximizeButtonWidth(): number | string {
-      switch (this.$store.state.config.barEditorLocation) {
+      switch (this.$_barEditorLocation) {
         case 'left':
         case 'right':
           return expandButtonWidthPx;
@@ -97,7 +110,7 @@ export default defineComponent({
     },
 
     $_barEditorMaximizeButtonHeight(): number | string {
-      switch (this.$store.state.config.barEditorLocation) {
+      switch (this.$_barEditorLocation) {
         case 'bottom':
         case 'top':
           return expandButtonWidthPx;
@@ -105,46 +118,9 @@ export default defineComponent({
           return '100%';
       }
     },
-
-    $_barEditorWidth(): number | undefined {
-      switch (this.$store.state.config.barEditorLocation) {
-        case 'left':
-        case 'right':
-          return idealDrawerWidthPx;
-        default:
-          return undefined;
-      }
-    },
-
-    $_barEditorHeight(): number | undefined {
-      switch (this.$store.state.config.barEditorLocation) {
-        case 'top':
-        case 'bottom':
-          return idealDrawerHeightPx;
-        default:
-          return undefined;
-      }
-    },
-  },
-
-  created() {
-    window.addEventListener('resize', this.$_updateBarEditorDrawerSize);
-  },
-
-  async mounted() {
-    this.$_updateBarEditorDrawerSize();
-  },
-
-  beforeUnmount() {
-    window.removeEventListener('resize', this.$_updateBarEditorDrawerSize);
   },
 
   methods: {
-    $_updateBarEditorDrawerSize() {
-      this.$data.$_barEditorDrawerWidthPxMax = window.innerWidth * 0.8;
-      this.$data.$_barEditorDrawerHeightPxMax = window.innerHeight * 0.8;
-    },
-
     async $_maximizeBarEditor() {
       await this.$store.dispatch('appState/setIsBarEditorMinimized', false);
     },

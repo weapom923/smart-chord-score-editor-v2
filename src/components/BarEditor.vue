@@ -1,11 +1,14 @@
 <template>
-  <div v-bind:style="$_barEditorStyle">
+  <div
+    class="d-flex flex-column"
+    v-bind:style="$_barEditorStyle"
+  >
     <bar-editor-toolbar
       density="compact"
       v-model:selected-part-idx="$data.$_selectedPartIdx"
     >
     </bar-editor-toolbar>
-    <v-container id="editor-container">
+    <v-container id="editor-container" class="flex-grow-1 overflow-scroll">
       <v-row v-if="$_selectedSectionAndBarRange">
         <v-col cols="3">
           <bar-detail-editor-component>

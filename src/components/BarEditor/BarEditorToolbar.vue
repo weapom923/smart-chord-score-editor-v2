@@ -27,7 +27,13 @@
         <template v-else>({{ $_numSelectedBars }} {{ $t('barsSelected') }})</template>
       </div>
       <v-spacer></v-spacer>
-      <v-btn-toggle class="py-1" variant="outlined" mandatory v-model="$_barEditorLocation">
+      <v-btn-toggle
+        v-if="!$store.state.appState.isMobileLayoutEnabled"
+        class="py-1"
+        variant="outlined"
+        mandatory
+        v-model="$_barEditorLocation"
+      >
         <v-btn size="small" icon="mdi-dock-left" v-bind:value="barEditorLocationLeft"></v-btn>
         <v-btn size="small" icon="mdi-dock-bottom" v-bind:value="barEditorLocationBottom"></v-btn>
         <v-btn size="small" icon="mdi-dock-right" v-bind:value="barEditorLocationRight"></v-btn>
