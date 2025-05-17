@@ -79,6 +79,7 @@ const ScoreModule: Module<ScoreState, RootState> = {
     setScoreMetadata(state: ScoreState, scoreMetadata: ScoreMetadata) {
       const newScoreMetadata = scoreMetadata.clone();
       const currentScoreMetadata = state.score.metadata.clone();
+      if (newScoreMetadata.isEqualTo(currentScoreMetadata)) return;
       state.scoreChangeHistoryManager.register(
         new ScoreChange({
           redo() { state.score.metadata = newScoreMetadata.clone() },
@@ -93,6 +94,7 @@ const ScoreModule: Module<ScoreState, RootState> = {
 
     setSectionName(state: ScoreState, { sectionIdx, sectionName }: { sectionIdx: number, sectionName: string }) {
       const currentSectionName = state.score.getSection(sectionIdx).name;
+      if (currentSectionName === sectionName) return;
       state.scoreChangeHistoryManager.register(
         new ScoreChange({
           redo() { state.score.getSection(sectionIdx).name = sectionName },
@@ -108,6 +110,7 @@ const ScoreModule: Module<ScoreState, RootState> = {
     setScore(state: ScoreState, score: Score) {
       const newScore = score.clone();
       const currentScore = state.score.clone();
+      if (newScore.isEqualTo(currentScore)) return;
       state.scoreChangeHistoryManager.register(
         new ScoreChange({
           redo() {
@@ -384,6 +387,10 @@ const ScoreModule: Module<ScoreState, RootState> = {
       }
       const copiedBars = state.copiedBars.map(bar => bar.clone());
       const currentBars = state.score.getBars(modifiedSectionAndBarRange).map(bar => bar.clone());
+      for (let barIdx = 0; barIdx < copiedBars.length; ++barIdx) {
+        if (!copiedBars[barIdx].isEqualTo(currentBars[barIdx])) break;
+        if (barIdx === copiedBars.length - 1) return;
+      }
       state.scoreChangeHistoryManager.register(
         new ScoreChange({
           redo() {
@@ -420,16 +427,24 @@ const ScoreModule: Module<ScoreState, RootState> = {
           modifiedSectionAndBarRange.last = nextSectionAndBarIdx;
         }
       }
-      const copiedPartInBars = state.copiedBars.map(bar => bar.parts.map(part => part.clone()));
-      const currentPartInBars = state.score.getBars(modifiedSectionAndBarRange).map(bar => bar.parts.map(part => part.clone()));
+      const copiedPartsInBars = state.copiedBars.map(bar => bar.parts.map(part => part.clone()));
+      const currentPartsInBars = state.score.getBars(modifiedSectionAndBarRange).map(bar => bar.parts.map(part => part.clone()));
+      loop: for (let barIdx = 0; barIdx < copiedPartsInBars.length; ++barIdx) {
+        const copiedPartsInBar = copiedPartsInBars[barIdx];
+        const currentPartsInBar = currentPartsInBars[barIdx];
+        for (let partIdx = 0; partIdx < copiedPartsInBar.length; ++partIdx) {
+          if (!copiedPartsInBar[partIdx].isEqualTo(currentPartsInBar[partIdx])) break loop;
+        }
+        if (barIdx === copiedPartsInBars.length - 1) return;
+      }
       state.scoreChangeHistoryManager.register(
         new ScoreChange({
           redo() {
             let barIdx = 0;
             for (const sectionAndBarIdx of state.score.getSectionAndBarIdxIterator(modifiedSectionAndBarRange)) {
-              const cyclicBarIdx = barIdx % copiedPartInBars.length;
+              const cyclicBarIdx = barIdx % copiedPartsInBars.length;
               const bar = state.score.getBar(sectionAndBarIdx);
-              bar.parts.splice(0, bar.numParts, ...copiedPartInBars[cyclicBarIdx].map(partInBar => partInBar.clone()));
+              bar.parts.splice(0, bar.numParts, ...copiedPartsInBars[cyclicBarIdx].map(partInBar => partInBar.clone()));
               ++barIdx;
             }
           },
@@ -437,7 +452,7 @@ const ScoreModule: Module<ScoreState, RootState> = {
             let barIdx = 0;
             for (const sectionAndBarIdx of state.score.getSectionAndBarIdxIterator(modifiedSectionAndBarRange)) {
               const bar = state.score.getBar(sectionAndBarIdx);
-              bar.parts.splice(0, bar.numParts, ...currentPartInBars[barIdx].map(partInBar => partInBar.clone()));
+              bar.parts.splice(0, bar.numParts, ...currentPartsInBars[barIdx].map(partInBar => partInBar.clone()));
               ++barIdx;
             }
           },
@@ -453,6 +468,10 @@ const ScoreModule: Module<ScoreState, RootState> = {
       const newBars = bars.map(bar => bar.clone());
       const currentBars = state.score.getBars(sectionAndBarRange).map(bar => bar.clone());
       if (currentBars.length !== bars.length) throw new RangeError();
+      for (let barIdx = 0; barIdx < newBars.length; ++barIdx) {
+        if (!newBars[barIdx].isEqualTo(currentBars[barIdx])) break;
+        if (barIdx === newBars.length - 1) return;
+      }
       state.scoreChangeHistoryManager.register(
         new ScoreChange({
           redo() {
@@ -480,6 +499,7 @@ const ScoreModule: Module<ScoreState, RootState> = {
     setBarBreak(state: ScoreState, { sectionAndBarIdx, barBreak }: { sectionAndBarIdx: SectionAndBarIdx, barBreak: BarBreak }) {
       const newBarBreak = barBreak.clone();
       const currentBarBreak = state.score.getBar(sectionAndBarIdx).break;
+      if (newBarBreak.isEqualTo(currentBarBreak)) return;
       state.scoreChangeHistoryManager.register(
         new ScoreChange({
           redo() { state.score.getBar(sectionAndBarIdx).break = newBarBreak },
@@ -620,6 +640,7 @@ const ScoreModule: Module<ScoreState, RootState> = {
     replacePart(state: ScoreState, { sectionAndBarIdx, partIdx, partInBar }: { sectionAndBarIdx: SectionAndBarIdx, partIdx: PartIdx, partInBar: PartInBar }) {
       const newPartInBar = partInBar.clone();
       const currentPartInBar = state.score.getPart({ sectionAndBarIdx, partIdx }).clone();
+      if (newPartInBar.isEqualTo(currentPartInBar)) return;
       state.scoreChangeHistoryManager.register(
         new ScoreChange({
           redo() { state.score.getBar(sectionAndBarIdx).parts[partIdx] = newPartInBar.clone() },
@@ -635,6 +656,7 @@ const ScoreModule: Module<ScoreState, RootState> = {
     replaceNote(state: ScoreState, { sectionAndBarIdx, partIdx, noteIdx, note }: { sectionAndBarIdx: SectionAndBarIdx, partIdx: PartIdx, noteIdx: NoteIdx, note: Note }) {
       const newNote = note.clone();
       const currentNote = state.score.getNote({ sectionAndBarIdx, partIdx, noteIdx }).clone();
+      if (newNote.isEqualTo(currentNote)) return;
       state.scoreChangeHistoryManager.register(
         new ScoreChange({
           redo() { state.score.getPart({ sectionAndBarIdx, partIdx }).notes[noteIdx] = newNote.clone() },
