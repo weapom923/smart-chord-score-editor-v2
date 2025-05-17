@@ -144,7 +144,12 @@ export default defineComponent({
   },
 
   async created() {
-    this.$data.$_waveformDecimator = new WaveformDecimator(await WaveformDecimator.loadData(this.audioBuffer));
+    try {
+      this.$data.$_waveformDecimator = WaveformDecimator.createFromData(await WaveformDecimator.loadData(this.audioBuffer));
+    } catch (error) {
+      console.error(error);
+      this.$data.$_waveformDecimator = new WaveformDecimator([], -1, this.audioBuffer.numberOfChannels, this.audioBuffer.length);
+    }
   },
 
   mounted() {

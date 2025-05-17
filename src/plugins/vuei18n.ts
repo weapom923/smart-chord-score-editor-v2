@@ -123,6 +123,7 @@ const messageJa = {
   barsSelected: '小節選択',
 
   editorAppearsHereWhenBarsSelected: '小節を選択するとここにエディターが表示されます',
+  failedToLoadWaveform: '波形の読み込みに失敗しました',
 
   helpMessage: {
     help: 'ヘルプ',
@@ -288,6 +289,7 @@ const messageEn: Messages = {
   barsSelected: 'bars selected',
 
   editorAppearsHereWhenBarsSelected: 'Editor appers here when bars selected',
+  failedToLoadWaveform: 'Failed to load waveform',
 
   helpMessage: {
     help: 'Help',

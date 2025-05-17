@@ -22,6 +22,7 @@
     </div>
 
     <div
+      v-if="waveformDecimator.decimatedSampleBuffers.length > 0"
       class="position-relative flex-grow-1"
       v-for="channelIdx of $_channelIdcs"
       v-bind:key="channelIdx"
@@ -37,6 +38,9 @@
         v-bind:view-width="$data.$_viewWidth"
       >
       </waveform-canvas>
+    </div>
+    <div v-else class="d-flex flex-column align-center justify-center flex-grow-1">
+      {{ $t('failedToLoadWaveform') }}
     </div>
 
     <div

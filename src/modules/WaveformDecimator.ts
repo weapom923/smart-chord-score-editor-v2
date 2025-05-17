@@ -35,11 +35,6 @@ export class DecimatedSampleBuffer {
 export default class WaveformDecimator {
   static readonly decimatedSampleBytes = 8; // sizeof IEEE754 double
 
-  readonly decimatedSampleBuffers: DecimatedSampleBuffer[][];
-  readonly levelMax: number;
-  readonly numChannels: number;
-  readonly numSamples: number;
-
   static async loadData(audioBuffer: AudioBuffer): Promise<Uint8Array> {
     const module = await Module({ locateFile: (fileName: string) => `/wasm/${fileName}` });
     const numChannels = audioBuffer.numberOfChannels;
@@ -64,7 +59,7 @@ export default class WaveformDecimator {
     return copiedWaveformDecimatorData;
   }
 
-  constructor(data: Uint8Array) {
+  static createFromData(data: Uint8Array): WaveformDecimator {
     let readOffset = 0;
     const dataView = new DataView(data.buffer, data.byteOffset, data.byteLength);
     const numChannels = dataView.getUint32(readOffset, true);
@@ -74,7 +69,7 @@ export default class WaveformDecimator {
     const decimationLevelMax = dataView.getUint32(readOffset, true);
     readOffset += 4;
 
-    this.decimatedSampleBuffers = generate(
+    const decimatedSampleBuffers = generate(
       numChannels,
       () => seq(0, decimationLevelMax).map(
         (level: number) => {
@@ -94,10 +89,15 @@ export default class WaveformDecimator {
         },
       )
     );
-    this.numChannels = numChannels;
-    this.numSamples = numOriginalsamples;
-    this.levelMax = decimationLevelMax;
+    return new WaveformDecimator(decimatedSampleBuffers, decimationLevelMax, numChannels, numOriginalsamples);
   }
+
+  constructor(
+    public readonly decimatedSampleBuffers: DecimatedSampleBuffer[][],
+    public readonly levelMax: number,
+    public readonly numChannels: number,
+    public readonly numSamples: number,
+  ) {}
 
   getBuffer(channelIdx: number, level: number): DecimatedSampleBuffer {
     const numChannels = this.decimatedSampleBuffers.length;
