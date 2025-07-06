@@ -597,11 +597,19 @@ export default defineComponent({
     },
 
     async $_selectPreviousBar() {
+      const selectedPart = this.$store.getters['score/selectedPart'];
       await this.$store.dispatch('score/selectPreviousBar');
+      if (selectedPart !== undefined) {
+        await this.$store.dispatch('score/selectFirstNoteInSelectedBar', selectedPart.type);
+      }
     },
 
     async $_selectNextBar() {
+      const selectedPart = this.$store.getters['score/selectedPart'];
       await this.$store.dispatch('score/selectNextBar');
+      if (selectedPart !== undefined) {
+        await this.$store.dispatch('score/selectFirstNoteInSelectedBar', selectedPart.type);
+      }
     },
   },
 })
