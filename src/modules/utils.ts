@@ -121,12 +121,13 @@ export async function loadFileAsUTF8Text(file: File) {
   return textDecoder.decode(textUint8Array.buffer);
 }
 
-export function downloadFile(fileName: string, text: string, mimeType: string) {
+export function downloadFile(fileName: string, fileExtName: string, text: string, mimeType: string) {
   const url = URL.createObjectURL(new Blob([ text ], { type: mimeType }));
   const anchor = document.createElement('a');
   document.body.appendChild(anchor);
-  anchor.download = fileName;
+  anchor.download = `${fileName || 'untitled'}${fileExtName}`;
   anchor.href = url;
+  anchor.target = '_blank';
   anchor.click();
   anchor.remove();
   URL.revokeObjectURL(url);

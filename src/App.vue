@@ -314,7 +314,7 @@ const App = defineComponent({
         componentName: 'warning-dialog',
         props: {
           okCallback: async () => {
-            await this.$_saveAndDownloadFile();
+            await this.$store.dispatch('score/saveAndDownloadScore');
           },
           okLabel: this.$t('save'),
           title: this.$t('warning'),
@@ -437,7 +437,7 @@ const App = defineComponent({
               await this.$store.dispatch('score/undo');
               return true;
             case 'KeyS':
-              await this.$_saveAndDownloadFile();
+              await this.$store.dispatch('score/saveAndDownloadScore');
               return true;
           }
           break;
@@ -631,16 +631,6 @@ const App = defineComponent({
         await this.$store.dispatch('score/removeBars', this.$store.state.score.selectedBars);
         return true;
       }
-    },
-
-
-    async $_saveAndDownloadFile() {
-      await this.$store.dispatch('score/saveScore');
-      downloadFile(
-        `${this.$store.state.score.score.metadata.title}.json`,
-        this.$_score.dumpJson(),
-        'application/json',
-      );
     },
 
     async $_onContextmenu() {

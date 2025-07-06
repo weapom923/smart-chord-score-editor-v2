@@ -107,12 +107,7 @@ export default defineComponent({
         saveScoreFile: new MenuItemDefinition(
           'mdi-content-save', this.$t('saveScore'),
           async () => {
-            await this.$store.dispatch('score/saveScore');
-            downloadFile(
-              `${this.$store.state.score.score.metadata.title}.json`,
-              this.$store.state.score.score.dumpJson(),
-              'application/json',
-            )
+            await this.$store.dispatch('score/saveAndDownloadScore');
           },
         ),
         loadScoreFromTextFile: new MenuItemDefinition(

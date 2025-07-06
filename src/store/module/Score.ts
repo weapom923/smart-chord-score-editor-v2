@@ -12,6 +12,7 @@ import { PartAndNoteIdx } from '../../modules/PartAndNoteIdx';
 import { BarTimeOffset } from '../../modules/BarTimeOffset';
 import { NoteValue, nv } from '../../modules/NoteValue';
 import { RootState } from '..';
+import { downloadFile } from '@/modules/utils';
 
 export namespace ScorePageWHRatio {
   export const silver = 1 / 1.4142356;
@@ -136,8 +137,14 @@ const ScoreModule: Module<ScoreState, RootState> = {
       );
     },
 
-    saveScore(state: ScoreState, score: Score) {
+    saveAndDownloadScore(state: ScoreState, score: Score) {
       state.lastSavedScore = state.score.clone();
+      downloadFile(
+        `${state.score.metadata.title || 'untitled'}`,
+        '.json',
+        state.score.dumpJson(),
+        'application/json',
+      );
     },
 
     insertSections(state: ScoreState, { sectionIdx, sections }: { sectionIdx: number, sections: Section[] }) {
@@ -715,8 +722,8 @@ const ScoreModule: Module<ScoreState, RootState> = {
       context.commit('setScore', score);
     },
 
-    saveScore(context: ActionContext<ScoreState, RootState>) {
-      context.commit('saveScore');
+    saveAndDownloadScore(context: ActionContext<ScoreState, RootState>) {
+      context.commit('saveAndDownloadScore');
     },
 
     setScoreMetadata(context: ActionContext<ScoreState, RootState>, scoreMetadata: ScoreMetadata) {
