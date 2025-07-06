@@ -125,6 +125,10 @@ const messageJa = {
   editorAppearsHereWhenBarsSelected: '小節を選択するとここにエディターが表示されます',
   failedToLoadWaveform: '波形の読み込みに失敗しました',
 
+  warning: '警告',
+  unsavedWarning: '変更が保存されていません。保存しますか？',
+  save: '保存',
+
   helpMessage: {
     help: 'ヘルプ',
     common: '共通',
@@ -290,6 +294,10 @@ const messageEn: Messages = {
 
   editorAppearsHereWhenBarsSelected: 'Editor appers here when bars selected',
   failedToLoadWaveform: 'Failed to load waveform',
+
+  warning: 'Warning',
+  unsavedWarning: 'Changes are not saved. Do you want to save?',
+  save: 'Save',
 
   helpMessage: {
     help: 'Help',

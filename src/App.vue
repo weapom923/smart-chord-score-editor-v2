@@ -121,7 +121,7 @@
 </style>
 
 <script lang="ts">
-import { CSSProperties, defineComponent, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import GlobalConfigEditorDialog from './components/dialog/GlobalConfigEditorDialog.vue';
 import ScoreMetadataEditorDialog from './components/dialog/ScoreMetadataEditorDialog.vue';
 import SectionEditorDialog from './components/dialog/SectionEditorDialog.vue';
@@ -130,6 +130,7 @@ import ChordTextEditorDialog from './components/dialog/ChordTextEditorDialog.vue
 import AppInfoDialog from './components/dialog/AppInfoDialog.vue';
 import AudioPlaybackConfigDialog from './components/dialog/AudioPlaybackConfigDialog.vue';
 import HelpDialog from './components/dialog/HelpDialog.vue';
+import WarningDialog from './components/dialog/WarningDialog.vue';
 import AudioPlayerBar from './components/AudioPlayerBar.vue';
 import AppBar from './components/AppBar.vue';
 import ScorePage from './components/ScorePage.vue';
@@ -172,6 +173,7 @@ const App = defineComponent({
     AppInfoDialog,
     AudioPlaybackConfigDialog,
     HelpDialog,
+    WarningDialog,
   },
 
   watch: {
@@ -304,6 +306,23 @@ const App = defineComponent({
   created() {
     window.addEventListener('keydown', this.onKeydown);
     window.addEventListener('resize', this.$_updateWindowInnerSize);
+    window.addEventListener('beforeunload', (event) => {
+      if (this.$store.getters['score/isCurrentScoreSaved']) return;
+      event.preventDefault();
+      event.returnValue = '';
+      this.$store.dispatch('dialog/setDialog', {
+        componentName: 'warning-dialog',
+        props: {
+          okCallback: async () => {
+            await this.$store.dispatch('score/saveScore');
+            this.$_downloadFile();
+          },
+          okLabel: this.$t('save'),
+          title: this.$t('warning'),
+          message: this.$t('unsavedWarning'),
+        },
+      });
+    });
   },
 
   async beforeMount() {
@@ -419,11 +438,7 @@ const App = defineComponent({
               await this.$store.dispatch('score/undo');
               return true;
             case 'KeyS':
-              downloadFile(
-                `${this.$store.state.score.score.metadata.title}.json`,
-                this.$_score.dumpJson(),
-                'application/json',
-              );
+              this.$_downloadFile();
               return true;
           }
           break;
@@ -617,6 +632,15 @@ const App = defineComponent({
         await this.$store.dispatch('score/removeBars', this.$store.state.score.selectedBars);
         return true;
       }
+    },
+
+
+    $_downloadFile() {
+      downloadFile(
+        `${this.$store.state.score.score.metadata.title}.json`,
+        this.$_score.dumpJson(),
+        'application/json',
+      );
     },
 
     async $_onContextmenu() {

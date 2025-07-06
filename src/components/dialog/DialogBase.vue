@@ -27,7 +27,7 @@
             color="primary"
             v-on:click="$_onOkClicked"
             v-bind:disabled="okDisabled"
-            v-bind:text="$t('ok')"
+            v-bind:text="okLabel ?? $t('ok')"
           >
           </v-btn>
         </slot>
@@ -87,7 +87,8 @@ const DialogBase = defineComponent({
     initializeCallback: { type: Function },
     okCallback:         { type: Function },
     finalizeCallback:   { type: Function },
-    okDisabled:         { type: Boolean, default: false }
+    okDisabled:         { type: Boolean, default: false },
+    okLabel:            { type: String },
   },
 
   computed: {

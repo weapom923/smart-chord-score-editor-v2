@@ -18,6 +18,7 @@ export namespace ScorePageWHRatio {
 };
 
 export type ScoreState = {
+  lastSavedScore?: Score,
   score: Score,
   scorePageWHRatio: number,
   scoreChangeHistoryManager: ScoreChangeHistoryManager,
@@ -36,6 +37,7 @@ const ScoreModule: Module<ScoreState, RootState> = {
   namespaced: true,
 
   state: {
+    lastSavedScore: undefined,
     score: new Score(),
     scorePageWHRatio: ScorePageWHRatio.silver,
     scoreChangeHistoryManager: new ScoreChangeHistoryManager(),
@@ -59,6 +61,11 @@ const ScoreModule: Module<ScoreState, RootState> = {
         partIdx: state.selectedPartAndNoteIdx.partIdx,
       });
     },
+
+    isCurrentScoreSaved(state: ScoreState): boolean {
+      if (state.lastSavedScore === undefined) return false;
+      return state.score.isEqualTo(state.lastSavedScore);
+    }
   },
 
   mutations: {
@@ -127,6 +134,10 @@ const ScoreModule: Module<ScoreState, RootState> = {
           },
         }),
       );
+    },
+
+    saveScore(state: ScoreState, score: Score) {
+      state.lastSavedScore = state.score.clone();
     },
 
     insertSections(state: ScoreState, { sectionIdx, sections }: { sectionIdx: number, sections: Section[] }) {
@@ -702,6 +713,10 @@ const ScoreModule: Module<ScoreState, RootState> = {
     // Score
     setScore(context: ActionContext<ScoreState, RootState>, score: Score) {
       context.commit('setScore', score);
+    },
+
+    saveScore(context: ActionContext<ScoreState, RootState>) {
+      context.commit('saveScore');
     },
 
     setScoreMetadata(context: ActionContext<ScoreState, RootState>, scoreMetadata: ScoreMetadata) {
