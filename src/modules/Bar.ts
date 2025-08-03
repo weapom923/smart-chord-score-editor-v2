@@ -107,6 +107,7 @@ export class Bar {
     if (!this.lineStart.isEqualTo(that.lineStart)) return false;
     if (!this.lineEnd.isEqualTo(that.lineEnd)) return false;
     if (!this.repeatEnding.isEqualTo(that.repeatEnding)) return false;
+    if (!this.scale.isEqualTo(that.scale)) return false;
     return true;
   }
 
