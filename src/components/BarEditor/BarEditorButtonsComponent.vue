@@ -1,218 +1,191 @@
 <template>
   <v-card>
     <v-card-actions>
-      <v-tooltip
-        location="bottom"
-        v-bind:text="$t('insertBarBefore')"
+      <v-btn
+        icon size="x-small"
+        v-on:click="$_insertEmptyBarBeforeSelectedBar"
       >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            icon="mdi-plus" size="x-small"
-            v-bind="props"
-            v-on:click="$_insertEmptyBarBeforeSelectedBar"
-          >
-          </v-btn>
-        </template>
-      </v-tooltip>
-      <v-tooltip
-        location="bottom"
-        v-bind:text="$t('selectPreviousBar')"
+        <v-icon>mdi-plus</v-icon>
+        <v-tooltip
+          activator="parent"
+          location="bottom"
+          v-bind:text="$t('insertBarBefore')"
+        >
+        </v-tooltip>
+      </v-btn>
+      <v-btn
+        icon size="x-small"
         v-bind:disabled="$_isSelectPreviousBarButtonDisabled"
+        v-on:click="$_selectPreviousBar"
       >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            icon="mdi-arrow-left" size="x-small"
-            v-bind="props"
-            v-bind:disabled="$_isSelectPreviousBarButtonDisabled"
-            v-on:click="$_selectPreviousBar"
-          >
-          </v-btn>
-        </template>
-      </v-tooltip>
+        <v-icon>mdi-arrow-left</v-icon>
+        <v-tooltip
+          activator="parent"
+          location="bottom"
+          v-bind:text="$t('selectPreviousBar')"
+        >
+        </v-tooltip>
+      </v-btn>
       <v-spacer></v-spacer>
-      <v-tooltip
-        location="bottom"
-        v-if="$_isSelectedNoteTypeRest"
-        v-bind:text="$t('convertToNormalNote')"
-        v-bind:disabled="!$_isTiedByNextNote || !$_isNoteSelected"
-      >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            icon="mdi-music-note-quarter" size="x-small"
-            v-bind="props"
-            v-bind:disabled="!$_isTiedByNextNote || !$_isNoteSelected"
-            v-on:click="$_toggleSelectedNoteType"
+      <template v-if="$_selectedNote">
+        <v-btn
+          icon size="x-small"
+          v-on:click="$_openChordTextEditorDialog"
+        >
+          <v-icon>mdi-form-textbox</v-icon>
+          <v-tooltip
+            activator="parent"
+            location="bottom"
+            v-bind:text="$t('openChordTextDialog')"
           >
-          </v-btn>
-        </template>
-      </v-tooltip>
-      <v-tooltip
-        location="bottom"
-        v-else
-        v-bind:text="$t('convertToRestNote')"
-        v-bind:disabled="!$_isTiedByNextNote || !$_isNoteSelected"
-      >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            icon="mdi-music-rest-quarter" size="x-small"
-            v-bind="props"
-            v-bind:disabled="!$_isTiedByNextNote || !$_isNoteSelected"
-            v-on:click="$_toggleSelectedNoteType"
+          </v-tooltip>
+        </v-btn>
+        <v-btn
+          v-if="$_selectedNote.type === 'rest'"
+          icon size="x-small"
+          v-bind:disabled="$_isTiedByNextNote"
+          v-on:click="$_toggleSelectedNoteType"
+        >
+          <v-icon>mdi-music-note-quarter</v-icon>
+          <v-tooltip
+            activator="parent"
+            location="bottom"
+            v-bind:text="$t('convertToNormalNote')"
           >
-          </v-btn>
-        </template>
-      </v-tooltip>
-      <v-tooltip
-        location="bottom"
-        v-if="$_isSelectedNoteTied"
-        v-bind:text="$t('untie')"
-        v-bind:disabled="!$_isSelectedNoteTieable"
-      >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            icon text="Untie" size="x-small"
-            v-bind="props"
-            v-bind:disabled="!$_isSelectedNoteTieable"
-            v-on:click="$_toggleSelectedNoteTied"
+          </v-tooltip>
+        </v-btn>
+        <v-btn
+          v-else-if="$_selectedNote.type === 'normal'"
+          icon size="x-small"
+          v-bind:disabled="$_isTiedByNextNote"
+          v-on:click="$_toggleSelectedNoteType"
+        >
+          <v-icon>mdi-music-rest-quarter</v-icon>
+          <v-tooltip
+            activator="parent"
+            location="bottom"
+            v-bind:text="$t('convertToRestNote')"
           >
-          </v-btn>
-        </template>
-      </v-tooltip>
-      <v-tooltip
-        location="bottom"
-        v-else
-        v-bind:text="$t('tie')"
-        v-bind:disabled="!$_isSelectedNoteTieable"
-      >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            icon text="Tie" size="x-small"
-            v-bind="props"
-            v-bind:disabled="!$_isSelectedNoteTieable"
-            v-on:click="$_toggleSelectedNoteTied"
+          </v-tooltip>
+        </v-btn>
+        <v-btn
+          v-if="$_selectedNote.tied"
+          icon size="x-small"
+          v-bind:disabled="!$_isSelectedNoteTieable"
+          v-on:click="$_toggleSelectedNoteTied"
+        >
+          Untie
+          <v-tooltip
+            activator="parent"
+            location="bottom"
+            v-bind:text="$t('untie')"
           >
-          </v-btn>
-        </template>
-      </v-tooltip>
-      <v-tooltip
-        location="bottom"
-        v-bind:text="$t('removeNote')"
-        v-bind:disabled="!$_isTiedByNextNote || !$_isNoteSelected"
-      >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            icon="mdi-eraser" size="x-small"
-            v-bind="props"
-            v-bind:disabled="!$_isTiedByNextNote || !$_isNoteSelected"
-            v-on:click="$_removeSelectedNote"
+          </v-tooltip>
+        </v-btn>
+        <v-btn
+          v-else
+          icon size="x-small"
+          v-bind:disabled="!$_isSelectedNoteTieable"
+          v-on:click="$_toggleSelectedNoteTied"
+        >
+          Tie
+          <v-tooltip
+            activator="parent"
+            location="bottom"
+            v-bind:text="$t('tie')"
           >
-          </v-btn>
-        </template>
-      </v-tooltip>
-      <v-tooltip
-        location="bottom"
-        v-bind:text="$t('copyNote')"
-        v-bind:disabled="!$_isNoteSelected"
-      >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            icon="mdi-content-copy" size="x-small"
-            v-bind="props"
-            v-bind:disabled="!$_isNoteSelected"
-            v-on:click="$_copySelectedNote"
+          </v-tooltip>
+        </v-btn>
+        <v-btn
+          icon size="x-small"
+          v-bind:disabled="$_isTiedByNextNote"
+          v-on:click="$_removeSelectedNote"
+        >
+          <v-icon>mdi-eraser</v-icon>
+          <v-tooltip
+            activator="parent"
+            location="bottom"
+            v-bind:text="$t('removeNote')"
           >
-          </v-btn>
-        </template>
-      </v-tooltip>
-      <v-tooltip
-        location="bottom"
-        v-if="$_isNoteCopied"
-        v-bind:text="$t('pasteNote')"
-        v-bind:disabled="!$_isNoteSelected"
-      >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            icon="mdi-content-paste" size="x-small"
-            v-bind="props"
-            v-bind:disabled="!$_isNoteSelected"
-            v-on:click="$_pasteCopiedNoteContent"
+          </v-tooltip>
+        </v-btn>
+        <v-btn
+          icon size="x-small"
+          v-on:click="$_copySelectedNote"
+        >
+          <v-icon>mdi-content-copy</v-icon>
+          <v-tooltip
+            activator="parent"
+            location="bottom"
+            v-bind:text="$t('copyNote')"
           >
-          </v-btn>
-        </template>
-      </v-tooltip>
-      <v-tooltip
-        location="bottom"
-        v-bind:text="$t('removeBar')"
-      >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            icon="mdi-delete" size="x-small"
-            v-bind="props"
-            v-on:click="$_removeSelectedBar"
+          </v-tooltip>
+        </v-btn>
+        <v-btn
+          icon size="x-small"
+          v-bind:disabled="!$_isNoteCopied"
+          v-on:click="$_pasteCopiedNoteContent"
+        >
+          <v-icon>mdi-content-paste</v-icon>
+          <v-tooltip
+            activator="parent"
+            location="bottom"
+            v-bind:text="$t('pasteNote')"
           >
-          </v-btn>
-        </template>
-      </v-tooltip>
-      <v-tooltip
-        location="bottom"
-        v-bind:text="$t('fillBarWithNote')"
+          </v-tooltip>
+        </v-btn>
+      </template>
+      <v-btn
+        icon size="x-small"
+        v-on:click="$_removeSelectedBar"
+      >
+        <v-icon>mdi-delete</v-icon>
+        <v-tooltip
+          activator="parent"
+          location="bottom"
+          v-bind:text="$t('removeBar')"
+        >
+        </v-tooltip>
+      </v-btn>
+      <v-btn
+        icon size="x-small"
         v-bind:disabled="$_isFillBarWithNoteButtonDisabled"
+        v-on:click="$_fillBarWithNote($event.shiftKey)"
       >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            icon="mdi-music-note-plus" size="x-small"
-            v-bind="props"
-            v-bind:disabled="$_isFillBarWithNoteButtonDisabled"
-            v-on:click="$_fillBarWithNote($event.shiftKey)"
-          >
-          </v-btn>
-        </template>
-      </v-tooltip>
-      <v-tooltip
-        location="bottom"
-        v-if="$_isSelectedNoteTypeChord"
-        v-bind:text="$t('openChordTextDialog')"
-        v-bind:disabled="!$_isNoteSelected"
-      >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            icon="mdi-form-textbox" size="x-small"
-            v-bind="props"
-            v-bind:disabled="!$_isNoteSelected"
-            v-on:click="$_openChordTextEditorDialog"
-          >
-          </v-btn>
-        </template>
-      </v-tooltip>
+        <v-icon>mdi-music-note-plus</v-icon>
+        <v-tooltip
+          activator="parent"
+          location="bottom"
+          v-bind:text="$t('fillBarWithNote')"
+        >
+        </v-tooltip>
+      </v-btn>
       <v-spacer></v-spacer>
-      <v-tooltip
-        location="bottom"
-        v-bind:text="$t('selectNextBar')"
+      <v-btn
+        icon size="x-small"
         v-bind:disabled="$_isSelectNextBarButtonDisabled"
+        v-on:click="$_selectNextBar"
       >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            icon="mdi-arrow-right" size="x-small"
-            v-bind="props"
-            v-bind:disabled="$_isSelectNextBarButtonDisabled"
-            v-on:click="$_selectNextBar"
-          >
-          </v-btn>
-        </template>
-      </v-tooltip>
-      <v-tooltip
-        location="bottom"
-        v-bind:text="$t('insertBarAfter')"
+        <v-icon>mdi-arrow-right</v-icon>
+        <v-tooltip
+          activator="parent"
+          location="bottom"
+          v-bind:text="$t('selectNextBar')"
+        >
+        </v-tooltip>
+      </v-btn>
+      <v-btn
+        icon size="x-small"
+        v-on:click="$_insertEmptyBarAfterSelectedBar"
       >
-        <template v-slot:activator="{ props }">
-          <v-btn
-            icon="mdi-plus" size="x-small"
-            v-bind="props"
-            v-on:click="$_insertEmptyBarAfterSelectedBar"
-          >
-          </v-btn>
-        </template>
-      </v-tooltip>
+        <v-icon>mdi-plus</v-icon>
+        <v-tooltip
+          activator="parent"
+          location="bottom"
+          v-bind:text="$t('insertBarAfter')"
+        >
+        </v-tooltip>
+      </v-btn>
     </v-card-actions>
     <v-card-text class="pa-0">
       <system-component
@@ -310,10 +283,6 @@ export default defineComponent({
 
     $_selectedSectionAndBarRange(): SectionAndBarRange { return new SectionAndBarRange(this.selectedSectionAndBarIdx) },
 
-    $_isNoteSelected() {
-      return (this.selectedNoteIdx !== undefined);
-    },
-
     $_selectedNoteIdx: {
       get(): NoteIdx | undefined    { return this.selectedNoteIdx },
       set(selectedNoteIdx: NoteIdx) { this.$emit('update:selectedNoteIdx', selectedNoteIdx) },
@@ -369,22 +338,15 @@ export default defineComponent({
 
     $_isSelectedNoteTypeChord(): boolean {
       if (this.selectedPart.type !== 'chord') return false;
-      if (this.$_isSelectedNoteTypeRest) return false;
-      return true;
+      if (this.$_selectedNote === undefined) return false;
+      return this.$_selectedNote.type === 'normal';
     },
 
     $_isTiedByNextNote(): boolean {
-      if (this.$_isSelectedNoteTypeRest) {
-        return true;
-      } else {
-        if (this.$_nextNote === undefined) return true;
-        return !this.$_nextNote.tied;
-      }
-    },
-
-    $_isSelectedNoteTypeRest(): boolean {
       if (this.$_selectedNote === undefined) return false;
-      return (this.$_selectedNote.type === 'rest');
+      if (this.$_selectedNote.type === 'rest') return false;
+      if (this.$_nextNote === undefined) return false;
+      return this.$_nextNote.tied;
     },
 
     $_isSelectedNoteTieable(): boolean {
@@ -437,13 +399,13 @@ export default defineComponent({
               if (!this.$_isSelectedNoteTieable) break;
               return this.$_toggleSelectedNoteTied();
             case 'KeyD':
-              if (!this.$_isTiedByNextNote) break;
+              if (this.$_isTiedByNextNote) break;
               return await this.$_removeSelectedNote();
             case 'KeyF':
               if (this.$_isFillBarWithNoteButtonDisabled) break;
               return await this.$_fillBarWithNote(false);
             case 'KeyR':
-              if (!this.$_isTiedByNextNote) break;
+              if (this.$_isTiedByNextNote) break;
               return this.$_toggleSelectedNoteType();
             case 'KeyC':
               if (!this.$_isSelectedNoteTypeChord) break;
@@ -502,8 +464,9 @@ export default defineComponent({
 
     $_toggleSelectedNoteType() {
       if (this.$_selectedNote === undefined) return false;
+      const newNoteType = (this.$_selectedNote.type === 'rest')? 'normal' : 'rest';
       const selectedNote = this.$_selectedNote.generateNewNoteFrom();
-      selectedNote.type = (this.$_isSelectedNoteTypeRest)? 'normal' : 'rest';
+      selectedNote.type = newNoteType;
       this.$_selectedNote = selectedNote;
       return true;
     },
